@@ -1,0 +1,60 @@
+version: '3'
+services:
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    restart: always
+    volumes:
+      - ./logs/nginx:/var/log/nginx/
+      - ./conf/nginx/:/etc/nginx/conf.d
+      - static_volume:/web/static  # <-- bind the static volume
+      - media_volume:/web/media  # <-- bind the media volume
+    depends_on:
+      - djangoapp
+    networks:
+      - nginx_network
+
+  db:
+    image: postgres:12.1
+    volumes:
+      - postgre_data:/var/lib/postgresql/data/
+      - ./logs/db:/var/log/postgresql
+
+    restart: always
+    env_file: # <-- we use the previously defined values
+      - ./conf/database1_env
+    networks:
+      - database1_network
+
+  djangoapp:
+#    image: djangoapp:latest
+    build:
+      context: ./helpdesk/
+      dockerfile: Dockerfile
+    volumes:
+      - ./logs/django:/web/log
+      - static_volume:/web/static  # <-- bind the static volume
+      - media_volume:/web/media  # <-- bind the media volume
+    restart: always
+    # command: ["gunicorn" ,"helpdesk.wsgi" ,"--bind" ,"0.0.0.0:8000"]
+
+    depends_on:
+      - db
+    networks:
+      - nginx_network
+      - database1_network
+
+
+
+volumes:
+  postgre_data:
+  static_volume:  # <-- declare the static volume
+  media_volume:  # <-- declare the media volume
+
+networks:
+  nginx_network:
+    driver: bridge
+  database1_network:
+    driver: bridge

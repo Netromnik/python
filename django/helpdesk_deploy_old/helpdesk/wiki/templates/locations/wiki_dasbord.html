@@ -1,0 +1,208 @@
+{% extends "../base.html" %}
+{% load static %}
+
+{% block style %}
+   <style>
+        a {
+            text-decoration: none;
+
+}
+
+
+a:link {
+    text-decoration: none;
+
+}
+
+a:visited {
+    text-decoration: none;
+
+}
+
+a:focus {
+    text-decoration: none;
+
+}
+
+a:hover {
+    text-decoration: none;
+
+}
+
+a:active {
+    text-decoration: none;
+
+}
+        .tree {
+            border: solid silver 1px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: start;
+            flex-direction: column;
+            padding-left: 8px;
+            padding-right: 8px;
+            background-color: #fafafa;
+            padding-top: 25px;
+            min-height: 333px;
+            overflow-y: scroll;
+        }
+
+        .tree-node {
+            padding: 8px;
+            width: 100%;
+        }
+
+        .tree-node:hover {
+            background-color: aliceblue;
+        }
+
+        .tree-node-list {
+            display: none;
+        }
+
+        span a {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        span a:hover {
+            color: cadetblue;
+            text-decoration: none;
+        }
+        span a:active{
+            color: #000;
+        }
+        span a:visited{
+            color: steelblue;
+        }
+
+        li a {
+            color: #000;
+            text-decoration: none;
+
+        }
+
+        li a:hover {
+            color: red;
+            text-decoration: none;
+        }
+        .active {
+            color: burlywood;
+            font-size: 16px;
+
+        }
+        .tree-node span {
+            margin-bottom: 8px;
+        }
+        .tree-node ui li:hover {
+            background-color: antiquewhite;
+
+        }
+        .tree-node ui li:visited {
+            background-color: steelblue;
+
+        }
+        .content{
+            overflow-y: auto;
+        }
+       .event{
+             display: flex;
+             flex-direction: row-reverse;
+              padding: 25px;
+    }
+    .event .btn {
+            background-color: skyblue;
+            border: none;
+            color: white;
+            border-radius: 0px;
+                margin: 4px 2px;
+    }
+    .event .btn:hover {
+color: #333;
+    text-decoration: none;
+}
+    .event input[type="submit"]{
+background-color: #4CAF50;
+    border: none;
+    color: white;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+            padding: 6px 12px;
+}
+    .event input[type="submit"]:hover{
+color: #333;
+    text-decoration: none;}
+    </style>
+{% endblock style %}
+{% block nav-bar %}
+    {% include "snippet/menu_wiki.html" %}
+{% endblock nav-bar %}
+
+ {% block body %}
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="tree">
+                {% for node in node_tree %}
+                    {% if node.is_collapse %}
+                    <div class="tree-node  tree-node-collapse">
+                        <span class="glyphicon glyphicon-list-alt"> <a> {{ node.title }} </a> </span>
+                        <ui class="tree-node-list ">
+                            {% for leaf in node.leaf %}
+                    {% if leaf.is_collapse %}
+                    <div class="tree-node  tree-node-collapse">
+                        <span class="glyphicon glyphicon-list-alt"> <a> {{ leaf.title }} </a> </span>
+                        <ui class="tree-node-list ">
+                            {% for leaf-v in leaf.leaf %}
+                            <li class="tree-node glyphicon glyphicon-file tree-node-leaf"> <a href="{{ leaf.url }}">{{ leaf.title }}</a> </li>
+                            {% endfor %}
+                        </ui>
+                    </div>
+                    {% else %}
+                    <div class="tree-node tree-node-leaf">
+                        <span class="glyphicon glyphicon-file">
+                            <a href="{{ leaf.url }}"> {{ leaf.title }} </a>
+                        </span>
+                    </div>
+                    {% endif %}                            {% endfor %}
+
+                        </ui>
+                    </div>
+                    {% else %}
+                    <div class="tree-node tree-node-leaf">
+                        <span class="glyphicon glyphicon-file">
+                            <a href="{{ node.url }}"> {{ node.title }} </a>
+                        </span>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="content"></div>
+              </div>
+                </div>
+        </div>
+    {% endblock body %}
+{% block extra-js %}
+<script>
+    /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+    var dropdown = document.querySelectorAll(".tree-node-collapse span");
+    var i;
+
+    for (i = 0; i < dropdown.length; i++) {
+        dropdown[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            dropdownContent = this.nextElementSibling
+
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+            } else {
+                dropdownContent.style.display = "block";
+            }
+        });
+    }
+</script>
+{% endblock extra-js %}

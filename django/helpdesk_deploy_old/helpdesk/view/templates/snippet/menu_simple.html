@@ -1,0 +1,14 @@
+<nav class="navbar collapse navbar-collapse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand glyphicon glyphicon-home" href="{% url 'view:dasbord' %}">
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{% url 'view:CreateTicket' %}"><span class="glyphicon glyphicon glyphicon-record"></span> Создать
+                        заявку</a></li>
+                <li><a href="{% url 'wiki:wiki_dasbord' %}"><span class="glyphicon glyphicon-check"></span> Вики</a></li>
+                <li><a href="{% url 'view:logout' %}"><span class="glyphicon glyphicon-log-in"></span> Выход</a></li>
+            </ul>
+        </div>
+ </nav>

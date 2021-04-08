@@ -1,0 +1,94 @@
+{% extends  'about_company/base_template.html'%}
+{% block baner %}
+{% load test_teg %}
+    <div class="block-img">
+        <div class="item1">
+            <p>В 2018 году АО "Роскартография"<br>выполнено воздушное лазерное сканирование<br>Казани, Набережных
+                Челнов, Альметьевска,<br>Зеленодольска и Нижнекамска.</p><br>
+            <p>Результатом работы стали подробные цифровые<br>топографические планы всех населенных пунктов<br>Республики
+                Татарстан масштаб 1:2 000.</p>
+        </div>
+        <div class="item2">
+            <p style="font-size: 25px; font-weight: 400;">аэрофотосъемка<br>Республики Татарстан</p>
+            <p><span style="font-size: 20px;">[ </span><span
+                    style="font-size: 40px; color: #4f9d35; text-shadow: black 2px 0px 2px;"> 67 805 </span><span
+                    style="font-size: 20px; color: #4f9d35; text-shadow: black 2px 0px 2px;"> км. кв. </span><span
+                    style="font-size: 20px;"> ]</span></p>
+        </div>
+        <div class="item3">
+            <p style="font-size: 25px; font-weight: 400;">ортофотопланы на все<br>населенные пункты региона</p>
+            <p><span style="font-size: 20px;">[ </span><span
+                    style="font-size: 40px; color: #40b5e6; text-shadow: black 2px 0px 2px;"> 1 976 </span><span
+                    style="font-size: 20px; color: #40b5e6; text-shadow: black 2px 0px 2px;"> км. кв. </span><span
+                    style="font-size: 20px;"> ]</span></p>
+        </div>
+        <div class="item4">
+            <p>Воздушное лазерное сканирование<br>Казани и других городов Татарстана</p>
+        </div>
+    </div>
+
+{% endblock %}
+ {% block js_content %} 
+<link rel="stylesheet" href="static/src/css/owl.carousel.min.css">
+<link rel="stylesheet" href="static/src/css/owl.theme.default.min.css">
+<script src="static/src/js/jquery.min.js"></script>
+<script src="static/src/js/owl.carousel.min.js"></script>
+  <script type="text/javascript"> 
+$(document).ready(function(){
+  $(".owl-carousel").owlCarousel();
+});
+  </script>
+
+{% endblock %} 
+
+{% block cars %}
+
+<div class="owl-carousel owl-theme" >
+
+     {% for  item in test %}
+<a href="{% url 'post_detail' item.pk %}">
+    <div class="item" style="background: url({{ item.image_title.url  }}) no-repeat;  background-size: cover;">						
+
+		<div class="date-time-news">
+	<p class="day">{{ item.date.day }}</p>
+	<p class="month">{{ item.date|date:" F " }}</p>
+	<p class="year">{{ item.date.year }}</p>
+             </div>
+<div class="block-post-title">
+<li>
+{{ item.introduese }}
+</li>
+</div></div>
+</a>
+    {% endfor %}
+</div>
+
+    {% endblock %}
+
+
+
+    {% block list_others_page %}
+    <div class="block-src">
+        {% with items=object_list %}
+		<div class='child'>
+    
+     {% for  item in items %} 	
+                    <a href="{{ item.get_url }}">
+                        <div class="items">
+                            <img src="{{ item.image }}">
+                            <p>{{ item.title }}</p>
+                        </div>
+                    </a>
+                {% if forloop.counter|modF:"5" %}
+</div>                    
+<div class="child">
+
+                {% endif %}
+                              
+      {% endfor %}
+  </div>            
+
+        {% endwith %}
+    </div>
+    {% endblock %}
+

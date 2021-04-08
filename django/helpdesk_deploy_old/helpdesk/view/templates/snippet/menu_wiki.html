@@ -1,0 +1,13 @@
+<nav class="navbar collapse navbar-collapse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand glyphicon glyphicon-home" href="{% url 'view:dasbord' %}">
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{% url 'wiki:wiki_create' %}"><span class="glyphicon glyphicon glyphicon-record"></span> Создать
+                        запись</a></li>
+                <li><a href="{% url 'view:logout' %}"><span class="glyphicon glyphicon-log-in"></span> Выход</a></li>
+            </ul>
+        </div>
+ </nav>

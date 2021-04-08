@@ -1,0 +1,25 @@
+{% extends  'base.html'%}
+{% load staticfiles %}
+
+{% block content %}
+<div class="post-text">
+	<div class="woocommerce columns-4 "><div class="woocommerce-notices-wrapper"></div>
+<form class="woocommerce-ordering" method="get">
+	<select name="orderby" class="orderby"  style="	visibility: hidden;" aria-label="Заказ в магазине">
+					<option value="menu_order" selected="selected">Исходная сортировка</option>
+					<option value="popularity">По популярности</option>
+					<option value="date">Сортировка по более позднему</option>
+					<option value="price">Цены: по возрастанию</option>
+					<option value="price-desc">Цены: по убыванию</option>
+			</select>
+	</form>
+<ul class="products columns-4">
+<li class="product type-product post-1681 status-publish first instock product_cat-atlas has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<a href="https://www.roscartography.ru/dlya-kazhdogo/goods/atlas/naczionalnyj-atlas-arktiki/" class="woocommerce-LoopProduct-link woocommerce-loop-product__link">
+        <img src="{{List_Market.image }}" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="" width="300" height="275"><h2 class="woocommerce-loop-product__title">Национальный атлас Арктики</h2>
+	<span class="price"><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">₽</span>33,000.00</span></span>
+</a><a href="/product-category/goods/atlas/?add-to-cart=1681" data-quantity="1" class="button product_type_simple add_to_cart_button ajax_add_to_cart" data-product_id="1681" data-product_sku="" aria-label="Добавить &quot;Национальный атлас Арктики&quot; в корзину" rel="nofollow">В корзину</a></li>
+</ul>
+</div>
+</div>
+{% endblock %}

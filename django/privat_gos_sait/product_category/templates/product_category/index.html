@@ -1,0 +1,31 @@
+{% extends  'base.html'%}
+{% load staticfiles %}
+
+{% block content %}
+<div class="block-src-states">
+			<div class="block-src-states-line">
+                                {{ forloop.counter0 }}
+{% for i in post %}
+{% if forloop.counter == 4 or forloop.counter == 7  %}
+				</div>
+							<div class="block-src-states-line">
+
+                    {% endif %}
+
+				<div class="block-src-states-line-item">
+					<a href="{{ i.slug }}">
+						<div class="block-src-states-line-item-img">
+							<img src="{{ i.image.url }}">
+						</div>
+						<div class="block-src-states-line-item-text">
+							<p>{{ i.name }}</p>
+						</div>
+					</a>
+				</div>
+
+{% endfor %}
+
+			</div>
+		</div>
+    </div>
+{% endblock %}

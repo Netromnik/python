@@ -1,0 +1,247 @@
+{% extends "../base_ticket.html" %}
+{% load static crispy_forms_tags %}
+{% block style %}
+<style>
+        .box {
+            padding: 25px;
+            display: grid;
+        }
+        .panel-info{
+    border: solid silver 0px;
+    }
+
+        h2 {
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid #000;
+            line-height: 0.1em;
+            margin: 10px 0 20px;
+        }
+
+        h2 span {
+            background: #fff;
+            padding: 0 10px;
+        }
+
+        .panel-heading {
+            text-align: left;
+            font-size: 24px
+        }
+
+        .panel-body {
+            background-color: #5f9ea021;
+        }
+
+        .col-md-12 {
+            padding: 0px;
+        }
+
+        .inline-block {
+            border: solid silver 2px;
+        }
+
+        .inline-block .header {
+            width: 33%;
+            float: left;
+            position: relative;
+            min-height: 1px;
+            padding: 8px;
+            padding-right: 15px;
+            padding-left: 15px;
+            font-weight: bold;
+        }
+
+        .inline-block .body {
+            width: 66%;
+            float: left;
+            position: relative;
+            min-height: 1px;
+            padding: 8px;
+            padding-right: 15px;
+            padding-left: 15px;
+            border-left: solid silver 2px;
+        }
+
+        .char-block {
+            border: solid silver 2px;
+
+        }
+
+        .char-block .header {
+            width: 100%;
+            float: left;
+            position: relative;
+            min-height: 1px;
+            padding: 8px;
+            padding-right: 15px;
+            padding-left: 15px;
+            border-bottom: solid silver 2px;
+            font-weight: bold;
+        }
+
+        .char-block .body {
+            width: 100%;
+            float: left;
+            position: relative;
+            min-height: 1px;
+            padding: 25px;
+
+        }
+
+        .file-fields-block {
+            border: solid silver 2px;
+
+        }
+
+        .file-fields-block .header {
+            width: 33%;
+            float: left;
+            position: relative;
+            min-height: 1px;
+            padding: 8px;
+            padding-right: 15px;
+            padding-left: 15px;
+            font-weight: bold;
+        }
+
+        .file-fields-block .body {
+            width: 66%;
+            float: left;
+            position: relative;
+            min-height: 1px;
+            padding: 8px;
+            padding-right: 15px;
+            padding-left: 15px;
+            border-left: solid silver 2px;
+        }
+
+        .alert-list {
+            padding: 25px;
+            overflow-x: hidden;
+            height: 400px;
+            margin-bottom: 25px;
+        }
+
+        .alert-list .alert {
+            padding: 8px;
+        }
+        .alert-messenge{
+            display: block;
+            padding: 8px;
+            border-bottom: solid silver 1px;
+        }
+        .alert-date{
+            display: block;
+            float: right;
+        }
+        .chat-body{
+            padding: 25px;
+            overflow-x: hidden;
+            height: 400px;
+        }
+        .message-bubble{
+            background-color: bisque;
+                border-radius: 8px;
+                padding: 8px;
+                width: 100%;
+                margin-bottom: 12px;
+        }
+
+.message-bubble > *
+{
+    padding-left: 10px;
+}
+
+.panel-body { padding: 0px; }
+
+.panel-heading { background-color: #3d6da7 !important; color: white !important; }
+.panel-info>.panel-heading {
+    background-image: none;
+    background-image: none;
+    background-repeat: no-repeat;
+}
+.panel-default>.panel-heading{
+    background-image: none;
+    background-image: none;
+    background-repeat: no-repeat;
+
+}
+</style>
+{% endblock style %}
+
+
+{% block body %}
+{% if request.GET %}
+<div class="alert alert-success" role="alert">
+    Успешно отправленно
+</div>
+{% endif %}
+
+<div class="box">
+    <h2><span>Заявка</span></h2>
+    <div class="box-body">
+    <div class="panel panel-info col-md-7">
+        <div class="panel-heading">{{ task.title }}</div>
+        <div class="panel-body">
+            {% for row in task.rows %}
+            <div class="col-md-12 {{ row.class }}">
+                <div class="header">{{ row.title }}</div>
+                <div class="body">
+                    {% if row.is_file %}
+                    <ol>
+                        {% for f in row.files %}
+                        <li><a class="file" href="{{ f.url }}">{{ f.name }}</a></li>
+                        {% endfor %}
+                    </ol>
+                    {% else %}
+                    {{ row.body }}
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
+        <div class="alert-list-all col-md-5">
+        <div class="panel panel-info ">
+            <div class="panel-heading">События</div>
+
+            <div class="alert-list">
+                {% for alert in alerts %}
+                <div class="col-md-12 alert alert-{{ alert.class }}" role="alert">
+                    <span class="alert-messenge"> {% autoescape off %} {{ alert.messenge }}  {% endautoescape %}</span>
+                    <span class="alert-date"> {{ alert.date }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% if chat.is_chat == True %}
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">Сообщения</div>
+        <div class="panel-body">
+            <div class="container chat-body" id="timeline">
+                {% for messenge in chat.obj %}
+                <div class="row message-bubble" style="border: solid {{ messenge.color }} 4px;">
+                    <p class="text-muted">{{ messenge.user }}</p>
+                    <p>{{ messenge.body }}</p>
+                    <p class="text-muted"><small>{{ messenge.date }}</small></p>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="panel-footer">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-success">Отправить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+</div>
+{% endblock body %}

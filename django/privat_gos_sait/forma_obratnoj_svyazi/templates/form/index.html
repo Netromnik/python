@@ -1,0 +1,151 @@
+{% extends  'base.html'%}
+{% load staticfiles %}
+
+{% block content %}
+	<script type="text/javascript">
+		
+	var i=0;
+$( document ).ready(function() {
+    
+$( ".remove" ).click(function() {   
+    			sendAjaxForm('result_form', 'cart' ,$( this ).attr('hreflang') ,$( this ).attr('href'));
+  alert($( this ).attr('href'));
+    			return false;
+
+});
+function sendAjaxForm(result_form, ajax_form,id,url) {
+    $.ajax({
+        url:     url, //url страницы (action_ajax_form.php)
+        type:     "POST", //метод отправки
+        dataType: "html", //формат данных
+        data: $("#"+ajax_form).serialize(),  // Сеарилизуем объект
+        success: function(response) { //Данные отправлены успешно
+        $("."+id).slideUp();
+            },
+    	error: function(response) { // Данные не отправлены
+    		alert("lol");
+        }
+ 	});
+};
+	</script>
+
+<div class="post-text">
+    <form action="" method="post">
+        <div class="forminator-row">
+            <label class="forminator-label" for="id_name">{{ form.name.label_tag }}</label>
+            <input type="text" class="forminator-input" name="name" maxlength="20" required="" id="id_name"></div>
+        <label class="forminator-label" for="id_email">{{ form.email.label_tag }}</label>
+        <input type="email" name="email" class="forminator-input" required="" id="id_email">
+
+
+        <div class="forminator-row">
+            <label class="forminator-label" for="id_phone">{{ form.phone.label_tag }}</label>
+            <input class="forminator-input" type="text" name="phone" maxlength="11" required="" id="id_phone">
+        </div>
+        <div class="forminator-row"><label class="forminator-label" for="id_text">{{ form.text.label_tag }}</label>
+            <textarea name="text" class="forminator-textarea" cols="40" rows="10" maxlength="200" required=""
+                      id="id_text"></textarea>
+        </div>
+
+        <button class="forminator-button forminator-input">Отправить сообщение</button>
+        {% csrf_token %}
+    </form>
+<hr>
+{% if cart.count == 0 and not cat %}
+  
+{% else %}  
+        <div class="woocommerce">
+            <div class="woocommerce-notices-wrapper"></div>
+            <form class="woocommerce-cart-form" action="https://www.roscartography.ru/korzina-2/" method="post">
+
+                <table class="shop_table shop_table_responsive cart woocommerce-cart-form__contents" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="product-name">Товар</th>
+                        <th class="product-price">Цена</th>
+                        <th class="product-quantity">Количество</th>
+			<th class="product-subtotal">Полная цена</th>
+			<th class="product-quantity">Удалить</th>
+                    </tr>
+                    </thead>
+                    <tbody>  
+        {% for item in cart %}
+        {% with product=item.product %}
+        <tr class="woocommerce-cart-form__cart-item cart_item {{product.slug}} ">
+            <td class="product-name" data-title="Товар">
+                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a></td>
+
+            <td class="product-price" data-title="Цена">
+                            <span class="woocommerce-Price-amount amount"><span
+                                    class="woocommerce-Price-currencySymbol">₽</span>{{ product.price }}</span></td>
+
+            <td class="product-quantity" data-title="Количество">
+                <div class="quantity">
+                    <input type="number" class="input-text qty text" step="1"
+                           min="0" max="30"  value="{{ item.quantity }}"
+                           title="Кол-во" size="4" inputmode="numeric">
+                </div>
+            </td>
+
+            <td class="product-subtotal" data-title="Итого">
+                            <span class="woocommerce-Price-amount amount"><span
+                                    class="woocommerce-Price-currencySymbol">₽</span>{{ item.total_price }}</span></td>
+	           <td class="product-remove">
+                <a href="/cart/remove/{{product.slug}}/"
+                   class="remove " aria-label="Удалить эту позицию" hreflang="{{product.slug}}"
+                 >×</a></td>
+
+
+        </tr>
+
+      {% endwith %}
+        {% endfor %}
+                        {% if cat %}
+                                <tr class="woocommerce-cart-form__cart-item cart_item">
+
+            <td class="product-name" data-title="Товар">
+                <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></td>
+
+            <td class="product-price" data-title="Цена">
+                            <span class="woocommerce-Price-amount amount"><span
+                                    class="woocommerce-Price-currencySymbol"></span>Договорная</span></td>
+
+            <td class="product-quantity" data-title="Количество">
+                </td>
+
+            <td class="product-subtotal" data-title="Итого">
+                            <span class="woocommerce-Price-amount amount"><span
+                                    class="woocommerce-Price-currencySymbol"></span></span></td>
+							    	           
+	<td class="product-remove">
+                <a href="/forma_obratnoj_svyazi/"
+                   class="remove " aria-label="Удалить эту позицию" "
+                 >×</a></td>
+        </tr>
+	
+    {% endif %}
+{% endif %}
+
+
+                    </tbody>
+                </table>
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block test %}
+
+<div class="post-text">
+    <td>
+        <form action="" method="post">
+            {{form.as_p}}
+            <input type="submit" value="Update">
+            {% csrf_token %}
+        </form>
+    </td>
+</div>
+{% endblock %}

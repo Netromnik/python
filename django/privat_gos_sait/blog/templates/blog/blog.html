@@ -1,0 +1,39 @@
+{% extends  'base.html'%}
+{% block content %}
+<div class="content">
+    <div class="post-text">
+        <!-- определение категории и количество записей -->
+        <!-- миниатюра записи -->
+        {% for post in object_list %}
+        <div class="news-block">
+
+            <div class="image-block">
+                <a href="{% url 'post_detail' post.pk %}"><img src="/media/{{ post.image_title }}" width="1280"
+                                                               height="854" alt="" data-sizes="auto"
+                                                               class="attachment-full size-full wp-post-image lazyautosizes ls-is-cached lazyloaded"
+                                                               sizes="(max-width: 1280px) 100vw, 1280px"/></noscript>
+                </a>
+
+            </div>
+            <div class="text-block">
+                <!-- заголовок записи -->
+                <h3 style="margin: 0px;"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
+                <!-- количество слов в анонсе (необязательно) -->
+
+                {{ post.introduese }}
+            </div>
+        </div>
+    <div class="separator"></div>
+    {% endfor %}
+    {% if is_paginated %}
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" style="float: left;">Предыдущая</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" style="float: right;">Следующая</a>
+        {% endif %}
+    {% endif %}
+    </div>
+    </div>
+
+{% endblock %}

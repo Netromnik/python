@@ -1,0 +1,84 @@
+{% extends  'base.html'%}
+{% load staticfiles %}
+
+{% block js_content %}
+<script type="text/javascript" src="/static/pette_files/jquery.form.js"></script>
+
+	<script type="text/javascript">
+		
+	var i=0;
+$( document ).ready(function() {
+	$("#btn").click(
+		function(){
+			sendAjaxForm('result_form', 'cart' , "#btn",'/cart/add/{{post.slug }}/');
+			return false;
+		}
+	);
+});
+
+function sendAjaxForm(result_form, ajax_form,id,url) {
+    i = ((++ i) & 1);
+    i?url='/cart/add/{{post.slug }}/':url='/cart/remove/{{post.slug }}/';
+    i?text='удалить':text='Добавить товар';
+    $.ajax({
+        url:     url, //url страницы (action_ajax_form.php)
+        type:     "POST", //метод отправки
+        dataType: "html", //формат данных
+        data: $("#"+ajax_form).serialize(),  // Сеарилизуем объект
+        success: function(response) { //Данные отправлены успешно
+        $(id).attr('value',text);
+	if (i){confirm("Товар добавлен,\nперейти к оформлению ? ")?window.location = "/forma_obratnoj_svyazi/":1;}
+	else{}
+	    },
+    	error: function(response) { // Данные не отправлены
+    		alert("lol");
+            $('#result_form').html('Ошибка. Данные не отправлены.');
+    	}
+ 	});
+};
+	</script>
+{% endblock %}
+{% block content %}
+<div class="post-text">
+                  <div class="woocommerce">
+					  <div class="single-product" data-product-page-preselected-id="0">
+				<div class="woocommerce-notices-wrapper"></div><div id="product-1681" class="product type-product post-1681 status-publish first instock product_cat-atlas has-post-thumbnail shipping-taxable purchasable product-type-simple">
+
+	<div class="woocommerce-product-gallery woocommerce-product-gallery--with-images woocommerce-product-gallery--columns-4 images ">
+		<img src=" {{ post.image.url }}">
+
+	</div>
+	<div class="summary entry-summary">
+		<p class="price"><span class="woocommerce-Price-amount amount">
+			<span class="woocommerce-Price-currencySymbol">₽</span>{{ post.price }}</span></p>
+
+		<form action="" method="post" id="cart">
+			{% csrf_token %}
+			{{ cart.forms_market.as_p }}
+			    <input type="button" id="btn" class="single_add_to_cart_button button alt" value="Добавить товар" />
+		</form>
+
+<div class="product_meta">
+
+</div>
+	</div>
+
+
+	<div class="woocommerce-tabs wc-tabs-wrapper">
+		<ul class="tabs wc-tabs" role="tablist">
+							<li class="description_tab active" id="tab-title-description" role="tab" aria-controls="tab-description">
+					<a href="#tab-description">Описание</a>
+				</li>
+					</ul>
+					<div class="woocommerce-Tabs-panel woocommerce-Tabs-panel--description panel entry-content wc-tab" id="tab-description" role="tabpanel" aria-labelledby="tab-title-description" style="display: block;">
+
+  <h2>Описание</h2>
+
+{{ post.text|safe }}			</div>
+			</div>
+
+</div>
+
+			</div>
+			</div>                      </div>
+{% endblock %}

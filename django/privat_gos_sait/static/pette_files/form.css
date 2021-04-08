@@ -1,0 +1,57 @@
+.forminator-label{
+	color: #00548a;
+	font-size: 12px;
+	font-family: inherit;
+	font-weight: 700;
+}
+.forminator-input{
+	width: 100%;
+	min-width: unset;
+	max-width: unset;
+	height: auto;
+	min-height: unset;
+	max-height: unset;
+	display: block;
+	margin: 0;
+	padding: 0;
+	background-image: unset;
+	line-height: 1.3em;
+	font-size: 16px;
+	font-family: inherit;
+	font-weight: 400;
+	padding: 8px;
+	border-width: 0;
+	border-style: none;
+	border-radius: 0;
+	background-color: #ededed;
+	color: #000000;
+}
+
+.forminator-textarea{
+width: 100%;
+min-height: 140px;
+resize: vertical;
+display: block;
+margin: 0;
+padding: 0;
+background-image: unset;
+line-height: 20px;
+-webkit-transition: .2s ease;
+transition: .2s ease;
+border-width: 0;
+border-style: none;
+border-radius: 0;
+background-color: #ededed;
+color: #000000;
+}
+.forminator-button{
+background-color: #83b8cc;
+color: #36603b;
+margin-top: 10px;
+
+}
+forminator-button:hover{
+background-color: #83b8cc;
+color: #36603b;
+margin-top: 10px;
+}

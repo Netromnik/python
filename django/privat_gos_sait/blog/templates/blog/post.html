@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="post-text">
+  <div class="title">
+						<span>
+							{{ object.title}}
+                        </span>
+  </div>
+    {{ object.content|safe }}
+
+</div>
+{% endblock content %}

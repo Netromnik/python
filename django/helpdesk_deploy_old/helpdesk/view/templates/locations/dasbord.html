@@ -1,0 +1,309 @@
+{% extends "../base.html" %}
+{% load  static %}
+
+{% block js %}
+{% endblock js %}
+{% block style %}
+   <style>
+        .list-wraper-flex {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 25px;
+        }
+
+        .list-wraper-flex-info {
+            display: flex;
+            padding: 25px;
+        }
+
+        .alert-list {
+            padding: 25px;
+            overflow-x: hidden;
+            height: 240px;
+            margin-bottom: 25px;
+        }
+
+        .list-sticker {
+            box-shadow: 0 0 9px -3px rgba(0, 0, 0, 0.75);
+            min-width: 200px;
+            height: 150px;
+            background: bisque;
+            margin: 10px;
+            padding: 5px;
+            color: coral;
+            font-weight: bold;
+            font-style: italic;
+            word-break: break-all;
+        }
+
+        .queue-display {
+            justify-content: start;
+        }
+
+        .list-sticker:hover {
+            color: #23527c;
+            text-decoration: none;
+            background-color: aliceblue;
+        }
+
+        .scene {
+            perspective: 600px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            transition: transform 1s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card_face {
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .card_front {
+            position: absolute;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .card_back {
+            transform: rotateY(180deg);
+            overflow-y: scroll;
+        }
+
+        .card_back a {
+            color: coral;
+            text-decoration: none;
+        }
+
+        .scene:hover a {
+            color: #3c5e6f;
+            text-decoration: none;
+        }
+
+        .card_back a:hover {
+            color: green;
+            text-decoration: none;
+        }
+
+        h2 {
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid #000;
+            line-height: 0.1em;
+            margin: 10px 0 20px;
+        }
+
+        h2 span {
+            background: #fff;
+            padding: 0 10px;
+        }
+
+        .box {
+            padding: 25px;
+        }
+
+        .stat{
+            cursor: default;
+            margin-top: 25px;
+        }
+        .stat-cart {
+            display: block;
+            color: #31708f;
+            /* background-color: #d9edf7; */
+            border-color: #bce8f1;
+
+        }
+        .stat-cart-title{
+            text-align: left;
+            width: 60%;
+            float: left;
+        }
+        .stat-cart-cent{
+            text-align: right;
+            width: 40%;
+            float: right;
+        }
+        .stat-cart-footer{
+            padding-left: 25px;
+        }
+        .alert-list .alert a{
+        background-color: #00000021;
+        color: darkblue;
+        }
+       .alert-list .alert a:hover{
+        background-color: red;
+        color: darkblue;
+        }
+    </style>
+{% endblock style %}
+{% block nav-bar %}
+    {% include "snippet/menu_simple.html" %}
+{% endblock nav-bar %}
+
+    {% block body %}
+      <div class="row">
+            <div class="col-md-12">
+                <h2><span>Оперативная информация</span></h2>
+                <div class="col-md-4 stat">
+                         {% for data in static_data %}
+                    <div class="stat-cart">
+                        <div class="stat-cart-title">{{ data.title }}:</div>
+                        <div class="stat-cart-cent">{{ data.all }}</div>
+                        <div class="stat-cart-footer">
+                            {% for stat in data.stats %}
+                            <div class="stat-cart">
+                                <div class="stat-cart-title">{{ stat.name }}: </div>
+                                <div class="stat-cart-cent">{{ stat.data }}</div>
+                                <div class="stat-cart-footer"></div>
+                            </div>
+                                                {% endfor %}
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="alert-list-all col-md-8">
+                    <div class="alert-list">
+                        {% for alert in alert_all %}
+                        <div class="col-md-12 alert alert-{{ alert.status }}" role="alert">
+                            {% autoescape off %}
+                            {{ alert.body }}
+                            {% endautoescape %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="box ">
+                    <h2><span>Созданные вами заявки</span></h2>
+        <table id="table" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Заголовок</th>
+                <th>Тема</th>
+                <th>Время последнего обновления</th>
+                <th>Выполнить до</th>
+                <th>Состояние</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if table == None %}
+            {% else %}
+            {% for art in table %}
+            <tr>
+                <td>{{art.pk}}</td>
+                <td>{{art.title}}</td>
+                <td>{{art.stream.description}}</td>
+                <td>{{art.updated_at}}</td>
+                <td>{{art.date_due}}</td>
+                <td>{{art.get_status}}</td>
+                <td><a href="/ticket/{{art.pk}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">перейти</a>
+                </td>
+            </tr>
+            {% endfor %}
+
+            {% endif %}
+
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>Id</th>
+                <th>Заголовок</th>
+                <th>Тема</th>
+                <th>Время последнего обновления</th>
+                <th>Выполнить до</th>
+                <th>Состояние</th>
+                <th></th>
+            </tr>
+            </tfoot>
+        </table>
+                </div>
+                <div class="list-wraper-flex queue-display">
+                    <h2><span>Список досок</span></h2>
+<!--                    <input class="form-control" id="myInput" type="text" placeholder="Поиск">-->
+                     {% for cart in cart_all %}
+                    <div  class="list-sticker scene">
+                        <div class="card">
+                            <div class="card_face card_front">
+                                {{ cart.name }}
+                            </div>
+                            <div class="card_face card_back">
+                                Категории:
+                                <ul>
+                                {% for sub in cart.sub %}
+                                    <li><a href="{{ sub.url }}">{{ sub.name }}</a></li>
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endblock body %}
+{% block extra-js %}
+<script>
+    var cards = document.querySelectorAll('.card');
+    cards.forEach((card)=>{
+    card.addEventListener('click', function () {
+        card.classList.toggle('is-flipped');
+    })});
+</script>
+<!-- include javascript, jQuery FIRST -->
+<script src="{% static 'vendor/jquery-3.5.1.js'%}"></script>
+<script src="{% static 'vendor/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'vendor/dataTables.bootstrap.min.js'%}"></script>
+<script>
+
+
+    var lang = {
+        processing: "Подождите...",
+        search: "Поиск:",
+        lengthMenu: "Показать _MENU_ записей",
+        info: "Записи с _START_ до _END_ из _TOTAL_ записей",
+        infoEmpty: "Записи с 0 до 0 из 0 записей",
+        infoFiltered: "(отфильтровано из _MAX_ записей)",
+        infoPostFix: "",
+        loadingRecords: "Загрузка записей...",
+        zeroRecords: "Записи отсутствуют.",
+        emptyTable: "В таблице отсутствуют данные",
+        paginate: {
+            first: "Первая",
+            previous: "Предыдущая",
+            next: "Следующая",
+            last: "Последняя"
+        },
+        aria: {
+            sortAscending: ": активировать для сортировки столбца по возрастанию",
+            sortDescending: ": активировать для сортировки столбца по убыванию"
+        },
+        select: {
+            rows: {
+                _: "Выбрано записей: %d",
+                0: "Кликните по записи для выбора",
+                1: "Выбрана одна запись"
+            }
+        }
+    }
+    $(document).ready(function() {
+        $('#table').DataTable({
+            language:lang});
+    } );
+</script>
+
+{% endblock extra-js %}

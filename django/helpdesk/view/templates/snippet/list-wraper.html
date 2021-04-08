@@ -1,0 +1,8 @@
+        <div class="dashboard-module">
+            <div class="list-wraper-flex">
+                <a href="{{ all }}" class="list-sticker">Все</a>
+                {% for stream in stream_list %}
+                <a href="{{ stream.get_sub_url }}" class="list-sticker">{{ stream.title }}</a>
+                {% endfor %}
+            </div>
+        </div>

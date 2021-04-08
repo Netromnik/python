@@ -1,0 +1,139 @@
+{% extends "../base.html" %}
+{% load  static %}
+
+{% block style %}
+    <style>
+        tr th {
+            background-color: #ffa65aa8;
+            font-style: oblique;
+            font-family: system-ui;
+            color: #888888;
+        }
+
+        .list-wraper-flex {
+            display: flex;
+            justify-content: start;
+            overflow-x: overlay;
+            padding: 25px;
+        }
+
+        .dashboard-module {
+            padding: 25px;
+            border: solid silver 10px;
+            padding-top: 0px;
+            text-align: center;
+        }
+
+        .list-sticker {
+            box-shadow: 0 0 9px -3px rgba(0, 0, 0, 0.75);
+            min-height: 60px;
+            min-width: 200px;
+            background: bisque;
+            margin: 10px;
+            padding: 5px;
+            color: coral;
+            font-weight: bold;
+            font-style: italic;
+            word-break: break-all;
+            text-align: center;
+
+        }
+
+        .list-sticker:hover {
+            color: #23527c;
+            text-decoration: none;
+            background-color: aliceblue;
+        }
+        .btn-push{
+                font-family: monospace;
+                font-style: oblique;
+                background-color: #c5121294;
+                color: #2b8a48;
+            }
+        .btn-push:hover{
+            background-color: cadetblue;
+            color: darkblue;
+        }
+
+        .btn-get{
+                font-family: monospace;
+                font-style: oblique;
+                background-color: burlywood;
+                color: #2b8a48;
+            }
+        .btn-get:hover{
+            background-color: cadetblue;
+            color: darkblue;
+        }
+        .btn-view{
+                font-family: monospace;
+                font-style: oblique;
+                background-color: #5f9ea061;
+                color: #2b8a48;
+            }
+        .btn-view:hover{
+            background-color: cadetblue;
+            color: darkblue;
+        }
+
+    </style>
+{% endblock style %}
+
+{% block nav-bar %}
+    {% include "snippet/menu_views.html" %}
+{% endblock nav-bar %}
+
+ {% block body %}
+    {% include "snippet/list-wraper.html" %}
+
+        <div class="box">
+            {{ table_asignet }}
+            {{ table_avtor }}
+        </div>
+    {% endblock body %}
+{% block extra-js %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap.min.js"></script>
+
+<script>
+    var lang = {
+        processing: "Подождите...",
+        search: "Поиск:",
+        lengthMenu: "Показать _MENU_ записей",
+        info: "Записи с _START_ до _END_ из _TOTAL_ записей",
+        infoEmpty: "Записи с 0 до 0 из 0 записей",
+        infoFiltered: "(отфильтровано из _MAX_ записей)",
+        infoPostFix: "",
+        loadingRecords: "Загрузка записей...",
+        zeroRecords: "Записи отсутствуют.",
+        emptyTable: "В таблице отсутствуют данные",
+        paginate: {
+            first: "Первая",
+            previous: "Предыдущая",
+            next: "Следующая",
+            last: "Последняя"
+        },
+        aria: {
+            sortAscending: ": активировать для сортировки столбца по возрастанию",
+            sortDescending: ": активировать для сортировки столбца по убыванию"
+        },
+        select: {
+            rows: {
+                _: "Выбрано записей: %d",
+                0: "Кликните по записи для выбора",
+                1: "Выбрана одна запись"
+            }
+        }
+    }
+    $(document).ready(function () {
+        document.querySelectorAll("table").forEach(
+            el => $(el).DataTable({
+            language: lang
+        })
+        );
+    });
+
+</script>
+{% endblock extra-js %}

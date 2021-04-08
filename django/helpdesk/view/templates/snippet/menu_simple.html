@@ -1,0 +1,28 @@
+{% load notifications_tags %}
+<nav class="navbar collapse navbar-collapse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand glyphicon glyphicon-home" href="{% url 'view:dasbord' %}">
+            </a>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'view:CreateTicket' %}"><span class="glyphicon glyphicon glyphicon-record"></span>
+                Создать
+                заявку</a></li>
+        {% if user.is_staff %}
+                        <li><a href="{% url 'view:analitic' %}">Административный интерфейс </a></li>
+        {% endif %}
+            <li class="dropdown dropdown-custom ">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Уведомления <b>
+                    {% live_notify_badge %}</b> <span class="caret"></span></a>
+                <div class="dropdown-menu">
+                    <ul class="list-unstyled dropdown-menu-insert" role="menu">
+                    </ul>
+                </div><!-- -- /.dropdown-menu ---->
+            </li>
+            <li><a href="{% url 'view:logout' %}"><span class="glyphicon glyphicon-log-in"></span> Выход</a></li>
+        </ul>
+    </div>
+</nav>
+

@@ -1,0 +1,39 @@
+<nav class="navbar collapse navbar-collapse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand glyphicon glyphicon-home" href="{% url 'view:dasbord' %}">
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-left">
+                <li class="dropdown"
+                    onclick='((el) => {el.classList[1] != "open" ? el.classList.add("open") : el.classList.remove("open")} )(this)'>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                        aria-expanded="false">{{ q_list.title }}<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% for q in q_list.dep   %}
+                            <li><a href="{{ q.url }}">{{ q.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="dropdown"
+                        onclick='((el) => {el.classList[1] != "open" ? el.classList.add("open") : el.classList.remove("open")} )(this)'>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">{{ dropdown_menu_view.title }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {% for menu in dropdown_menu_view.dep  %}
+                                <li><a href="{{ menu.url }}"> {{ menu.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+
+                <li><a href="{% url 'view:CreateTicket' %}"><span class="glyphicon glyphicon glyphicon-record"></span> Создать
+                        заявку</a></li>
+                <li><a href="{% url 'wiki:wiki_dasbord' %}"><span class="glyphicon glyphicon-check"></span> Вики</a></li>
+                <li><a href="{% url 'view:logout' %}"><span class="glyphicon glyphicon-log-in"></span> Выход</a></li>
+            </ul>
+        </div>
+ </nav>

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load  static %}
+{% load render_table from django_tables2 %}
+
+{% block js %}
+
+    <script src="{% static 'vendor/table/moment.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/table/jquery.dataTables.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/table/jquery.dataTables.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/table/dataTables.searchBuilder.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/table/searchBuilder.bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/table/dataTables.dateTime.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/table/datetime-moment.js' %}" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="{% static 'vendor/table/jquery.dataTables.min.css'%}">
+    <link rel="stylesheet" href="{% static 'vendor/table/searchBuilder.bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'vendor/table/dataTables.dateTime.min.css'%}">
+    <!-- Chartjs libraries -->
+    <script src="{% static 'vendor/highcharts.js'%}"></script>
+    <script src="{% static 'vendor/data.js'%}"></script>
+    <script src="{% static 'vendor/exporting.js'%}"></script>
+    <script src="{% static 'vendor/accessibility.js'%}"></script>
+
+
+{% endblock js %}
+{% block style %}
+{% endblock style %}
+
+    {% block body %}
+            {% render_table user_scope  "tables/template_anal.html"%}
+<figure class="highcharts-figure">
+    <div id="container"></div>
+    <p class="highcharts-description">
+    </p>
+            {% render_table table_month  "tables/template_anal.html"%}
+            {% render_table admin_table  "tables/template_anal.html"%}
+
+</figure>
+    {% endblock body %}
+{% block extra-js %}
+
+<script>
+    Highcharts.chart('container', {
+    data: {
+        table: 'table-w'
+    },
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Дата состояний заявок по дням'
+    },
+    yAxis: {
+        allowDecimals: false,
+        title: {
+            text: 'Units'
+        }
+    },
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.series.name + '</b><br/>' +
+                this.point.y + ' ' + this.point.name.toLowerCase();
+        }
+    }
+});
+</script>
+   <script src=" {% static 'vendor/table/dataTables.buttons.min.js' %}"></script>
+   <script src="{% static 'vendor/table/buttons.bootstrap.min.js' %}"></script>
+   <script src=" {% static 'vendor/table/jszip.min.js' %}"></script>
+   <script src="{% static 'vendor/table/pdfmake.min.js' %}"></script>
+   <script src="{% static 'vendor/table/vfs_fonts.js' %}"></script>
+   <script src=" {% static 'vendor/table/buttons.html5.min.js' %}"></script>
+  <script src=" {% static 'vendor/table/buttons.print.min.js' %}"></script>
+  <script src=" {% static 'vendor/table/buttons.colVis.min.js' %}"></script>
+
+      <script src="{% static 'vendor/table/locale_table.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/table/table_settings.js' %}" type="text/javascript"></script>
+
+{% endblock extra-js %}

@@ -1,0 +1,21 @@
+{% load django_tables2 %}
+{% load i18n %}
+   <table id="{{table.class_id}}" class="table table-striped table-bordered" >
+        <thead>
+                    {% for column in table.columns %}
+                        <th {{ column.attrs.th.as_html }}>
+                                {{ column.header }}
+                        </th>
+                    {% endfor %}
+        </thead>
+        <tbody>
+                        {% for row in table.rows %}
+
+                    <tr {{ row.attrs.as_html }}>
+                        {% for column, cell in row.items %}
+                            <td {{ column.attrs.td.as_html }}>{% if cell.get_full_name == None %}{{ cell }}{% else %} {{ cell.get_full_name }}{% endif %}</td>
+                        {% endfor %}
+                    </tr>
+                        {% endfor %}
+        </tbody>
+    </table>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% load  static %}
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap-glyphicons.css'%}">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap-theme.min.css'%}">
+    <link rel="stylesheet" href="{% static 'vendor/dataTables.bootstrap.min.css'%}">
+
+{% block js %}
+{% endblock js %}
+
+{% block style %}
+
+{% endblock style %}
+
+</head>
+<body>
+{% block nav-bar %}
+    {% include "snippet/menu_simple.html" %}
+{% endblock nav-bar %}
+{% block breadcrumbs %}
+    {% include "snippet/breadcrumbs.html" %}
+{% endblock breadcrumbs %}
+<div class="container">
+    {% block body %}
+    {% endblock body %}
+</div>
+</body>
+{% block extra-js %}
+{% endblock extra-js %}
+
+</html>
