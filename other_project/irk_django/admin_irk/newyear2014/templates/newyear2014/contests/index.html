@@ -1,0 +1,45 @@
+{% extends 'newyear2014/layout.html' %}
+
+{% load adv_tags staticfiles media_utils str_utils thumbnail paginator_utils date_tags rating_tags gallery_tags comments_tags %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/hash.js' %}"></script>
+    <script type="text/javascript" src="{% static 'newyear2014/js/newyear2014_contests.js' %}"></script>
+{% endblock %}
+
+{% block title %}Конкурсы | {{ block.super }}{% endblock title %}
+
+{% block b-content %}
+    <header class="g-intend b-ny2014-sponsors">
+        <h1 class="g-intend">Спонсоры</h1>
+        <ul class="b-list-j b-ny2014-sponsors-list">
+            {% for object in object_list %}
+                <li>
+                    <a data-anchor="{{ forloop.counter }}" href="{{ object.get_absolute_url }}">
+                        {% thumbnail object.sponsor_image 76x76 as thumb %}
+                        <div class="image"><img src="{{ thumb }}" alt="{{ object.sponsor_title|typograf:'title'|safe }}"></div>
+                        {{ object.sponsor_title|typograf:'title'|safe }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </header>
+    <section class="b-content-cr">
+        <ul class="b-list-v b-ny2014-contest-list">
+            {% for object in object_list %}
+                {% thumbnail object.image 300x1000 as thumb %}
+                <li class="j-anchor-{{ forloop.counter }}">
+                    <a href="{{ object.get_absolute_url }}">
+                        <img src="{{ thumb }}" alt="{{ object.caption_short|typograf:'title'|safe }}" style="width:{{ thumb.width }}px;height:{{ thumb.height }}px;">
+                        <span class="text">{{ object.title|typograf:'title'|safe }}{% if object.is_closed %}<small class="g-closed">закрыт</small>{% endif %}</span>
+                    </a>
+                    <div class="text">{{ object.caption|typograf:"user"|safe }}</div>
+                    {% if object.model == 'photo' %}<div class="photo-icon"></div>{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% include 'newyear2014/base/b-aside-r.html' %}
+{% endblock b-content %}
+

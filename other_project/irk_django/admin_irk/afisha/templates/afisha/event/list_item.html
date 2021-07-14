@@ -1,0 +1,156 @@
+{% load staticfiles media_utils str_utils pytils_dt thumbnail comments_tags utils_tags %}
+
+{% if prism %}
+
+<article class="afisha-article__article afisha-article__article_height {% if event.is_hidden %}g-hidden-material{% endif %}">
+    <header class="afisha-article__header">
+        <a href="{{ event.get_absolute_url }}"
+            class="afisha-article__link {% if metrika_goal %}j-metrika-goal{% endif %}"
+            {% if metrika_goal %}data-metrika-goal="{{ metrika_goal }}"{% endif %}>
+            <figure class="afisha-article__figure afisha-article__figure_height afisha-article__figure_dark">
+                {% if event.gallery.main_image.image %}
+                    {% if request.user_agent.is_gadget %}
+                        {% thumbnail event.gallery.main_image.image 340x210 crop as thumb %}
+                        <img{% if is_lazyload %} class="j-lazy-load" data-original="{{ thumb }}" src="{% static 'img/gag_widget_340x200.gif' %}"
+                            {% else %} src="{{ thumb }}"{% endif %} alt="{{ event.title|typograf }}" style="max-width: 100%; width: 100%;">
+                    {% else %}
+                        {% thumbnail event.gallery.main_image.image 280x190 crop as thumb %}
+                        <img{% if is_lazyload %} class="j-lazy-load" data-original="{{ thumb }}"{% else %} src="{{ thumb }}"{% endif %}
+                                alt="{{ event.title|typograf }}" width="{{ thumb.width }}" height="{{ thumb.height }}">
+                    {% endif %}
+                {% else %}
+                    <h4 class="afisha-article__noimage">
+                        {{ event|typograf }}
+                    </h4>
+                {% endif %}
+            </figure>
+        </a>
+        <div class="afisha-article__elements">
+            {% if event.genre %}
+            <span class="afisha-article__event {% if event.schedule.first.kassy_session %}afisha-article__event_max-width{% endif %}">
+                {{ event.genre|typograf }}
+            </span>
+            {% endif %}
+            {% if event.schedule.first.kassy_session %}
+                {% include 'afisha/snippets/buy_button.html' with session=event.schedule.first metrika='afisha_buy_click' %}
+            {% endif %}
+            {% if event.is_free %}
+                <span class="afisha-article__element afisha-article__element_green">
+                    Бесплатно
+                </span>
+            {% endif %}
+        </div>
+    </header>
+    {% if event.age_rating >= 0 %}
+    <span class="afisha-article__age">
+        {{ event.age_rating }}+
+    </span>
+    {% endif %}
+    <h4 class="afisha-article__title">
+        <a href="{{ event.get_absolute_url }}" class="afisha-article__title-link {% if metrika_goal %}j-metrika-goal{% endif %}">
+            {{ event|typograf }}
+        </a>
+    </h4>
+    <span class="afisha-article__date">
+        {% if announcement.fake_date %}
+            {% if announcement.time != None %}
+                <time datetime="{{ announcement.fake_date|ru_strftime:"%Y-%m-%d %H:%M" }}">
+                    {{ announcement.date|ru_strftime:"%d %B, %a"|capfirst }} {{ announcement.time|time:"H:i" }}
+                </time>
+            {% else %}
+                <time datetime="{{ announcement.date|ru_strftime:"%Y-%m-%d" }}">
+                    {{ announcement.date|ru_strftime:"%d %B, %A"|capfirst }} уточняется
+                </time>
+            {% endif %}
+        {% elif event.schedule.first %}
+            {% if event.schedule.first.time != None %}
+                <time datetime="{{ event.schedule.first.date|ru_strftime:"%Y-%m-%d" }} {{ event.schedule.first.time|time:"H:i" }}">
+                    {{ event.schedule.first.date|ru_strftime:"%d %B, %a"|capfirst }} {{ event.schedule.first.time|time:"H:i" }}
+                </time>
+            {% else %}
+                <time datetime="{{ event.schedule.first.date|ru_strftime:"%Y-%m-%d" }}">{{ event.schedule.first.date|ru_strftime:"%d %B, %a"|capfirst }}</time> уточняется
+            {% endif %}
+        {% else %}
+            уточняется
+        {% endif %}
+    </span>
+    {% if event.comments_cnt %}{% comments_cnt event extra_class='afisha-article__review afisha-article__review_big' new_layout=True %}{% endif %}
+</article>
+
+{% else %}
+
+<article class="afisha-article__article afisha-article__article_height {% if event.is_hidden %}g-hidden-material{% endif %}">
+    <header class="afisha-article__header">
+        <a href="{{ event.get_absolute_url }}"
+            class="afisha-article__link {% if metrika_goal %}j-metrika-goal{% endif %}"
+            {% if metrika_goal %}data-metrika-goal="{{ metrika_goal }}"{% endif %}>
+
+            <figure class="afisha-article__figure afisha-article__figure_height afisha-article__figure_dark">
+                {% if event.gallery.main_image.image %}
+                    {% if request.user_agent.is_gadget %}
+                        {% thumbnail event.gallery.main_image.image 340x210 crop as thumb %}
+                        <img{% if is_lazyload %} class="j-lazy-load" data-original="{{ thumb }}" src="{% static 'img/gag_widget_340x200.gif' %}"
+                            {% else %} src="{{ thumb }}"{% endif %} alt="{{ event.title|typograf }}" style="max-width: 100%; width: 100%;">
+                    {% else %}
+                        {% thumbnail event.gallery.main_image.image 280x190 crop as thumb %}
+                        <img{% if is_lazyload %} class="j-lazy-load" data-original="{{ thumb }}"{% else %} src="{{ thumb }}"{% endif %}
+                                alt="{{ event.title|typograf }}" width="{{ thumb.width }}" height="{{ thumb.height }}">
+                    {% endif %}
+                {% else %}
+                    <span class="b-afisha-event-image-gag card g-{{ event.type.alias }}"></span>
+                {% endif %}
+            </figure>
+        </a>
+        <div class="afisha-article__elements">
+            {% if event.genre %}
+            <span class="afisha-article__event {% if event.schedule.first.kassy_session %}afisha-article__event_max-width{% endif %}">
+                {{ event.genre|typograf }}
+            </span>
+            {% endif %}
+            {% if event.schedule.first.kassy_session %}
+                {% include 'afisha/snippets/buy_button.html' with session=event.schedule.first metrika='afisha_buy_click' %}
+            {% endif %}
+            {% if event.is_free %}
+                <span class="afisha-article__element afisha-article__element_green">
+                    Бесплатно
+                </span>
+            {% endif %}
+        </div>
+    </header>
+    {% if event.age_rating >= 0 %}
+    <span class="afisha-article__age">
+        {{ event.age_rating }}+
+    </span>
+    {% endif %}
+    <h4 class="afisha-article__title">
+        <a href="{{ event.get_absolute_url }}" class="afisha-article__title-link {% if metrika_goal %}j-metrika-goal{% endif %}">
+            {{ event|typograf }}
+        </a>
+    </h4>
+    <span class="afisha-article__date">
+        {% if announcement.fake_date %}
+            {% if announcement.time != None %}
+                <time datetime="{{ announcement.fake_date|ru_strftime:"%Y-%m-%d %H:%M" }}">
+                    {{ announcement.date|ru_strftime:"%d %B, %a"|capfirst }} {{ announcement.time|time:"H:i" }}
+                </time>
+            {% else %}
+                <time datetime="{{ announcement.date|ru_strftime:"%Y-%m-%d" }}">
+                    {{ announcement.date|ru_strftime:"%d %B, %A"|capfirst }} уточняется
+                </time>
+            {% endif %}
+        {% elif event.schedule.first %}
+            {% if event.schedule.first.time != None %}
+                <time datetime="{{ event.schedule.first.date|ru_strftime:"%Y-%m-%d" }} {{ event.schedule.first.time|time:"H:i" }}">
+                    {{ event.schedule.first.date|ru_strftime:"%d %B, %a"|capfirst }} {{ event.schedule.first.time|time:"H:i" }}
+                </time>
+            {% else %}
+                <time datetime="{{ event.schedule.first.date|ru_strftime:"%Y-%m-%d" }}">{{ event.schedule.first.date|ru_strftime:"%d %B, %a"|capfirst }}</time> уточняется
+            {% endif %}
+        {% else %}
+            уточняется
+        {% endif %}
+    </span>
+    {% if event.comments_cnt %}{% comments_cnt event extra_class='afisha-article__review afisha-article__review_big' new_layout=True %}{% endif %}
+</article>
+
+{% endif %}

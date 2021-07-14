@@ -1,0 +1,29 @@
+{# Шаблон старого пагинатора, без ссылок на предыдущую/следующую страницу. Только список номеров страниц #}
+{% if paginator.paginator.num_pages > 1 %}
+<div class="nav-page">
+    Страница:
+    {% if first %}
+        <a href="./?page=1&{{ url_params|default:'' }}">первая</a>
+    {% endif %}
+
+    {% if paginator.has_previous %}
+        <a id="prevPage" href="./?page={{ paginator.previous_page_number }}&amp;{{ url_params|default:'' }}">&laquo;</a>
+    {% endif %}
+
+    {% for page in paginator.page_range %}
+        {% if page == paginator.number %}
+            <span class="curr-page">{{ page }}</span>
+        {% else %}
+            <a href="./?page={{ page }}&amp;{{ url_params|default:'' }}">{{ page }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if paginator.has_next %}
+        <a id="nextPage" href="./?page={{ paginator.next_page_number }}&amp;{{ url_params|default:'' }}">&raquo;</a>
+    {% endif %}
+
+    {% if last %}
+        <a href="./?page={{ paginator.paginator.num_pages }}&amp;{{ url_params|default:'' }}">последняя</a>
+    {% endif %}
+</div>
+{% endif %}

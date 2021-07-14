@@ -1,0 +1,14 @@
+{% extends 'news/flatpage.html' %}
+
+{# Шаблон простой страницы, контент которой не обрабатывается типографом #}
+
+{% load str_utils site_utils %}
+
+{% block b-content-parent %}
+    {% autoescape off %}
+        <article class="b-content b-content-article">
+            <header><h1>{{ flatpage.title|typograf }}</h1></header>
+            <div class="b-content-article-text j-copyright-insert" data-url="http://{% get_site_url 'www' %}{{ flatpage.get_absolute_url }}">{{ flatpage.content }}</div>
+        </article>
+    {% endautoescape %}
+{% endblock %}

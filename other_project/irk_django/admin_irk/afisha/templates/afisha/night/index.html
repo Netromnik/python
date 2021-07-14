@@ -1,0 +1,34 @@
+{% extends "afisha/event/index.html" %}
+
+{% load staticfiles afisha_tags str_utils %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.dropkick.js' %}"></script>
+{% endblock %}
+
+{% block days-items %}
+    <li><span class="g-active">Все</span></li>
+    <li class="j-filter-date"><span data-date="friday">Пятница</span></li>
+    <li class="j-filter-date"><span data-date="saturday">Суббота</span></li>
+    <li class="j-filter-date"><span data-date="sunday">Воскресенье</span></li>
+    <li class="b-calendar-open j-calendar-open">
+        <span><span class="icon-calendar-new"></span></span>
+        <div class="b-calendar">
+            <a href="#" class="b-calendar-close"></a>
+            <article></article>
+        </div>
+    </li>
+{% endblock days-items %}
+
+{% block aside_category %}
+    <select class="g-indent j-filter-guide afisha-filter-group" name="guide_choices" id="id_guide">
+        <option value="{{ guide.id }}" selected="selected">Где угодно</option>
+        {% filter_choices view filters.guide 'choices' %}
+        {% for guide in choices %}
+            <option value="{{ guide.id }}"{% if order_by == "date" %} selected="selected"{% endif %}>{% if guide.title_short %}{{ guide.title_short|typograf }}{% else %}{{ guide.name|typograf }}{% endif %}</option>
+        {% endfor %}
+    </select>
+{% endblock %}
+
+{% block time %}{% endblock %}

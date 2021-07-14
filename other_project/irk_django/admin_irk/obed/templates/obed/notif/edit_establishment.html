@@ -1,0 +1,9 @@
+{% extends "to_moder.html" %}
+
+{% load site_utils pytils_numeral %}
+
+{% block body_letter %}
+    <h3>Отредактирована компания в разделе «Обед»: «{{ establishment }}»</h3>
+    <p><a href="http://{% get_site_url obed domain %}{% url 'obed:establishment:edit' firm_id=establishment.id  %}">Перейти на страницу редактирования</a></p>
+    <p><a href="http://{% get_site_url 'www' %}{% url 'admin:phones_establishmentproxy_change' establishment.id %}">Посмотреть в административной панели</a></p>
+{% endblock %}

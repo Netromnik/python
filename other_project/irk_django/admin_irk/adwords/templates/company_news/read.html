@@ -1,0 +1,57 @@
+{% extends 'news-less/layout_cr.html' %}
+
+{% load news_tags site_utils cache_tags str_utils thumbnail staticfiles media_utils gallery_tags comments_tags site_utils admin_utils adv_tags %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.sticky-kit.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'news/js/lenta.js' %}"></script>
+{% endblock %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'news.instance.meta' vary='object.id' tags='news' %}{% spaceless %}
+        {% include 'share_meta.html' with url=object.get_absolute_url title=object.title description=object.content image=object.gallery.main_image.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block title %}{{ object.title|typograf:"title"|safe }} | Новости компаний{% endblock %}
+
+{% block b-content-class %} b-adwords-news{% endblock %}
+
+{% block container %}
+    <div class="lenta j-container">
+        {% block lenta-material-item %}
+            <div class="lenta-material j-lenta-item">
+                {% block lenta-top-banner-container %}
+                    <div class="lenta-material__top-banner g-desktop">
+                        {% block b-adword-header %}{{ block.super }}{% endblock %}
+                    </div>
+                {% endblock %}
+
+                {% block lenta-rubricator %}
+                    <div class="lenta-material__rubricator">
+                        <header class="b-news-content-header g-margin-bottom-25">
+                            {% include 'news-less/base/search.html' %}
+                            {% news_rubricator obj=object %}
+                        </header>
+                    </div>
+                {% endblock %}
+
+                {% block lenta-material-inner %}
+                <div class="lenta-material__inner">
+                    <div class="material-grid">
+                        <div class="material-grid__item material-grid__item_main j-sticky-wrapper">
+                            {% block lenta-material-content %}
+                                {% render_news_cool object show_date=True under_comments_banner='news' %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+                {% endblock lenta-material-inner %}
+            </div>
+        {%  endblock lenta-material-item %}
+    </div>
+{% endblock %}
+
+

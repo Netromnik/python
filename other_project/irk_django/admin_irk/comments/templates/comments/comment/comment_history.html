@@ -1,0 +1,18 @@
+{% load str_utils pytils_dt %}
+
+<table class="b-table list-comments__history j-comment-history-table">
+    <tbody>
+    <tr class="thead">
+        <td>Дата</td>
+        <td>Действие</td>
+        <td>Пользователь</td>
+    </tr>
+    {% for row in history %}
+        <tr class="{% cycle "g-odd" "g-even" %}">
+            <td>{{ row.created|ru_strftime:"%d %B %Y в %H:%M" }}</td>
+            <td>{{ row.get_action_display }}</td>
+            <td>{{ row.user }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

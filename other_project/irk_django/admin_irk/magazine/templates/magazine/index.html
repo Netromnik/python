@@ -1,0 +1,21 @@
+{% extends 'magazine/layout.html' %}
+
+{% load staticfiles site_utils cache_tags thumbnail str_utils pytils_numeral comments_tags %}
+
+{% block meta %}
+    {% cache 86400 'magazine.instance.meta' vary='magazine.pk' tags='magazine' %}{% spaceless %}
+        {% include 'share_meta.html' with card='summary_large_image' object=magazine image=materials.0.magazine_image url=magazine.get_absolute_url title=magazine.title description=magazine.caption %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.swiper.3.0.5.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.lazyload.1.9.3.js' %}"></script>
+{% endblock js %}
+
+{% block container %}
+    <ul class="magazine-list j-magazine-list">
+        {% include 'magazine/list_item.html' with withInterestinStory=True %}
+    </ul>
+{% endblock container %}

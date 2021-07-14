@@ -1,0 +1,21 @@
+{% extends 'auth/social/details.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Аккаунт закрыт | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; margin: 10px">
+        <img src="{% static 'img/logo_240.png' %}">
+        <h1 class="g-color-gray">Ваш аккаунт закрыт</h1>
+        <p>Когда-то у вас был аккаунт на IRK.ru, но сейчас он закрыт и в него нельзя войти.</p>
+        <p>Возможно, вы сами закрыли учетную запись или произошел какой-то сбой в работе программы.</p>
+        <p>Напишите нам, если хотите снова активировать аккаунт или вам нужно помочь зарегистрировать новый.</p>
+        <form action="{% url 'about:feedback' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="content" value="{{ msg }}">
+                <input type="submit" value="Написать">
+        </form>
+    </div>
+{% endblock %}

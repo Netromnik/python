@@ -1,0 +1,17 @@
+{% load news_tags str_utils date_tags comments_tags thumbnail utils_tags pytils_numeral %}
+
+{% if materials %}
+    {% if article_read_page %}
+        <div class="b-widget-list-bordered b-widget-list-multi b-widget-list-multi-{{ news_list|length }}-{{ materials|length }} orange {% if direction == "horizontal" %}g-content-block{% elif direction == "vertical" %}g-aside-block{% endif %} j-article-aside-float-block g-accelerate j-article-aside-float-similar-materials" data-news-count="{{ news_list|length }}" data-longread-count="{{ materials|length }}">
+    {% else %}
+        <div class="b-widget-list-bordered b-widget-list-multi orange {% if direction == "horizontal" %}g-content-block{% elif direction == "vertical" %}g-aside-block{% endif %}">
+    {% endif %}
+        <ul class="b-widget-list-multi-container g-centered-div">
+            {% for article in materials %}
+                <li class="longread-{{ forloop.counter }}" data-similarity-way="{{ article.way }}">
+                    {% material_card article is_light=True is_wide=True metrika_goal=metrika_goal audit_goal=audit_goal audit_material=audit_material %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

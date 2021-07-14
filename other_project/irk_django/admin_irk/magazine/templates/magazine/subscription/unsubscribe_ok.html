@@ -1,0 +1,13 @@
+{% extends "magazine/layout.html" %}
+
+{% block title %}Вы отписались от журнала | {{ block.super }}{% endblock %}
+
+{% block b-content %}
+    <div class="b-content-article-text">
+        <h1>Вы отписались от журнала</h1>
+
+        <p>На ваш адрес  {{ email }}  больше не будут приходить уведомления о нашем журнале.</p>
+
+        <p><a href="{% url 'home_index' %}" class="b-submit">На главную</a></p>
+    </div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% load adv_tags media_utils staticfiles %}
+
+{% block promo_A %}
+    {% if project %}
+        {% ibanner id=project.branding_top_id as branding_top_custom %}
+        {% if branding_top %}
+            {% include 'snippets/branding_top.html' with branding_top=branding_top_custom %}
+        {% else %}
+            {% ibanner id=576 as branding_top %}
+            {% include 'snippets/branding_top.html' %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block text_widget %}{% ibanner id=302 template='adv/banners/text_widget_layout.html' %}{% endblock %}
+
+{% block meta_adaptive %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+{% endblock %}
+
+{% block style_adaptive %}
+    {% less '/less/compile/adaptive/apps/special.less' media='all' %}
+{% endblock %}
+
+{% block style %}
+    {% include 'special/base/style.html' %}
+{% endblock style %}
+
+{% block js %}
+    {{ block.super }}
+    {% include 'special/base/js.html' %}
+{% endblock js %}
+
+{% block layout-base-class %}{{ block.super }} special{% endblock %}
+
+{% block top_banner %}{% endblock %}
+
+{% block b-adword-header %}{% endblock b-adword-header %}
+
+{% block b-footer-layout-banner %}
+    {% ibanner id=544 as programmatic_footer %}
+    {% if request.user_agent.is_gadget and programmatic_footer %}
+        <div class="g-margin-bottom-20 g-centered-div g-not-desktop">{{ programmatic_footer }}</div>
+    {% endif %}
+{% endblock %}
+
+{% block promo_B %}
+    {% if project %}
+        {% ibanner id=project.branding_bottom_id as branding_footer_custom %}
+    {% endif %}
+    {% if branding_footer %}
+        <div class="b-footer-layout-banner g-overflow g-desktop">{{ branding_footer_custom }}</div>
+    {% else %}
+        {% ibanner id=577 as branding_footer %}
+        {% if branding_footer %}
+            <div class="b-footer-layout-banner g-overflow g-desktop">{{ branding_footer }}</div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

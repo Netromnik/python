@@ -1,0 +1,14 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load str_utils staticfiles media_utils pytils_dt phones_tags tourism_tags adv_tags %}
+{% block title %}Заказать отель | IRK.ru{% endblock %}
+
+{% block content %}
+
+<section class="b-tourism-aviasales b-content-block">
+    <header>
+        <h1 id='aviasales_header'>Заказать отель</h1>
+    </header>
+    <script type="text/javascript">;(function() {document.write(unescape('%3Cdiv id="oaf_iframe_irkru_600x200"%3E%3C/div%3E%3Cscript type="text/javascript" ' + (navigator.userAgent.match(/trident/ig) ? 'defer="defer"' : 'async="async"') + ' src="//ostrovok.ru/partners/affiliate-js/?partner=irkru&layout=600x200"%3E%3C/script%3E'))}) ();</script>
+</section>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends layout %}
+
+{% load adv_tags static staticfiles media_utils str_utils thumbnail paginator_utils share_utils cache_tags news_tags %}
+{% load str_utils utils_tags pytils_dt comments_tags thumbnail %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'project.instance.meta' vary='project.id' tags='project' %}{% spaceless %}
+        {% include 'share_meta.html' with object=project url=project.get_absolute_url title=project.title description=project.description image=project.branding card='summary_large_image' %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block title %}{{ project.title|typograf }} | {{ block.super }}{% endblock %}
+
+{% block style %}
+    {% include 'special/base/style.html' %}
+
+    <link rel="stylesheet" href="{% get_media_prefix %}site/special/buildingtime/css/tilda-grid-3.0.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="{% get_media_prefix %}site/special/buildingtime/css/tilda-blocks-2.12.css?t=202001171642" type="text/css" media="all" />
+    <link rel="stylesheet" href="{% get_media_prefix %}site/special/buildingtime/css/tilda-animation-1.0.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="{% get_media_prefix %}site/special/buildingtime/css/tooltipster.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="{% get_media_prefix %}site/special/buildingtime/css/tilda-slds-1.4.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="{% get_media_prefix %}site/special/buildingtime/css/tilda-zoom-2.0.min.css" type="text/css" media="all" />
+    <style>body{padding-top: 50px}</style>
+{% endblock style %}
+
+{% block js %}
+    {{ block.super }}
+    {% include 'special/base/js.html' %}
+
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/rentafont_webfonts.js"></script>
+    <script>WebFontConfig = { "id": "MTAyNzYyb3JkZXI5MDc1OA==", "fonts": ["2590", "2594", "2592", "2582", "2584"], by_style: 1, by_id: 1 };</script>
+    <!--script src="{% get_media_prefix %}site/special/buildingtime/js/jquery-1.10.2.min.js"></script-->
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/tilda-scripts-2.8.min.js"></script>
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/tilda-blocks-2.7.js?t=202001171642"></script>
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/lazyload-1.3.min.js"></script>
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/tilda-animation-1.0.min.js"></script>
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/jquery.tooltipster.min.js"></script>
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/tilda-slds-1.4.min.js?t=202001171642"></script>
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/hammer.min.js"></script>
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/tilda-zoom-2.0.min.js"></script>
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/tilda-animation-ext-1.0.min.js"></script>
+    <script src="{% get_media_prefix %}site/special/buildingtime/js/tilda-animation-sbs-1.0.min.js"></script>
+    <script>window.dataLayer = window.dataLayer || [];</script>
+    <script>
+        if ((/bot|google|yandex|baidu|bing|msn|duckduckbot|teoma|slurp|crawler|spider|robot|crawling|facebook/i.test(navigator.userAgent)) === false && typeof (sessionStorage) != 'undefined' && sessionStorage.getItem('visited') !== 'y') {
+            var style = document.createElement('style'); style.type = 'text/css'; style.innerHTML = '@media screen and (min-width: 980px) {.t-records {opacity: 0;}.t-records_animated {-webkit-transition: opacity ease-in-out .2s;-moz-transition: opacity ease-in-out .2s;-o-transition: opacity ease-in-out .2s;transition: opacity ease-in-out .2s;}.t-records.t-records_visible {opacity: 1;}}'; document.getElementsByTagName('head')[0].appendChild(style); $(document).ready(function () { $('.t-records').addClass('t-records_animated'); setTimeout(function () { $('.t-records').addClass('t-records_visible'); sessionStorage.setItem('visited', 'y'); }, 400); });
+        }
+    </script>
+{% endblock js %}
+
+{% block layout-base-class %}{{ block.super }} header-flow-locck {% if request.user_agent.is_gadget %}black{% else %}transparent-header{% endif %}{% endblock layout-base-class %}
+
+{% block promo_A %}{% endblock %}
+
+{% block adblock-message %}{% endblock %}
+
+{% block container %}
+
+    {% tildacontent base='%media%/site/special/buildingtime/' %}
+        {% include './body.html' %}
+    {% endtildacontent %}
+
+    {# табы #}
+    <div id="rec133085919" class="r t-rec t-rec_pt_45 t-rec_pb_0"
+        style="padding-top:45px;padding-bottom:0px;background-color:#272531; " data-record-type="395"
+        data-bg-color="#272531">
+        <!-- t395 -->
+        <div class="t395">
+            <div class="t-container">
+                <div class="t395__col t-width t-width_9">
+                    <div class="t395__wrapper t-align_center">
+                        <div class="t395__tab t395__tab_active t395__width_25" data-target-class="all">
+                            <div class="t395__title t-name t-name_xs" style="color:#ffffff;font-weight:400;"
+                                field="title">Все участники</div>
+                        </div>
+                        <div class="t395__tab t395__width_25" data-target-class="dream">
+                            <div class="t395__title t-name t-name_xs" style="color:#ffffff;font-weight:400;"
+                                field="title2">Мечтают о доме<br /></div>
+                        </div>
+                        <div class="t395__tab t395__width_25" data-target-class="built">
+                            <div class="t395__title t-name t-name_xs" style="color:#ffffff;font-weight:400;"
+                                field="title3">Построили дом<br /></div>
+                        </div>
+                        <div class="t395__tab t395__width_25" data-target-class="betonov">
+                            <div class="t395__title t-name t-name_xs" style="color:#ffffff;font-weight:400;"
+                                field="title4">От Фабрики Бетонов</div>
+                        </div>
+                    </div>
+                    <div class="t395__wrapper_mobile">
+                        <div class="t395__firefoxfix"></div>
+                        <select class="t395__select t-name" style="font-family:;">
+                            <option data-target-class="all">Все участники</option>
+                            <option data-target-class="dream">Мечтают о доме</option>
+                            <option data-target-class="built">Построили дом</option>
+                            <option data-target-class="betonov">От Фабрики Бетонов</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style type="text/css">
+            #rec133085919 .t395__tab {
+                background-color: #272531 !important;
+            }
+            #rec133085919 .t395__tab_active {
+                background-color: #c32429 !important;
+                border-color: #222 !important;
+            }
+            #rec133085919 .t395__tab_active:after {
+                background-color: #222 !important;
+            }
+            #rec133085919 .t395__tab_active .t395__title {
+                color: #fff !important;
+                font-weight: 600 !important;
+            }
+            #rec133085919 .t395__tab:first-child {}
+            #rec133085919 .t395__tab:last-child {}
+            #rec133085919 .t395__tab_active:last-child {}
+            #rec133085919 .t395__select {
+                color: #fff !important;
+                background-color: #c32429 !important;
+            }
+            #rec133085919 .t395__wrapper_mobile:after {
+                border-color: #fff transparent transparent transparent;
+            }
+            #rec133085919 .t395__firefoxfix {
+                top: 1px;
+                bottom: 1px;
+                right: 1px;
+                background-color: #c32429 !important;
+            }
+        </style>
+    </div>
+
+    {# кастомная логика табов #}
+    <script>
+        var BetonovSwitcher = function(){
+            var self = this;
+
+            self.desktopClick = function() {
+                var targetClass = $(this).data('targetClass');
+                self.showMaterials(targetClass);
+                self.highlightTab(this);
+            };
+
+            self.mobileClick = function() {
+                var targetClass = $(this).children(":selected").data('targetClass');
+                self.showMaterials(targetClass);
+            };
+
+            self.showMaterials = function(targetClass) {
+                if (targetClass) {
+                    $('.betonov-all').hide();
+                    $('.betonov-'+targetClass).show();
+                }
+            };
+
+            self.highlightTab = function(tabElement) {
+                $('.t395__wrapper [data-target-class]').removeClass('t395__tab_active');
+                $(tabElement).addClass('t395__tab_active');
+            };
+        };
+
+        var betonovSwitcher = new BetonovSwitcher();
+
+        $('.t395__wrapper').on('click', '[data-target-class]', betonovSwitcher.desktopClick);
+        $('.t395__wrapper_mobile').on('click', 'select', betonovSwitcher.mobileClick);
+
+    </script>
+
+    {# материалы #}
+    <div id="rec133085797" class="r t-rec t-rec_pt_45 t-rec_pb_0" style="padding-top:45px;padding-bottom:0px;background-color:#272531; " data-animationappear="off" data-record-type="404" data-bg-color="#272531" data-connect-with-tab="yes">
+        <!-- T404 -->
+        <div class="t404">
+            <div class="t-container">
+            {% for material in materials %}
+                <div class="t404__col t-col t-col_4 t-align_left betonov-all betonov-{{ material.get_postmeta.betonov_contest }}"> <a class="t404__link" href="{{ material.get_absolute_url }}">
+                    <div class="t404__imgbox">
+                        {% thumbnail material.wide_image 620x293 as thumb %}
+                        <div class="t404__img t-bgimg loaded" data-original="{{ thumb }}" style="background-image: url({{thumb}});" src="">
+                        </div>
+                        <div class="t404__separator"></div>
+                    </div>
+                    <div class="t404__textwrapper ">
+                        <div class="t404__uptitle t-uptitle" style="color:#ffffff;text-transform:uppercase;"> <span style="color:#ffffff;text-transform:uppercase;" class="t404__date">{{ material.stamp|ru_strftime:"%d %B %Y г." }}</span></div>
+                        <div class="t404__title t-heading t-heading_xs" style="color: rgb(255, 255, 255); height: 62px;">{{ material.title|typograf }}</div>
+                    </div>
+                </a></div>
+            {% endfor %}
+            </div>
+        </div>
+        <script type="text/javascript">$(document).ready(function () {
+            t404_unifyHeights('133085797'); $('.t404').bind('displayChanged', function () { t404_unifyHeights('133085797'); }); $(window).bind('resize', t_throttle(function () { t404_unifyHeights('133085797'); }, 200)); $(window).load(function () { t404_unifyHeights('133085797'); });
+        });</script>
+    </div>
+
+    {% include './footer.html' %}
+
+{% endblock %}
+

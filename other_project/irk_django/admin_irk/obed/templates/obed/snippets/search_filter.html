@@ -1,0 +1,84 @@
+{% load obedtags %}
+<div class="j-transform-container j-transform-container-filter-desktop">
+    <form class="b-obed-filter-form j-obed-filter-form j-transform" data-transform-target="filter" method="get" action="{% if current_section %}{% url 'obed:section_list' current_section.slug %}{% else %}{% url 'obed:list' %}{% endif %}">
+        <div class="b-obed-filter j-obed-filter">
+            <input class="button b-obed-button-orange g-right g-desktop g-mobile_768 j-metrika-goal" data-metrika-goal="obed_filter_submit" type="submit" value="Подобрать">
+
+            <span class="b-obed-filter-showmore g-right g-mobile_320 g-mobile_480 j-obed-filter-showmore-button j-metrika-goal" data-metrika-goal="obed_filter_advanced" data-target="settings">
+                Поиск, кухни и цены
+                <span class="b-obed-filter-showmore-counter j-obed-filter-showmore-counter"></span>
+            </span>
+
+            <a href="{% url 'obed:list' %}" class="g-hover g-mobile_320 g-mobile_480">Все заведения</a>
+
+            <span class="j-transform-container j-transform-container-time-mobile_768 j-transform-container-time-desktop">
+                <span class="b-obed-filter-button-group b-obed-filter-time g-inline-block j-filter-button-group j-transform" data-transform-target="time">
+                    <ul>
+                        <li>
+                            <label for="{{ form.business_lunch.id_for_label }}" class="{% if form.business_lunch.value %}g-active{% endif %}">{{ form.business_lunch.label }}</label>
+                            {{ form.business_lunch }}
+                        </li>
+                        <li>
+                            <label for="{{ form.dinner.id_for_label }}" class="{% if form.dinner.value %}g-active{% endif %}">{{ form.dinner.label }}</label>
+                            {{ form.dinner }}
+                        </li>
+                        <li>
+                            <label for="{{ form.work_24_hour.id_for_label }}" class="{% if form.work_24_hour.value %}g-active{% endif %}">{{ form.work_24_hour.label }}</label>
+                            {{ form.work_24_hour }}
+                        </li>
+                    </ul>
+                </span>
+            </span>
+
+            <label for="{{ form.bill.id_for_label }}" class="g-margin-left-10 g-margin-right-10 g-desktop">на сумму</label>
+            <span class="j-transform-container j-transform-container-bill-desktop">
+                <span class="b-obed-filter-button-group b-obed-filter-bill g-inline-block j-filter-button-group j-transform" data-transform-target="bill">
+                    {{ form.bill }}
+                </span>
+            </span>
+
+            <span class="b-obed-filter-showmore g-margin-left-10 g-desktop g-mobile_768 j-obed-filter-showmore-button j-metrika-goal" data-metrika-goal="obed_filter_advanced" data-target="settings">
+                кухня и другие критерии
+            </span>
+        </div>
+        <div class="b-obed-filter-layer j-obed-filter-more-container">
+            <div class="b-obed-filter-more j-obed-filter-more" id="obed-filter-more-settings">
+                <div class="j-transform-container j-transform-container-search-mobile_320 j-transform-container-search-mobile_480"></div>
+
+                <div class="j-transform-container j-transform-container-time-mobile_320 j-transform-container-time-mobile_480"></div>
+
+                <h6 class="b-obed-filter-bill-title g-mobile_320 g-mobile_480 g-mobile_768">Сумма</h6>
+                <div class="g-overflow j-transform-container j-transform-container-bill-mobile_320 j-transform-container-bill-mobile_480 j-transform-container-bill-mobile_768"></div>
+
+                {% spaceless %}
+                    <h6>Кухня</h6>
+                    <div class="b-obed-filter-checkbox-list g-overflow">
+                        {{ form.types }}
+                        <span class="g-first-capital g-inline-block g-margin-bottom-25 g-jlink g-color-black g-mobile_480 g-mobile_320 j-obed-filter-toggle" data-toggle-target="{{ form.types.auto_id }}" data-toggle-type="cousins">Любая</span>
+                    </div>
+
+                    <h6>
+                        <span class="g-desktop g-mobile_768">Дополнительно</span>
+                        <span class="g-mobile_480 g-mobile_320">Другие критерии</span>
+                    </h6>
+                    <div class="b-obed-filter-checkbox-list g-overflow">
+                        <ul id="obed_filter_settings">
+                            <li><label>{{ form.wifi }} {{ form.wifi.label }}</label></li>
+                            <li><label>{{ form.children_room }} {{ form.children_room.label }}</label></li>
+                            <li><label>{{ form.banquet_hall }} {{ form.banquet_hall.label }}</label></li>
+                            <li><label>{{ form.open_2_hour }} {{ form.open_2_hour.label }}</label></li>
+                            <li><label>{{ form.dancing }} {{ form.dancing.label }}</label></li>
+                            <li><label>{{ form.live_music }} {{ form.live_music.label }}</label></li>
+                            <li><label>{{ form.entertainment }} {{ form.entertainment.label }}</label></li>
+                            <li><label>{{ form.karaoke }} {{ form.karaoke.label }}</label></li>
+                        </ul>
+                        <span class="g-inline-block g-margin-bottom-25 g-jlink g-color-black g-mobile_480 g-mobile_320 j-obed-filter-toggle" data-toggle-target="obed_filter_settings" data-toggle-type="settings">Все 8 критериев</span>
+                    </div>
+                {% endspaceless %}
+                <span class="g-jlink g-font-size-14 g-desktop j-obed-filter-reset">Очистить все</span>
+                <input class="button b-obed-button-orange g-mobile_320 g-mobile_480 j-metrika-goal" data-metrika-goal="obed_filter_submit" type="submit" value="Подобрать">
+            </div>
+            <ul class="b-obed-labels g-desktop g-mobile_768 j-obed-filter-labels"></ul>
+        </div>
+    </form>
+</div>

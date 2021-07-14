@@ -1,0 +1,10 @@
+{% load adv_tags %}
+
+{% if request.user_agent.is_gadget %}
+    {% adaptive_banner mobile_id=566 template='adv/adaptive_banner_content.html' as adaptive_banner_special_2 %}
+    {% if adaptive_banner_special_2%}
+        <li class="b-banners-adaptive_320x320-container g-margin-bottom-20 g-mobile_320 g-mobile_480">
+            <div class="b-banners-adaptive_320x320 g-height-auto">{{ adaptive_banner_special_2 }}</div>
+        </li>
+    {% endif %}
+{% endif %}

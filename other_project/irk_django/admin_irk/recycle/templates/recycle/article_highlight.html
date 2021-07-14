@@ -1,0 +1,17 @@
+{% load comments_tags thumbnail date_tags utils_tags str_utils staticfiles %}
+
+{% if material.wide_image %}
+    {% thumbnail material.wide_image 500x500 as thumb %}
+{% endif %}
+
+<article class="article-hl">
+    <a class="article-hl__link" href="{{ material.get_absolute_url }}">
+        <div class="article-hl__imgbox _dark">
+            <span role="img" class="article-hl__img _cover" style="{% if thumb %}background-image:url({{ thumb }});{% endif %}"></span>
+        </div>
+        <div class="article-hl__info">
+            <h2 class="article-hl__title">{{ material.title }}</h2>
+            {% comment %} <button class="article-hl__button">Читать</button> {% endcomment %}
+        </div>
+    </a>
+</article>

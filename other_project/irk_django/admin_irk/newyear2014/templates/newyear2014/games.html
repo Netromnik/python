@@ -1,0 +1,18 @@
+{% extends 'newyear2014/layout_cr.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Игры | {{ block.super }}{% endblock title %}
+
+{% block b-content %}
+    <ul class="b-list-l b-ny2014-games-list">
+        <li class="game">
+            <h2><a href="{% url 'newyear2014.views.climber.index' %}">Прыгай, пока молодой <span class="button">Играть!</span></a></h2>
+            <a href="{% url 'newyear2014.views.climber.index' %}"><img src="{% static 'newyear2014/img/games_01.jpg' %}" alt=""/></a>
+        </li>
+        <li class="game">
+            <h2><a href="{% url 'newyear2014.views.puzzle.index' %}">Новостная мозаика <span class="button">Играть!</span></a></h2>
+            <a href="{% url 'newyear2014.views.puzzle.index' %}"><img src="{% static 'newyear2014/img/games_02.jpg' %}" alt=""/></a>
+        </li>
+    </ul>
+{% endblock b-content %}

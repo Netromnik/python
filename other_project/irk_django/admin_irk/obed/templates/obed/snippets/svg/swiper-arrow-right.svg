@@ -1,0 +1,9 @@
+<svg class="{{ className }}" xmlns="http://www.w3.org/2000/svg" width="{{ size|default:'37' }}" height="{{ size|default:'37' }}" viewBox="0 0 {{ size|default:'37' }} {{ size|default:'37' }}">
+    <g fill="none" fill-rule="evenodd" transform="translate(1 1)">
+        <circle cx="17.5" cy="17.5" r="17.5" stroke="{{ color|default:'black' }}"/>
+        <g fill="{{ color|default:'black' }}" transform="translate(13 9)">
+            <rect width="10.476" height="2.019" x="-.298" y="4.215" rx="1.009" transform="rotate(45 4.94 5.224)"/>
+            <rect width="10.476" height="2.019" x="-.298" y="10.944" rx="1.009" transform="scale(1 -1) rotate(45 33.798 0)"/>
+        </g>
+    </g>
+</svg>

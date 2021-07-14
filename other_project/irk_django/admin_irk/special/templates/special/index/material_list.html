@@ -1,0 +1,12 @@
+{% comment %}
+    Список материалов на индексе спецпроекта
+
+    inputs:
+        materials - собственно сам список
+{% endcomment %}
+
+{% load special_tags %}
+
+{% for material in materials %}
+    <li>{% special_material_card material %}</li>
+{% endfor %}

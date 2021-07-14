@@ -1,0 +1,8 @@
+{% extends "letter.html" %}
+
+{% load site_utils str_utils %}
+
+{% block content %}
+    <p>Ваше событие размещено в разделе "Афиша" на IRK.ru</p>
+    <p><a href="https://{% get_site_url www %}{{ event.get_absolute_url }}">{{ event.title|typograf }}</a></p>
+{% endblock %}

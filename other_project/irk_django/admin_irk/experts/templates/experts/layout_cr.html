@@ -1,0 +1,11 @@
+{% extends 'experts/layout.html' %}
+
+{% block b-content %}
+    <article class="b-content-cr g-content-resp">
+        {% block b-content-cr %}{% endblock %}
+    </article>
+
+     <aside class="b-aside-r">
+        {% block b-aside-r %}{% include 'experts/base/b-aside-r.html' %}{% endblock %}
+    </aside>
+{% endblock %}

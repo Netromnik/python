@@ -1,0 +1,39 @@
+{% extends 'newyear2014/layout_cr.html' %}
+
+{% load comments_tags gallery_tags form_tags staticfiles media_utils staticfiles str_utils thumbnail rating_tags %}
+
+{% block title %}{{ object.title|typograf:'title'|safe }} | {{ object.contest|typograf:'title'|safe }} | Конкурсы | {{ block.super }}{% endblock title %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'newyear2014/js/newyear2014_contests.js' %}"></script>
+{% endblock %}
+
+{% block b-content-cr %}
+    <div class="b-content-block b-breadcrumbs">
+        <ul class="b-list-h">
+            <li><a href="{% url 'newyear2014.views.index' %}">2015</a></li>
+            <li><a href="{% url 'newyear2014.views.contests.index' %}">Новогодние конкурсы</a></li>
+            <li><a href="{{ object.contest.get_absolute_url }}">{{ object.contest|typograf:'title'|safe }}</a></li>
+            <li>{{ object.name|typograf:'title'|safe }}</li>
+        </ul>
+    </div>
+    <header class="b-ny2014-contest-participant g-intend">
+        <h2>{{ object.contest|typograf:'title'|safe }}</h2>
+    </header>
+    <article class="b-ny2014-contest-participant">
+        <h1>{{ object.title|typograf:'title'|safe }}</h1>
+        {{ object.content|typograf:'user'|safe }}
+        <h3 class="g-color-gray g-intend">{{ object.name|typograf:'title'|safe }}</h3>
+        <div class="b-ny2014-contest-participant-nav">
+            <a class="g-prev" href="{{ previous.get_absolute_url }}">предыдущий участник</a>
+            {% if object.contest.can_rate %}
+                {% rating object 'newyear2014/contests/widgets/vote_small.html' %}
+            {% else %}
+                {% rating object 'newyear2014/contests/widgets/vote_small.html' closed %}
+            {% endif %}
+            <a class="g-next" href="{{ next.get_absolute_url }}">следующий участник</a>
+        </div>
+    </article>
+    {% comments object %}
+{% endblock b-content-cr %}

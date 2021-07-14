@@ -1,0 +1,72 @@
+{% extends 'contests/layout_cr.html' %}
+
+{% load gallery_tags form_tags staticfiles media_utils str_utils %}
+
+{% block title %}Добавление участника | {{ block.super }}{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.extend.js' %}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#b-contests-participant-form').validate({
+                rules: {
+                    description: {
+                        required: true
+                    },
+                    full_name: {
+                        required: true
+                    },
+                    phone: {
+                        required: true
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    var attr = element.attr('name'),
+                            box = $('[name=' + attr + ']').parent();
+
+                    if (box.find('.g-color-red').length > 0) {
+                        box.find('.g-color-red').text(error.html());
+                    } else {
+                        box.append('<small class="g-color-red">' + error.html() + '</small>');
+                    }
+                },
+                success: function (label) {
+
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block b-content-cr %}
+    <div class="g-margin-bottom-30">
+        <a class="g-color-black g-font-bold g-font-size-16" href="{{ contest.get_absolute_url }}"><span class="b-contests-arrow-left"></span>&nbsp;{{ contest.title|typograf }}</a>
+    </div>
+
+    <h1 class="b-contests-title-h1">Принять участие в конкурсе</h1>
+
+    <form class="b-contests-participant-form" id="b-contests-participant-form" method="POST" enctype="multipart/form-data">{% csrf_token %}
+        <ul class="b-contests-participant-form-list">
+            <li>
+                <h3 class="b-contests-participant-form-tag-name">Ответы на вопросы: <small class="g-color-red">*</small></h3>
+                {{ form.description }}
+            </li>
+            <li>
+                <h3 class="b-contests-participant-form-tag-name">{{ form.full_name.label_tag }} <small class="g-color-red">*</small></h3>
+                {{ form.full_name }}
+            </li>
+            <li>
+                <h3 class="b-contests-participant-form-tag-name">{{ form.phone.label_tag }} <small class="g-color-red">*</small></h3>
+                {{ form.phone }}
+                {{ form.phone.errors }}
+                <div class="g-color-gray g-font-size-12">Телефон не будет опубликован, мы свяжемся с вами, чтобы выдать приз</div>
+            </li>
+            <li>
+                <button class="b-contests-button-orange small" type="submit">Отправить</button>
+            </li>
+        </ul>
+    </form>
+
+{% endblock %}

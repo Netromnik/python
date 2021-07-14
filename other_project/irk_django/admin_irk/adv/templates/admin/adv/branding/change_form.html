@@ -1,0 +1,37 @@
+{% extends 'admin/change_form.html' %}
+{% load i18n %}
+{% block object-tools %}
+	{{ block.super }}
+
+	<script type="text/javascript">
+	    (function($) {
+            $(function() {
+                $('#duplicate_link').on('click', function(e) {
+                    e.preventDefault();
+                    var siteId = $('#id_site').find(":selected").val();
+                    if ($.isNumeric(siteId) && siteId != {{ original.site.pk }}) {
+                        window.location = $(this).attr('href') + siteId;
+                    }
+                    else{
+                        alert('Выберите раздел, не привязанный к текущему брендированию')
+                    }
+                });
+            });
+	    })(django.jQuery);
+	</script>
+
+ 	{% if change %}{% if not is_popup %}
+ 	  <ul class="object-tools"><li><a href="history/" class="historylink">{% trans "History" %}</a></li>
+ 	  {% if has_absolute_url %}<li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+ 	  {% if object_id  %}<li><a href="{% url 'admin:adv_branding_duplicate' object_id %}" id='duplicate_link' class="historylink">Дублировать</a></li>{% endif %}
+ 	  </ul>
+ 	{% endif %}{% endif %}
+
+	<div style="clear:both;margin-top:10px;">
+		<h4>Требования к изображениям:</h4>
+		<ul>
+			<li>Верхнее: 1920×250 пикселей</li>
+			<li>Нижнее: 1920×130 пикселей</li>
+		</ul>
+	</div>
+{% endblock %}

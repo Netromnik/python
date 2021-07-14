@@ -1,0 +1,9 @@
+{% load adv_tags %}
+
+{% adaptive_banner mobile_id=529 template='adv/adaptive_banner_content.html' as adaptive_banner_320_2 %}
+{% if adaptive_banner_320_2 %}
+    <div class="b-banners-adaptive_300x400-container g-relative g-hide j-banners-adaptive-article j-irk-close-adaptive_banner g-margin-bottom-20 g-mobile_320 g-mobile_480 g-mobile_768">
+        <span class="b-banners-adaptive_300x400-close j-irk-close" data-close-target="adaptive_banner"></span>
+        <div class="b-banners-adaptive_300x400">{{ adaptive_banner_320_2 }}</div>
+    </div>
+{% endif %}

@@ -1,0 +1,11 @@
+{% for event in object_list %}
+    {% if forloop.counter == 2 or forloop.counter == 6 %}
+        <div class="grid__item grid__item_x2">
+            {% include 'irkutsk360/card_afisha.html' %}
+        </div>
+    {% else %}
+        <div class="grid__item">
+            {% include 'irkutsk360/card_afisha.html' %}
+        </div>
+    {% endif %}
+{% endfor %}

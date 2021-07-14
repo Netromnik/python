@@ -1,0 +1,110 @@
+{% extends 'newyear2014/layout.html' %}
+{% load staticfiles adv_tags newyear2014_tags media_utils %}
+
+{% block title %}Прыгай, пока молодой | {{ block.super }}{% endblock title %}
+
+{% block style %}
+    {{ block.super }}
+    {% less '/less/compile/newyear/climber.less' %}
+{% endblock style %}
+
+{% block b-content-parent %}
+    <section class="b-content g-ny2014-menu g-noborder">
+        {% main_menu request.path %}
+        {% ibanner ID=408 as banner1 %}
+        {% if banner1 %}
+            <div class="g-intend">{{ banner1 }}</div>{% endif %}
+
+        {% include 'newyear2014/base/browsers.html' %}
+        <section class="b-ny2014-game climber g-intend">
+
+            <div class="b-ny2014-game-climber container">
+
+                <canvas id="canvas">
+                    <p>К сожалению, данная игра не может быть запущена, так как ваш браузер не поддерживает технологию
+                        &lt;canvas&gt;
+                        Обновите браузер и попробуйте еще раз.</p>
+                </canvas>
+
+                <div id="mainMenu">
+                    <div id="logo"><img src="{% static 'newyear2014/img/climber_logo.png' %}"></div><a class="button" href="javascript:init()">Играть</a>
+                </div>
+
+                <div id="gameOverMenu">
+                    <h1>Прыгай, пока молодой!</h1>
+                    <h3 id="go_score">…но вы успели набрать 0 очков</h3>
+
+                    <a class="button" href="javascript:reset()">Еще раз!</a>
+                </div>
+
+                <!-- Preloading image ;)-->
+                <img id="sprite" src="{% static 'newyear2014/img/climber_sprites.png' %}"/>
+
+                <div id="scoreBoard">
+                    <p id="score">0</p>
+                </div>
+
+            </div>
+        </section>
+        <section class="b-social g-intend">
+            <div class="share" id="social-buttons">
+                <div class="share-twitter">
+                    <a href="http://twitter.com/share?url=http%3A%2F%2Fwww.irk.ru/2014/climber/%3Futm_source%3Dtwitter%26utm_medium%3Dmicroblog%26utm_campaign%3Dtwitter1&amp;text=Прыгай%20пока%20молодой&amp;related=tvoyirkutsk" class="twitter-share-button">Tweet</a>
+                </div>
+                <div class="share-vkontakte"></div>
+                <div class="share-facebook">
+                    <div id="fb-root"></div>
+                    <div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-action="recommend" data-href="{{ request.scheme }}://{% get_site_url www %}/2014/climber/?utm_source=facebook&utm_medium=socialnetwork"></div>
+                </div>
+                <div id="ok_shareWidget" class="share-odnoklassniki"></div>
+            </div>
+            <script type="text/javascript">
+                var NAVIGATION = [32, 37, 38, 39, 40];
+                // запрещает скроллл при клике на стрелки
+                document.body.addEventListener("keydown", function(event) {
+                    if (-1 != NAVIGATION.indexOf(event.keyCode))
+                        event.preventDefault();
+                })
+                yepnope([
+                    {load: 'http://platform.twitter.com/widgets.js'},
+                    {load: 'http://connect.facebook.net/ru_RU/all.js#xfbml=1'},
+                    {
+                        load: 'http://vkontakte.ru/js/api/share.js',
+                        complete: function() {
+                            try {
+                                $('#social-buttons .share-vkontakte').append(
+                                        VK.Share.button({
+                                            type: 'round',
+                                            text: 'Сохранить',
+                                            url: '{{ request.scheme }}://{% get_site_url www %}/2014/climber/?utm_source=vk&utm_medium=socialnetwork&utm_campaign=vk1',
+                                            title: 'Прыгай, пока молодой',
+                                            noparse: true
+                                        })
+                                );
+                            } catch (e) {}
+                        }
+                    },
+                    {
+                        load:
+                                !function (d, id, did, st) {
+                                    var js = d.createElement("script");
+                                    js.src = "http://connect.ok.ru/connect.js";
+                                    js.onload = js.onreadystatechange = function () {
+                                        if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
+                                            if (!this.executed) {
+                                                this.executed = true;
+                                                setTimeout(function () {
+                                                    OK.CONNECT.insertShareWidget(id,did,st);
+                                                }, 0);
+                                            }
+                                        }};
+                                    d.documentElement.appendChild(js);
+                                }(document,"ok_shareWidget","http://irk.ru/2014/climber/","{width:145,height:30,st:'rounded',sz:20,ck:1}")
+                    }
+                ]);
+            </script>
+        </section>
+    </section>
+    <script type="text/javascript" src="{% static 'newyear2014/js/newyear2014_climber.js' %}"></script>
+
+{% endblock b-content-parent %}

@@ -1,0 +1,33 @@
+{% load str_utils comments_tags thumbnail date_tags %}
+{% comment %}
+    transform_target - для адаптивных переносов на странице новостей
+{% endcomment %}
+{% if newyear2019_news %}
+    <section class="b-widget-list-bordered j-show-main-container g-aside-block g-indent{% if transform_target %} j-transform" data-transform-target="{{ transform_target }}{% endif %}">
+        <header class="b-widget-list-bordered-header">
+            <h3>Новогодние новости</h3>
+        </header>
+        <ul class="b-list-v b-widget-list-bordered-container">
+            {% for entry in newyear2019_news %}
+                <li class="b-home-news g-bordered{% if forloop.last %} g-last{% endif %}">
+                    <h4 class="g-indent-small g-font-size-16 g-font-serif">
+                        <a class="g-color-black visited" href="{{ entry.get_absolute_url }}">{{ entry|typograf }}</a>
+                    </h4>
+                    {% if entry.has_video %}
+                        <span class="icon-inline-svg video"></span>
+                    {% endif %}
+                    {% if entry.has_audio %}
+                        <span class="icon-inline-svg icon-inline-svg-audio g-margin-right-5"></span>
+                    {% endif %}
+                    {% if entry.published_time %}
+                        <time class="g-color-gray" datetime="{{ entry.stamp|date:"Y-m-d" }} {{ entry.published_time|date:"H:i" }}">
+                            {% if entry.stamp < date %}{{ entry.stamp|dates:"%d.%m|%d.%m.%Y" }} {% endif %}{{ entry.published_time|date:"H:i" }}</time>
+                    {% else %}
+                        <time class="g-color-gray">{{ entry.stamp|dates:"%d.%m|%d.%m.%Y" }}</time>
+                    {% endif %}
+                    {% comments_cnt entry new_layout=True %}
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endif %}

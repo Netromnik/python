@@ -1,0 +1,35 @@
+{% extends "obed/layout.html" %}
+
+{% load form_tags staticfiles media_utils %}
+
+{% block title %}Добавление участника | {{ block.super }}{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    {% less '/less/compile/apps/contests.less' %}
+{% endblock style %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/add_odd.js' %}"></script>
+{% endblock %}
+
+{% block b-content-parent %}
+    <h1>Принять участие в конкурсе</h1>
+    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+        <table id="tableNewView">
+
+            {% tr_field_contests form.description 'description' 'ответы' %}
+
+            <tr>
+                <th></th>
+                <td>
+                    <button class="b-button" type="submit">Отправить</button>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+{% endblock %}

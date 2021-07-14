@@ -1,0 +1,46 @@
+{% comment %}
+    Фотореп на индексе спецпроекта
+
+    inputs:
+        material - материал
+{% endcomment %}
+
+{% load str_utils utils_tags pytils_dt comments_tags thumbnail %}
+
+<article class="b-special-material photos">
+    <header>
+        <a href="{{ material.get_absolute_url }}" class="b-special-material-title-link">
+            <figure class="b-special-material-poster">
+                {% thumbnail material.wide_image 620x293 as thumb %}
+                <img src="{{ thumb }}" alt="{{ material.caption_short|typograf }}" width="620px" height="293px">
+                <span class="b-special-material-photos-count g-not-desktop">
+                    {{ material.gallery.main_gallery_pictures|length }}
+                </span>
+            </figure>
+            <h2 class="b-special-material-title">{{ material.title|typograf }}</h2>
+        </a>
+        <h3 class="b-special-material-subtitle g-desktop">{{ material.label }}</h3>
+    </header>
+
+    <div class="g-color-gray b-special-material-summary">
+        <time datetime="{{ material.stamp|ru_strftime:"%Y-%m-%d %H:%M" }}">
+            {{ material.stamp|ru_strftime:"%d %B %Y г." }}
+        </time>
+        {% comments_cnt material new_layout=True %}
+    </div>
+
+    <ul class="b-list-l b-special-material-photos g-desktop">
+        {% for picture in material.gallery.main_gallery_pictures|slice:":6" %}
+            <li>
+                <a href="{{ material.get_absolute_url }}#event={{ picture.id }}">
+                    {% thumbnail picture.image 98x75 crop=True as thumb %}
+                    <img src="{{ thumb }}" width="98px" height="75px">
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if request.user_agent.is_gadget %}
+        <a href="{{ material.get_absolute_url }}" class="b-special-material-link g-mobile_320"></a>
+    {% endif %}
+</article>

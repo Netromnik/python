@@ -1,0 +1,19 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load game_tags str_utils staticfiles media_utils pytils_dt phones_tags tourism_tags adv_tags %}
+
+{% block title %}Онлайн табло аэропорта | {{ block.super }}{% endblock %}
+
+{# удалить этот блок после игры #}
+{% block game2020 %}
+    {% treasure 'airport' %}
+{% endblock %}
+
+{% block content %}
+    <header class="b-content-block g-title">
+        <h1>Онлайн табло аэропорта</h1>
+    </header>
+
+    <iframe width="700" height="1000" frameborder="0" style="overflow: hidden; border: 0; -moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5); -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);" src="{{ request.scheme }}://rasp.yandex.ru/informers/station/9600174/?size=25&amp;color=7&amp;type=tablo"></iframe>
+
+{% endblock %}

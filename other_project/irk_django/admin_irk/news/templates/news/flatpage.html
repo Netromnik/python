@@ -1,0 +1,18 @@
+{% extends 'news-less/layout.html' %}
+
+{% load str_utils site_utils %}
+
+{% block title %}{{ flatpage.title|typograf }} | {{ block.super }}{% endblock %}
+
+{% block promo_A %}{% endblock %}
+
+{% block b-adword-header %}{% endblock b-adword-header %}
+
+{% block b-content-parent %}
+    <article class="b-content b-content-article">
+        <header><h1>{{ flatpage.title|typograf }}</h1></header>
+        <div class="b-content-article-text j-copyright-insert" data-url="http://{% get_site_url 'www' %}{{ flatpage.get_absolute_url }}">{{ flatpage.content|typograf:"admin" }}</div>
+    </article>
+{% endblock b-content-parent %}
+
+{% block promo_B %}{% endblock %}

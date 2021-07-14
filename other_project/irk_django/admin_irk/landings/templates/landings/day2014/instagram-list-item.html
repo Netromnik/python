@@ -1,0 +1,12 @@
+{% spaceless %}
+<li id="{{ forloop.counter }}" data-id="{{ image.id }}">
+    <a href="{{ image.data.link }}">
+        <figure>
+            <img src="{{ image.data.images.standard_resolution.url }}" alt="" style="width: 510px; height: 510px;"/>
+            <figcaption>
+                @{{ image.data.user.username }}
+            </figcaption>
+        </figure>
+    </a>
+</li>
+{% endspaceless %}

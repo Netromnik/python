@@ -1,0 +1,54 @@
+{% extends 'obed/layout.html' %}
+
+{% load staticfiles obedtags pytils_numeral %}
+
+{% block title %}Байкальский гастрономический фестиваль | {{ block.super }}{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/lib/nouislider.js' %}"></script>
+    {{ block.super }}
+{% endblock %}
+
+{% block adblock-message %}{% endblock %}
+{% block obed-search-filter %}{% endblock %}
+{% block b-container-first %}
+    <div class="barofest_header">
+        <img src="{% static 'obed/img/barofest_logo.svg' %}" alt="Байкальский Гастрономический Фестиваль" class="barofest_logo" width="305" height="110" />
+        <p class="barofest_caption">До 30 апреля рестораны Иркутска предлагают своим гостям сеты на тему «Сибирская Кухня». Набор из трех-четырех блюд в любом заведении обойдется всего в 990 рублей.</p>
+    </div>
+{% endblock b-container-first %}
+
+{% block b-container-second %}
+    {% if main_establishments %}
+        <section class="b-obed-corporatives-container type-barofest g-indent{% if not see_also_establishments %} no-also-establishments{% endif %}">
+            <div class="b-obed-corporatives">
+                <ul class="b-obed-corporatives-inlist">
+                    {% for establishment in main_establishments %}
+                        <li class="b-obed-corporatives-inlist-item">
+                            {% include 'obed/establishment/list_item.html' with tab='barofest' %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}
+
+{% block b-container-third %}
+    {% if see_also_establishments %}
+    <div class="b-container no-padding-top">
+        <article class="b-content">
+            <div class="b-obed-establishment-toolbar">
+                <div class="g-left"><b>Смотрите также:</b></div>
+            </div>
+            <ul class="b-obed-establishment-list">
+                {% for establishment in see_also_establishments %}
+                    <li>
+                        {% include 'obed/establishment/list_item.html' %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </article>
+    </div>
+    {% endif %}
+{% endblock %}

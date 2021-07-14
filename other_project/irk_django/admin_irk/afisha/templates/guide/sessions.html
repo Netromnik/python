@@ -1,0 +1,30 @@
+{% load str_utils thumbnail share_utils afisha_tags pytils_dt %}
+{% for category, events in schedule %}
+            {% for event, sessions_info in events %}
+            <tr>
+                <td class="name"><a href="{{ event.get_absolute_url }}">{{ event|typograf }}</a></td>
+                <td class="date">
+                    <time>{{ category|ru_strftime:"%a, %d %B"|capfirst }}</time>
+                </td>
+                <td class="time">
+                    {% with sessions_info.sessions as sessions %}
+                        <ul>
+                            {% for session in sessions %}
+                            <li>
+                                <time>{{ session.time|time:"H:i" }}</time>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% endwith %}
+                </td>
+                <td class="hall">
+                    {% if sessions_info.hall %}
+                        {{ sessions_info.hall }}
+                    {% endif %}
+                </td>
+                <td class="price">
+                    {{ sessions_info.price|typograf:'admin'|safe }}
+                </td>
+            </tr>
+            {% endfor %}
+{% endfor %}

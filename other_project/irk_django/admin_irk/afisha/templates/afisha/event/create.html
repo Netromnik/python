@@ -1,0 +1,588 @@
+{% extends "afisha/layout.html" %}
+
+{% load game_tags gallery_tags staticfiles media_utils form_tags %}
+
+{% block title %}Добавление концертов, вечеринок, выставок в Афишу Иркутска {% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static "js/lib/jquery-ui-1.8.js" %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.extend.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.mask.js' %}"></script>
+    <script>
+        $(function () {
+            $('.j-calendar').datepicker({dateFormat: 'dd.mm.yy', firstDay: 1});
+            $('.j-date-input').mask('00.00.0000');
+            $('.j-time-input').mask('00:00');
+
+            // Валидация формы
+            $('#addevent-form').validate({
+                rules: {
+                    type: {
+                        required: true
+                    },
+                    title: {
+                        required: true,
+                        minlength: 3
+                    },
+                    place: {
+                        required: true,
+                        minlength: 4
+                    },
+                    'gallerypicture_set-0-picture_0': {
+                        required: false,
+                        file: false
+                    },
+                    'form-0-date': {
+                        required: true,
+                        rexp: 'date'
+                    },
+                    'form-0-time': {
+                        required: true,
+                        rexp: 'time'
+                    },
+                    organizer_email: {
+                        required: true,
+                        email: true
+                    },
+                    'wide_image': {
+                        required: false,
+                        file: false
+                    },
+                    content: {
+                        required: true
+                    }
+                },
+                messages: {
+                    type: {
+                        select: 'Выберите тип события'
+                    },
+                    'form-0-date': {
+                        required: 'Не заполнено',
+                        rexp: 'Введите дату корректно'
+                    },
+                    'form-0-time': {
+                        required: 'Не заполнено',
+                        rexp: 'Введите время корректно'
+                    },
+                    title: {
+                        minlength: 'Введите не меньше 3х символов'
+                    },
+                    place: {
+                        minlength: 'Введите не меньше 4х символов'
+                    },
+                    organizer_email: {
+                        email: 'Некорректно введен e-mail'
+                    }
+                }
+            });
+
+            var $eventPay = $('.j-event-pay');
+            // изменение платного/бесплатного события
+            $('.j-event-radio').on('change', function() {
+                if ($(this).val() === 'true') {
+                    $eventPay.slideDown();
+                    $('.j-organizer-email').text('E-mail, на него придет ссылка для оплаты*');
+                    $('.j-status-text').text('будет отправлена ссылка на оплату.');
+                    $('.j-adword').slideDown();
+
+                    calculatePrice();
+                } else {
+                    $eventPay.slideUp();
+                    $('.j-organizer-email').text('E-mail, на который придет уведомление о статусе размещения*');
+                    $('.j-status-text').text('придет уведомление о статусе размещения.');
+                    $('.j-adword').slideUp();
+                }
+            });
+
+            // добавление даты
+            var dateCounter = 1;
+            var dateCounterMax = 10;
+
+            $('.j-date-add').on('click', function(e) {
+                e.preventDefault();
+
+                if(dateCounter < dateCounterMax) {
+                    // клонируем блок с первой датой
+                    var dateTemplate = $('.j-date-default').clone();
+
+                    // удаляем сообщения об ошибках, если они есть
+                    var dateInput = dateTemplate.find('.j-date-input');
+                    dateInput.removeClass('error');
+                    dateInput.next('.error').remove();
+
+                    var timeInput = dateTemplate.find('.j-time-input');
+                    timeInput.removeClass('error');
+                    timeInput.next('.error').remove();
+
+                    dateTemplate
+                        .removeClass('j-date-default')
+                        .attr('data-date', dateCounter);
+
+                    // изменяем id в куске кода на нужный
+                    var dateHtml = dateTemplate.html();
+                    dateHtml = dateHtml.replace(/-([0-9]+)-/g, '-' + dateCounter + '-');
+                    // удаляем класс датапикера, чтобы инициализировать его заново
+                    dateHtml = dateHtml.replace("hasDatepicker", "");
+                    dateTemplate.html(dateHtml);
+
+                    // ссылка для удаления блока с датой
+                    var deleteLink = $('<span>', {
+                        text: '',
+                        class: 'delete-date',
+                        on: {
+                            click: function(e){
+                                e.preventDefault();
+                                $(this).closest('.j-date').remove();
+                                dateCounter--;
+
+                                // обновляем кол-во полей даты
+                                $('#id_form-TOTAL_FORMS').val(dateCounter);
+                                calculatePrice();
+                            }
+                        }
+                    });
+
+                    dateTemplate.append(deleteLink);
+                    dateTemplate.appendTo('.j-dates');
+
+                    $('.j-calendar').datepicker({dateFormat: 'dd.mm.yy', firstDay: 1});
+
+                    dateCounter++;
+                    // обновляем кол-во полей даты
+                    $('#id_form-TOTAL_FORMS').val(dateCounter);
+                    //пересчитываем цену
+                    calculatePrice();
+                }
+
+            });
+
+            // изменения полей со слайдером
+            $('.j-slider').on('change input', function() {
+                calculatePrice();
+            });
+
+            // очистить данные для слайдера
+            $('.j-slider-clear-link').on('click', function(e) {
+                e.preventDefault();
+
+                $('.j-slider-in').val('');
+                $('.j-slider-out').val('');
+                calculatePrice();
+            });
+
+            // проверяем заполненность полей для слайдера
+            function sliderCheck() {
+                var $dateSliderIn  = $('.j-slider-in');
+                var $dateSliderOut = $('.j-slider-out');
+                var dateSliderInValue  = $dateSliderIn.val();
+                var dateSliderOutValue = $dateSliderOut.val();
+                var daysCount = 0;
+
+                if (dateSliderInValue.length || dateSliderOutValue.length) {
+                    $('.j-slider-clear').slideDown();
+                } else {
+                    $('.j-slider-clear').slideUp();
+                }
+
+                // проверка даты чтобы избежать NaN
+                if (validate_date(dateSliderInValue)) {
+                    // если дата "с" заполнена, подставляем автоматически такую же дату в "по"
+                    if (dateSliderOutValue === '' && !$dateSliderOut.is(":focus")) {
+                        $dateSliderOut.val(dateSliderInValue);
+                        dateSliderOutValue = dateSliderInValue;
+                    }
+                } else {
+                    if (dateSliderInValue.length === 10) {
+                        $dateSliderIn.val('');
+                        $('.j-slider-clear').slideUp();
+                        return false;
+                    }
+                }
+
+                if (validate_date(dateSliderOutValue)) {
+                    // если дата "по" заполнена, подставляем автоматически такую же дату в "с"
+                    if (dateSliderInValue === '' && !$dateSliderIn.is(":focus")) {
+                        $dateSliderIn.val(dateSliderOutValue);
+                        dateSliderInValue = dateSliderOutValue;
+                    }
+                } else {
+                    if (dateSliderOutValue.length === 10) {
+                        $dateSliderOut.val('');
+                        $('.j-slider-clear').slideUp();
+                        return false;
+                    }
+                }
+
+                if (validate_date(dateSliderInValue) && validate_date(dateSliderOutValue)) {
+                    //преобразуем строку в дату для дальнейшего преобразования в миллисекунды
+
+                    // дата начала показа
+                    var dateIn = dateConvert(dateSliderInValue);
+                    // дата конца показа
+                    var dateOut = dateConvert(dateSliderOutValue);
+
+                    // считаем кол-во суток
+                    daysCount = ((dateOut - dateIn) / 1000) / 86400; // 86400 секунд в сутках
+
+                    if (daysCount < 0) {
+                        daysCount = 1;
+                        $dateSliderOut.val(dateSliderInValue);
+                    } else if (daysCount == 0){
+                        daysCount = 1;
+                        $('.j-slider-image').addClass('active');
+                    } else if (daysCount >= 1){
+                        daysCount += 1;
+                        $('.j-slider-image').addClass('active');
+                    }
+                } else {
+                    $('.j-slider-image').removeClass('active');
+
+                }
+
+                return daysCount;
+            }
+
+            // валидация даты
+            function validate_date(value) {
+                if (value.length === 10) {
+                    var arrD = value.split(".");
+                  arrD[1] -= 1;
+                  var d = new Date(arrD[2], arrD[1], arrD[0]);
+                  if ((d.getFullYear() == arrD[2]) && (d.getMonth() == arrD[1]) && (d.getDate() == arrD[0])) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                }
+            }
+
+            // преобразование даты в миллисекунды
+            function dateConvert(dateValue) {
+                var dateValue = dateValue.split('.');
+                dateValue = dateValue[2] + '-' + dateValue[1] + '-' + dateValue[0]; //0000-00-00
+                // преобразуем в миллисекунды
+                dateValue = Date.parse(dateValue);
+
+                return dateValue;
+            }
+
+            // считаем цену
+            function calculatePrice() {
+                var $price = $('.j-price');
+                // кол-во дней
+                var dateCount = + $('#id_form-TOTAL_FORMS').val();
+                // цена за 1 день
+                var pricePerDay = + {{ prices.commercial_event }};
+                // цена за 1 день в слайдере
+                var priceSliderPerDay = + {{ prices.commercial_event_carousel }};
+
+                if ($('.j-event-radio-commercial').prop('checked')) {
+                    var daysSumm = dateCount * pricePerDay;
+                    var daysCount = sliderCheck();
+
+                    $price.text(daysSumm + daysCount * priceSliderPerDay);
+                }
+            }
+
+            // отмена отправки формы при нажатии Enter
+            $('#addevent-form').keydown(function(e){
+                if (e.keyCode === 13 && e.target.id != 'id_content') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // спойлер
+            $('.j-spoiler-title').click(function(e){
+                e.preventDefault();
+
+                var $this = $(this).parent();
+                var $titleTag = $this.find('.j-spoiler-title');
+                var closeTitleText = $this.data('closeTitle');
+                var oldTitleText = $this.data('title');
+                var $content = $this.find('.j-spoiler-content');
+
+                $content.slideToggle(function() {
+                    if ($this.hasClass('active')) {
+                        $titleTag.text(oldTitleText);
+                        $this.removeClass('active');
+                    } else {
+                        $titleTag.text(closeTitleText);
+                        $this.addClass('active');
+                    }
+                });
+            });
+
+            $('.j-oferta-checkbox').change(function () {
+                if ($(this).is(":checked")) {
+                    $('.j-form-submit').removeAttr('disabled');
+                } else {
+                    $('.j-form-submit').attr('disabled', 'disabled');
+                }
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block container %}<div class="b-container-padding"><div class="g-overflow">{{ block.super }}</div></div>{% endblock %}
+
+{# удалить этот блок после игры #}
+{% block game2020 %}
+    {% treasure 'afisha_create' %}
+{% endblock %}
+
+{% block content %}
+
+    <form class="addevent" id="addevent-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ period_formset.management_form }}
+        <div class="addevent__radio">
+
+            <label class="addevent__label" for="id_is_commercial">
+                <input class="j-event-radio j-event-radio-commercial" type="radio" id="id_is_commercial" name="is_commercial" value="true" checked="checked" />
+                <span class="addevent__label-text addevent__label-text_left">
+                    Коммерческое событие
+                </span>
+            </label>
+
+            <label class="addevent__label" for="id_is_nonecommercial">
+                <input class="j-event-radio" type="radio" id="id_is_nonecommercial" name="is_commercial" value="false" />
+                <span class="addevent__label-text addevent__label-text_right">
+                    Бесплатное размещение
+                </span>
+            </label>
+
+        </div>
+
+        <div class="addevent__description">
+            <p class="bold">
+                События, организуемые с целью продвижения компаний или их услуг,
+                а также мастер-классы размещаются платно. Стоимость - {{ prices.commercial_event }} ₽ место.
+            </p>
+            <p class="j-adword">
+                Пожалуйста, ознакомьтесь с <a href="/about/condition/" target="_blank">требованиями к рекламе</a>.
+            </p>
+            <p>
+                После проверки модератором на вашу почту <span class="j-status-text">будет отправлена ссылка на оплату.</span>
+                Поля, помеченные *, обязательны для заполнения.
+            </p>
+            <p>
+                Редакция оставляет за собой право вносить
+                грамматические, орфографические, стилистические, пунктуационные правки в
+                текст, не меняя сути содержания, но и  не согласовывая с автором текста
+                итоговый вариант.
+            </p>
+        </div>
+
+        <div class="addevent__columns">
+            <div class="addevent__column addevent__column_left">
+
+                <div class="addevent__item">
+                    <label class="addevent__item-label" for="id_type">
+                        Тип*
+                    </label>
+                    {{ form.type }}
+                </div>
+                <div class="addevent__item">
+                    <label class="addevent__item-label" for="id_title">
+                        Название*
+                    </label>
+                    {{ form.title }}
+                </div>
+                <div class="addevent__item">
+                    <label class="addevent__item-label" for="id_place">
+                        Место проведения*
+                    </label>
+                    {{ form.place }}
+                </div>
+                <div class="addevent__item">
+                    <!--блок на случай, если дат несколько-->
+                    <div class="j-dates">
+                        <div class="addevent__item addevent__item_add flex addevent__date j-date j-date-default" data-date="0">
+                            <p>
+                                <label for="id_form-0-date">Дата*</label>
+                                <input id="id_form-0-date" name="form-0-date" placeholder="" type="text" class="j-calendar j-date-input" />
+                                <span class="help">дд.мм.гггг</span>
+                            </p>
+                            <p>
+                                <label for="id_form-0-time">Время*</label>
+                                <input id="id_form-0-time" name="form-0-time" placeholder="" type="text" class="j-time-input" />
+                                <span class="help">чч:мм</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="addevent__link">
+                        <a href="#" class="j-date-add">
+                            Добавить еще одну дату
+                        </a>
+                    </div>
+
+                </div>
+                <div class="addevent__item">
+                    <label class="addevent__item-label" for="id_source_url">
+                        Официальный сайт
+                    </label>
+                    {{ form.source_url }}
+                    <div class="help">
+                        C http://
+                    </div>
+                </div>
+                <div class="addevent__item flex">
+                    <div class="addevent__item-column">
+                        <label class="addevent__item-label" for="id_price">
+                            Цена, руб.
+                        </label>
+                        {{ form.price }}
+                    </div>
+                    <div class="addevent__item-column">
+                        <label class="addevent__item-label" for="id_age_rating">
+                            Возрастной рейтинг
+                        </label>
+                        {{ form.age_rating }}
+                    </div>
+                </div>
+                <div class="addevent__item">
+                    <label class="addevent__item-label" for="id_gallerypicture_set-0-picture_0">
+                        Изображения*
+                    </label>
+                    <div class="addevent__text">
+                        Для главной картинки события принимается изображение размером 620x413 пикселей,
+                        БЕЗ надписей, логотипов и других графических элементов. <br />Внутри мероприятия допустимы горизонтальные изображения с текстом.
+                    </div>
+                    {% gallery_form_new gallery nostyle=1 %}
+                </div>
+                <div class="addevent__item">
+                    <label class="addevent__item-label j-organizer-email" for="id_organizer_email">
+                        <!--E-mail, на него придет ссылка для оплаты*-->
+                        E-mail, на который придет уведомление о статусе размещения*
+                    </label>
+                    {{ form.organizer_email }}
+                </div>
+                <div class="addevent__item">
+                    <label class="addevent__item-label" for="id_organizer">
+                        Организатор
+                    </label>
+                    {{ form.organizer }}
+                </div>
+                <div class="addevent__item">
+                    <label class="addevent__item-label" for="id_organizer_contacts">
+                        Контакты организатора
+                    </label>
+                    {{ form.organizer_contacts }}
+                </div>
+
+                <div class="spoiler j-spoiler" data-title="Добавить аккаунты соц. сетей" data-close-title="Скрыть поля соц. сетей">
+                    <div class="spoiler__title j-spoiler-title">
+                        Добавить аккаунты соц. сетей
+                    </div>
+                    <div class="spoiler__content j-spoiler-content">
+                        <div class="addevent__item">
+                            <label class="addevent__item-label" for="id_vk_url">
+                                Страница VK
+                            </label>
+                            {{ form.vk_url }}
+                        </div>
+                        <div class="addevent__item">
+                            <label class="addevent__item-label" for="id_fb_url">
+                                Страница Facebook
+                            </label>
+                            {{ form.fb_url }}
+                        </div>
+                        <div class="addevent__item">
+                            <label class="addevent__item-label" for="id_ok_url">
+                                Страница OK
+                            </label>
+                            {{ form.ok_url }}
+                        </div>
+                        <div class="addevent__item">
+                            <label class="addevent__item-label" for="id_inst_url">
+                                Аккаунт Instagram
+                            </label>
+                            {{ form.inst_url }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="addevent__column addevent__column_right">
+                <div class="addevent__item">
+                    <label class="addevent__item-label" for="id_content">
+                        Описание*
+                    </label>
+                    {{ form.content }}
+                </div>
+            </div>
+        </div>
+        <div class="addevent__bottom">
+            <div class="j-event-pay">
+                <div class="addevent__pay">
+                    <div class="addevent__pay-inner">
+                        <label class="addevent__item-label" for="id_type">
+                            Дополнительно
+                        </label>
+                        <div class="addevent__rotation j-slider-image">
+                           Продвижение в слайдере<br /> "Главное" - {{ prices.commercial_event_carousel }} ₽/сутки
+                        </div>
+                        <div class="addevent__item addevent__item_slider addevent__item_nom flex">
+                            <div class="addevent__slider addevent__slider_left">
+                                {#{{ form.announcement_index_start_date }}#}
+                                <input id="id_announcement_index_start_date" name="announcement_index_start_date" placeholder="" type="text" class="j-calendar j-slider j-slider-in j-date-input" />
+                            </div>
+                            <div class="addevent__slider addevent__slider_right">
+                                {#{{ form.announcement_index_end_date }}#}
+                                <input id="id_announcement_index_end_date" name="announcement_index_end_date" placeholder="" type="text" class="j-calendar j-slider j-slider-out j-date-input" />
+                            </div>
+                            <div class="addevent__slider addevent__slider_file">
+                                {{ form.wide_image }}
+                                <div class="help">
+                                    Минимальный размер изображения 940x445
+                                </div>
+                            </div>
+                        </div>
+                        <div class="addevent__clear j-slider-clear">
+                            <a href="#" class="j-slider-clear-link">
+                                Очистить даты
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="addevent__price">
+                    <div class="addevent__price-label">
+                        К оплате:
+                    </div>
+                    <div class="addevent__price-num">
+                        <span class="j-price">{{ prices.commercial_event }}</span> ₽
+                    </div>
+                </div>
+            </div>
+
+            <div class="addevent__oferta">
+                <div class="addevent__oferta__check">
+                    <input type="checkbox" name="oferta_checkbox" id="oferta_checkbox" class="j-oferta-checkbox" required />
+                    <label for="oferta_checkbox"></label>
+                </div>
+                <div class="addevent__oferta__text">
+                    Настоящим соглашением подтверждаю соответствие размещаемого рекламного материала
+                    и фотографий, требованиям законодательства РФ и гарантирую возложение на себя
+                    ответственности в полном объеме. В случае предъявления каких-либо требований
+                    (претензий и/или исков) со стороны третьих лиц, включая антимонопольные органы,
+                    обязуюсь самостоятельно, своими силами и за свой счет урегулировать их и доказать
+                    соответствие содержания предоставленного рекламного материала действующему
+                    законодательству РФ.
+                </div>
+            </div>
+
+            <div class="addevent__add">
+                <input type="submit" class="addevent__submit j-form-submit" value="Отправить заявку" disabled="disabled" />
+                <span class="addevent__submit-label">
+                    После проверки модератором на вашу <span class="j-status-text">почту будет отправлена ссылка на оплату.</span>
+                </span>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

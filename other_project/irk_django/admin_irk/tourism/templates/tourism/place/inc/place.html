@@ -1,0 +1,152 @@
+{% load staticfiles media_utils tourism_tags str_utils gallery_tags weather_tags thumbnail pytils_dt %}
+
+<header class="b-place-resorts-title-block">
+    <h1 class="g-title">{{ place.title|typograf:'title'|safe }}</h1>
+
+    {% if place.gallery.main_image.image %}
+    {% thumbnail place.gallery.main_image.image 740x100000 as thumb %}
+    <figure class="b-place-main-image">
+        <img src="{{ thumb }}" alt="{{ place.gallery.main_image.alt|typograf:"title"|safe }}" alt="{{ place.gallery.main_image.alt|typograf:"title"|safe }}">
+    </figure>
+    <figcaption><small class="g-color-gray">{{ place.gallery.main_image.alt|typograf:"title"|safe }}</small></figcaption>
+    {% endif %}
+</header>
+
+{% if place.children.count or paid_firms %}
+<div class="b-content-block b-place-resorts-block">
+    <ul class="b-list-h">
+        {% if place.children.count %}
+        <li>
+            <section class="b-rectangle-info-block">
+                <header class="b-title-block">Курорты и здравницы</header>
+                <article class="b-descr-block">
+                    <ul class="b-list-h b-list-items">
+                        <li>
+                        {% for child in place.children.all %}
+                            <a href="{{ child.get_absolute_url }}">{{ child.title|typograf:'title'|safe }}</a>
+                            {% if forloop.counter|divisibleby:num_items_in_col %} </li><li>{% endif %}
+                        {% endfor %}
+                    </ul>
+                </article>
+            </section>
+        </li>
+        {% endif %}
+
+        {% if paid_firms %}
+        <li>
+            <section class="b-place-resorts-firm-block">
+                {% for paid_firm in paid_firms %}
+                <div class="b-place-resorts-firm-info">
+                    <a href="{{ paid_firm.get_absolute_url }}" title="{{ paid_firm|typograf:'title'|safe }}">
+                        {% thumbnail paid_firm.logo 100x1000 as thumb %}
+                        <span class="b-place-firm-logo"><img src="{{ thumb }}" style="width:{{ thumb.width }}px;height:{{ thumb.height }}px;"></span>
+                        {{ paid_firm|typograf:'title'|safe }}
+                    </a>
+                </div>
+                <a href="{{ paid_firm.get_absolute_url }}" class="b-button-colors button-orange">Купить путевку</a>
+                {% endfor %}
+            </section>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+{% if tours %}
+<div class="b-content-block">
+    <section class="b-tourism-company-tours-block">
+
+        <header>
+            <h2>Туры</h2>
+        </header>
+
+        <article>
+            <table class="b-tourism-tours-table">
+                <colgroup>
+                    <col width="358">
+                    <col width="144">
+                    <col width="96">
+                    <col width="92">
+                    <col width='81'>
+                </colgroup>
+                <thead>
+                <th>Название</th>
+                <th>Продолжительность</th>
+                <th>Стоимость</th>
+                <th>Дата</th>
+                <th></th>
+                </thead>
+                <tbody>
+                {% for tour in tours %}
+                <tr id="tr{{ tour.pk }}">
+                    <td class="b-tour-title-block">
+                        <a href="{{ tour.get_absolute_url }}" class="b-tour-title">
+                            {% thumbnail tour.image 89x1000 as thumb %}
+                            {% if thumb %}<img class="b-tour-title-pic" src="{{ thumb }}" style='width:{{ thumb.width }}; height:{{ thumb.height }}'>{% endif %}
+                            {{ tour.title|typograf|safe }}
+                        </a>
+                    </td>
+                    <td class="b-tour-durations-block">{{ tour.nights }}</td>
+                    <td class="b-tour-price-block">{% if tour.price %}<span class="price">{{ tour.price }}&nbsp;руб.</span>{% endif %}</td>
+                    <td class="b-tour-date-block">
+                        {% for date in tour.get_dates %}
+                            {{ date.0|ru_strftime:"%d %B" }}{% if date.1 %} - {{ date.1|ru_strftime:"%d %B" }}{% endif %}{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <div class="g-relative">
+                            {% if can_edit %}
+                            <div id="j-tour-title-{{ tour.pk }}" class="j-tour-title">
+                                {% if tours_paid and hot_tours < 5 %}
+                                <a href="{% url 'tourism:tour:update_status' tour.pk %}?hot=1&amp;section={{ section.slug }}"><img alt="поджечь" src="{% static 'tourism/img/action-fire.png' %}" /></a>
+                                {% endif %}
+                                <a href="{% url 'tourism:tour:edit' tour.pk %}?section={{ section.slug }}"><img alt="редактировать" src="{% static 'tourism/img/action-edit.png' %}" /></a>
+                                <a href="{% url 'tourism:tour:delete' tour.pk %}?section={{ section.slug }}"><img alt="удалить" src="{% static 'tourism/img/action-delete.png' %}" /></a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <script type="text/javascript">
+            $('.b-tourism-tours-table tr')
+                    .mouseover(function() {
+                        var id = parseInt(this.id.replace('tr', ''));
+                        $('#j-tour-title-'+id).show();
+                        $(this).addClass('g-selected');
+
+                    })
+                    .mouseout(function() {
+                        var id = parseInt(this.id.replace('tr', ''));
+                        $('#j-tour-title-'+id).hide();
+                        $(this).removeClass('g-selected');
+                    });
+            </script>
+            <div class="b-grad-opacity"></div>
+        </article>
+
+        <div class="b-tours-open-block">
+            <a href="#" class="b-tours-open b-button-colors button-orange">Все туры</a>
+        </div>
+    </section>
+</div>
+{% endif %}
+
+<div class="b-content-block b-place-resorts-descr-block">
+    {{ place.short|typograf:'admin,image=760x2048'|safe }}
+    {{ place.description|typograf:'admin,image=760x2048'|safe }}
+    {% if place.tonkosti_id > 0 %}
+        <a href="http://tonkosti.ru/" id="place-information-source">Источник — портал «Тонкости туризма»</a>
+    {% else %}
+
+    {% endif %}
+</div>
+
+{% if place.panorama_url and show_panorama %}
+<div class="b-content-block b-place-resorts-panorama">
+    <iframe src="{{ place.panorama_url }}" frameborder="0" scrolling="no"></iframe>
+</div>
+{% endif %}

@@ -1,0 +1,22 @@
+{% load thumbnail staticfiles media_utils %}
+<style>
+	.block {float: left; padding: 0.2em; margin: 0 1em; width: auto; overflow: hidden; max-width: 180px;}
+	.block img {border: 1px solid #999;}
+	.field {float: left;}
+	.imgPreview {position: absolute;}
+    .field .watermark {padding-left: 30px}
+</style>
+<div class="fileBox">
+	{% if value %}
+		{% thumbnail value.image 50x50 as main_thumb %}
+		{% if main_thumb %}
+		<div class="block">
+			<img class="imgThumb border" alt="{{ value.title }}" title="{{ value.title }}" src="{{ main_thumb }}" width="{{ main_thumb.width }}" height="{{ main_thumb.height }}" /><br />
+			<small style="color: gray;">{{ value.image.width }}x{{ value.image.height }} пикс.</small>
+		</div>
+		{% endif %}
+	{% endif %}
+	<div class="field">
+		{{ fields.0 }} {{ fields.1 }} {{ fields.2 }} <span class="watermark">{{ fields.3 }} Ватермарк</span>
+	</div>
+</div>

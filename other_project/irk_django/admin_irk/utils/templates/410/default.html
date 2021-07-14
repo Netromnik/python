@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% load staticfiles media_utils thumbnail str_utils comments_tags share_utils %}
+
+{% block style %}
+    {% less '/less/compile/410.less' %}
+{% endblock style %}
+
+{% block promo_A %}{% endblock %}
+{% block top_banner %}{% endblock %}
+
+{% block b-content %}
+    <section class="b-410-content">
+        <div class="b-410-share-container">
+            <h2>Уважаемые пользователи, вы по-прежнему можете общаться друг с другом в наших группах в соцсетях:</h2>
+            <div class="b-410-share">
+                <span class="b-share-button-group">
+                    <a href="http://www.facebook.com/tvoyirkutsk" class="b-share-button b-share-button-fb" title="Facebook"></a>
+                    <a href="http://vk.com/tvoy_irkutsk" class="b-share-button b-share-button-vk" title="Вконтакте"></a>
+                    <a href="http://twitter.com/tvoyirkutsk" class="b-share-button b-share-button-tw" title="Твиттер"></a>
+                    <a href="http://instagram.com/tvoyirkutsk/" class="b-share-button b-share-button-ig" title="Инстаграмм"></a>
+                </span>
+            </div>
+        </div>
+        <h1>6 лучших статей месяца:</h1>
+        <ul class="b-410-content-list">
+            {% for article in article_list %}
+                {% if article.image %}
+                    {% thumbnail article.image 300x200 as thumb %}
+                {% else %}
+                    {% thumbnail article.gallery.main_image.image 300x142 crop as thumb %}
+                {% endif %}
+                <li class="b-410-content-list-item">
+                    <h3 class="b-410-content-list-item-group_name g-margin-bottom-10">
+                        <a href="{{ article.rubric_url }}" class="g-hover g-title-link">
+                            {{ article.rubric_title|typograf }}
+                        </a>
+                    </h3>
+                    <article class="b-widget-article">
+                        <header>
+                            <a href="{{ article.get_absolute_url }}">
+                                <figure class="g-relative">
+                                    <img src="{{ thumb }}"
+                                         alt="{{ thumb.alt }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px">
+                                </figure>
+                                <h4>{{ article.title|typograf }}</h4>
+                            </a>
+                        </header>
+                        <p>{{ article.caption }}</p>
+                        <a href="{{ article.get_absolute_url }}" class="b-widget-article-link"></a>
+                        {% comments_cnt article new_layout=True %}
+                    </article>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock b-content %}
+
+{% block b-footer-layout-banner %}{% endblock %}

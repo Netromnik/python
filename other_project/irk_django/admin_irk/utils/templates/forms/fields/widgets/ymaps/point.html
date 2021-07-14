@@ -1,0 +1,40 @@
+<div id="map-{{ name }}" style="width:640px;height:480px;"></div>
+<script type="text/javascript">
+    "use strict";
+
+    $(function() {
+        var map_id = 'map-{{ name }}';
+
+        ymaps.ready(function() {
+            var input = $('#{{ attrs.id }}');
+            var center = [52.27560, 104.306474];
+
+            var map = new ymaps.Map(map_id, {
+                zoom: 15,
+                center: center
+            });
+
+            var coords;
+            if (input.val().length > 0) {
+                coords = /POINT\s*\(\s*([0-9\.]+)\s*([0-9.]+)\s*\)/.exec(input.val());
+                coords = [parseFloat(coords[2]), parseFloat(coords[1])];
+            } else {
+                coords = center;
+            }
+
+            var marker = new ymaps.Placemark(coords, {}, {
+                draggable: true,
+                hasBalloon: false
+            });
+            marker.events.add('dragend', function(e) {
+                var self = e.get('target');
+                var coords = self.geometry.getCoordinates();
+                input.val('POINT(' + coords[1] + ' ' + coords[0] + ')');
+            });
+            map.geoObjects.add(marker);
+            map.setCenter(coords);
+
+
+        });
+    });
+</script>

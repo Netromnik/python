@@ -1,0 +1,20 @@
+{% load staticfiles media_utils %}
+
+<script type="text/javascript" src="{% static 'js/lib/jquery.placeholder.min.js' %}"></script>
+<script type="text/javascript">
+    $(function() {
+        var $searchInput = $('.j-search-input');
+        if ( $searchInput.length != 0 ) {
+            $searchInput.placeholder();
+        }
+    });
+</script>
+
+<div class="b-house-search g-indent">
+    <form action="{% url 'afisha:search' %}" name="" method="GET">
+        <img src="{% static 'img/search/search-input-left.png' %}" class="b-house-search-left">
+        <input name="q" type="text" class="b-house-search-input j-search-input" placeholder="Поиск" value="{{ q }}">
+        <input type="image" src="{% static 'img/search/search-input-submit.png' %}" class="b-house-search-button">
+        <input type="submit" class="b-house-search-submit">
+    </form>
+</div>

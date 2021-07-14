@@ -1,0 +1,27 @@
+{% load staticfiles media_utils %}
+
+<script type="text/javascript" src="{% static 'js/lib/jquery.placeholder.min.js' %}"></script>
+<script type="text/javascript">
+    $(function() {
+        $('.b-widget-search').each(function () {
+            var $that = $(this),
+                $searchField = $('input[type="text"]', $that);
+
+            $that.on('click', '.j-search-submit', function (e) {
+                e.preventDefault();
+                $that.submit();
+            });
+
+            $that.on('click', '.j-search-insert', function (e) {
+                e.preventDefault();
+                $searchField.val($(this).text());
+            });
+
+            $searchField.placeholder();
+        });
+    });
+</script>
+
+<form class="b-widget-search g-margin-bottom-20" data-transform-target="search" action="{% url 'news:search' %}" method="GET">
+    <input name="q" type="text" placeholder="Поиск" value="{{q}}"><span class="b-widget-search-button j-search-submit"></span>
+</form>

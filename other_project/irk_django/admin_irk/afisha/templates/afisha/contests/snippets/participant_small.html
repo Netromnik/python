@@ -1,0 +1,41 @@
+{% load thumbnail comments_tags str_utils rating_tags cache pytils_numeral %}
+
+<div class="b-partaker">
+    {% if participant.gallery.main_image.image %}
+        {% thumbnail participant.gallery.main_image.image 150x100000 as thumb %}
+        <a href="{% url 'afisha:contests:participant_read' participant.contest.slug participant.pk %}"><img src="{{ thumb }}" alt="{% if participant.contest.type == 'ig' %}{{ participant.username }}{% else %}{{ participant.title|typograf:"title"|safe }}{% endif %}" /></a>
+    {% endif %}
+
+    {% if not participant.contest.is_blocked %}
+        {% if not participant.contest.is_closed and participant.is_active %}
+            {% if participant.contest.vote_type == participant.contest.SMS_VOTE %}
+                <div class="b-like-small-block">
+                    <span class="wrap-icon-count disabled">
+                        <span class="count-like">{{ participant.sms_value|default_if_none:"0" }}</span>
+                        <span class="icon-like">{{ participant.sms_value|default_if_none:0|choose_plural:'голос,голоса,голосов' }}</span>
+                    </span>
+                </div>
+            {% else %}
+                {% rating participant 'ratings/widgets/like_fb_small.html' %}
+            {% endif %}
+        {% else %}
+            {% if participant.contest.vote_type == participant.contest.SMS_VOTE %}
+                <div class="b-like-small-block">
+                    <span class="wrap-icon-count disabled">
+                        <span class="count-like">{{ participant.sms_value|default_if_none:"0" }}</span>
+                        <span class="icon-like">{{ participant.sms_value|default_if_none:0|choose_plural:'голос,голоса,голосов' }}</span>
+                    </span>
+                </div>
+            {% else %}
+                {% rating participant 'ratings/widgets/like_fb_small.html' closed %}
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% rating participant 'ratings/widgets/like_fb_small.html' closed %}
+    {% endif %}
+
+    {% url 'afisha:contests:participant_read' participant.contest.slug participant.pk as participant_url %}
+    <div class="b-partaker-g-title"><a href="{% if participant.contest.type == 'ig' %}http://instagram.com/{{ participant.username }}{% else %}{{ participant_url }}{% endif %}">{% if participant.contest.type == 'ig' %}{{ participant.username }}{% else %}{{ participant|typograf:"title"|safe }}{% endif %}</a>
+        {% comments_cnt participant url=participant_url %}
+    </div>
+</div>

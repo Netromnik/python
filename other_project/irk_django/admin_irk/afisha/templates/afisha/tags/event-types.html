@@ -1,0 +1,59 @@
+{% load str_utils %}
+<nav class="b-afisha-nav">
+    {% if not is_event_create_form %}<a class="cinema-button cinema-button_blue g-right hide-1200" href="{% url 'afisha:event_create' %}">Добавить событие</a>{% endif %}
+    <a class="g-afisha-iconer g-color-black announce g-right hide-1200"
+       href="{% if current_type %}{% url 'afisha:announces:events_list' event_type=current_type.alias %}{% else %}{% url 'afisha:announces:events_list' %}{% endif %}">СКОРО</a>
+    <ul class="b-content-header-menu">
+        {% if current_type or section or not is_index_page %}
+            <li><a href="{% url 'afisha:index' %}">Главное</a></li>
+        {% else %}
+            <li class="g-active"><div>Главное</div></li>
+        {% endif %}
+
+        {% for event_type in event_types %}
+            {% if event_type.id in active_event_type %}
+                <li class="content-header-menu-{{ forloop.counter }} {% if current_type == event_type %}g-active{% endif %}{% if forloop.last %} separation{% endif %}{% if forloop.counter > 2 and forloop.counter <= 5 %} hidden2-desktop{% endif %}">
+                    {% if current_type == event_type and is_index_page %}<div>{{ event_type|typograf }}</div>{% else %}<a href="{% url 'afisha:events_type_index' event_type=event_type.alias %}">{{ event_type|typograf }}</a>{% endif %}</li>
+            {% else %}
+                <li class="content-header-menu-{{ forloop.counter }} {% if forloop.last %} separation{% endif %}{% if forloop.counter > 4 %} hidden2-desktop{% endif %}"><div>{{ event_type|typograf }}</div></li>
+            {% endif %}
+        {% endfor %}
+        <li class="content-header-menu-guide{% if is_guide_rubric %} g-active{% endif %}">
+            {% if is_guide_index %}
+                <span>Места</span>
+            {% else %}
+                <a href="{% url 'guide:rubric' rub='cinema' %}">Места</a>
+            {% endif %}
+        </li>
+        <li class="g-desktop g-margin-no">
+            {% include 'afisha/base/search_widget.html' %}
+        </li>
+        <li class="g-relative more g-last">
+            <span class="g-jlink g-mobile j-toggle-button" data-toggle-target="afisha-submenu bodyhide"><span class="g-jlink g-color-black">еще</span></span>
+            <span class="g-jlink g-not-mobile j-toggle-button" data-toggle-target="afisha-submenu bodyhide"><span class="g-jlink g-color-black">еще</span></span>
+        </li>
+    </ul>
+    <div class="submenu-wrapper j-toggle-target-afisha-submenu" data-toggle-class="show">
+        <span class="submenu-wrapper__close j-toggle-button-touch" data-toggle-target="afisha-submenu bodyhide"></span>
+        <ul class="submenu-wide">
+            {% for event_type in event_types %}
+                <li class="counter-{{ forloop.counter }}">
+                    {% if current_type == event_type %}
+                        <span>
+                            {{ event_type|typograf }}
+                        </span>
+                    {% else %}
+                        <a href="{% url 'afisha:events_type_index' event_type=event_type.alias %}">
+                            {{ event_type|typograf }}
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            <li>
+                <a href="/guide/cinema/">
+                    Места
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

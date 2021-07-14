@@ -1,0 +1,34 @@
+{% extends "auth/layout.html" %}
+
+{% load profile_utils staticfiles %}
+
+{% block title %}Регистрация | {{ block.super }}{% endblock %}
+{% block h1 %}Регистрация на IRK.ru{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main_content %}
+
+    <form action="" method="post">{% csrf_token %}
+
+    <span class="{% if wizard.steps.current == 'info' %}current{% endif %}">1. Ввод личных данных</span>
+    <span class="future">2. Подтверждение регистрации</span>
+    <span class="future">3. Окончание регистрации</span>
+
+    <table>
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+            {{ form }}
+        {% endfor %}
+    {% else %}
+        {{ wizard.form }}
+    {% endif %}
+    </table>
+    <input type="submit" value="Продолжить"/>
+    </form>
+
+{% endblock main_content %}

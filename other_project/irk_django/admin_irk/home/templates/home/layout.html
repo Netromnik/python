@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+
+{% load staticfiles media_utils adv_tags %}
+
+{% block push-notifications %}{% include 'push_notifications/snippets/opener.html' %}{% endblock %}
+{% block push-notifications-feature %}{% include 'push_notifications/snippets/feature.html' %}{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="description" content="Все новости Иркутска. Эксперты, блоги, интервью, аналитика, фоторепортажи. Все о жизни города.">
+{% endblock %}
+
+{% block meta_adaptive %}
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+{% endblock meta_adaptive %}
+
+{% block style %}
+    {% less '/less/compile/apps/home.less' %}
+{% endblock style %}
+
+{% block style_adaptive %}
+    {% less '/less/compile/adaptive/apps/home.less' media='all' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'home/js/home.js' %}"></script>
+{% endblock %}
+
+{% block js_adaptive %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'home/js/home-adaptive.js' %}"></script>
+{% endblock %}
+
+{% block text_widget %}{% ibanner id=311 template='adv/banners/text_widget_layout.html' %}{% endblock %}
+
+{% block top_banner %}
+    {% include 'home/base/banner/banner-overhead.html' %}
+{% endblock %}
+
+{% block float_banner %}
+    {% include 'home/base/banner/b-banner-1000x50-float.html' %}
+{% endblock %}
+
+{% block promo_A %}
+    {% ibanner id=474 as branding_top %}
+    {% include 'snippets/branding_top.html' %}
+{% endblock promo_A %}
+
+{% block promo_B %}
+    {% ibanner id=464 as branding_footer %}
+    {% ibanner id=544 as programmatic_footer %}
+    {% if request.user_agent.is_gadget and programmatic_footer %}
+         <div class="g-margin-bottom-20 g-margin-top-20 g-centered-div g-not-desktop">{{ programmatic_footer }}</div>
+    {% endif %}
+    {% if branding_footer %}
+        <div class="b-branding-bottom g-desktop">
+            {{ branding_footer }}
+        </div>
+    {% endif %}
+{% endblock promo_B %}
+
+{% block container %}
+    <div class="b-container {% block container-class %}{% endblock %}">
+        {% block b-notification %}
+            <ul class="b-notification j-notification">
+                {% block b-notification-blank %}
+                    <li class="j-notification-blank">
+                        <span class="b-notification-text j-notification-text"></span>
+                        <span class="b-notification-close j-notification-close"></span>
+                    </li>
+                {% endblock %}
+                {% if user_messages %}
+                    {% for message in user_messages %}
+                        <li class="show {{ message.tags }}">
+                            <span class="b-notification-text j-notification-text">{{ message }}</span>
+                            <span class="b-notification-close j-notification-close"></span>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        {% endblock %}
+
+        {% block b-adword-header %}
+            {% include 'home/base/banner/banner-underhead.html' %}
+        {% endblock %}
+
+        {% block b-content-parent %}
+            <article class="b-content{% block b-content-class %}{% endblock %}">
+                {% block b-content-header %}{% endblock b-content-header %}
+                {% block b-content %}{% endblock b-content %}
+                {% block b-content-footer %}{% endblock b-content-footer %}
+            </article>
+        {% endblock b-content-parent %}
+    </div>
+    {% block container-footer %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_modify staticfiles %}
+
+{% block content %}
+<style type="text/css">
+	div.site ul {list-style: none; padding: 0; clear: both; display: block;}
+	div.site ul li {display: block; float: none; clear: both; list-style: none; font-size: 100%; margin: 0; padding: 0; line-height: 100%;}
+	div.site ul label {white-space: nowrap;}
+	#add_id_site {clear: both; display: block;}
+</style>
+<script type="text/javascript">
+    DOMAIN_MEDIA = (location.protocol === 'https:' ? 'https://www.irk.ru':'http://www.irk.ru');
+	section_items = {};
+	var section = {
+    	count_items : 10,
+    	count_show : 0,
+    	show : function () {
+    		for (var id in section_items) {
+    			if (section_items[id] == 'hide') {
+    				$('#ajax-block-' + id).show();
+    				section_items[id] = 'show';
+    				section.count_show++;
+    				if (section.count_show == section.count_items) $('#add-section').hide();
+    				break;
+    			}
+
+    		}
+
+    	},
+
+    	hide : function (id) {
+    		$('#ajax-block-' + id + ' input').val('');
+    		$('#ajax-block-' + id).hide();
+    		section_items[id] = 'hide';
+    		if (section.count_show == section.count_items) $('#add-section').show();
+    		section.count_show--;
+
+    	},
+
+    	init : function () {
+
+    		if (window.section_items == undefined) return false;
+
+    		for (var id in section_items) {
+    			if (section_items[id] == 'show') section.count_show++;
+    		}
+
+    		$('#add-section a').click(function () {
+    			section.show();
+    			return false;
+
+    		});
+    		$('a.del-section').click(function () {
+
+    			var id = parseInt(this.rev);
+    			section.hide(id);
+    			return false;
+
+    		});
+    	}
+    };
+
+	$(document).ready(function() {
+		$('div.form-row.field-places').append('<div id="add-section">' +
+			'<a class="noLink" href="#">' +
+				'<img src="{% static 'tourism/img/action-add.png' %}" aling="absmiddle">' +
+				'<span class="jsLink">Добавить еще одно место</span>' +
+			'</a>' +
+		'</div>');
+		section.init();
+		$('#add-section > a').attr('rev', section.count_show+1);
+
+        $('div.form-row.field-places input[type="hidden"]').change(function(event) {
+            var self = $(this);
+            self.parent().find('div.banner-exists').remove();
+            $.getJSON('/adm/adv/place/'+self.val()+'/change/check/', function(data) {
+                if (data.length > 0) {
+                    self.parent().append('<div class="banner-exists">'+data.text+'</div>');
+                }
+            });
+        });
+	});
+</script>
+{{ block.super }}
+{% endblock %}
+
+{% block object-tools %}
+ 	{% if change %}{% if not is_popup %}
+ 	  <ul class="object-tools"><li><a href="history/" class="historylink">{% trans "History" %}</a></li>
+ 	  {% if has_absolute_url %}<li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+ 	  {% if object_id  %}<li><a href="{% url 'admin:adv_banner_duplicate' object_id %}" class="historylink">Дублировать</a></li>{% endif %}
+ 	  </ul>
+ 	{% endif %}{% endif %}
+{% endblock %}

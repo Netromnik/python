@@ -1,0 +1,8 @@
+{% load str_utils %}
+
+{% if meteocentre.storm_content %}
+<div class="b-weather-main-storm">
+    <b>{{ meteocentre.storm_caption|default:'штормовое'|capfirst }}</b>
+    {{ meteocentre.storm_content|typograf|safe }}
+</div>
+{% endif %}

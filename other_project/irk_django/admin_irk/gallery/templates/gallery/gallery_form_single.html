@@ -1,0 +1,17 @@
+{% load staticfiles media_utils pytils_numeral %}
+
+<div class="b-gallery-single">
+    {{ formset.management_form }}
+    {% for form in formset|slice:":1" %}
+        <div id="li{{ forloop.counter0 }}"{% if forloop.first and not form.instance.pk %} class="main"{% endif %}{% if form.instance.main %} class="main"{% endif %}>
+            {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+            <div class="picture">
+                {{ form.picture }}
+            </div>
+            {% if form.errors %}
+                <div class="pic-error"><span class="g-color-red">{% if form.errors.picture %}{{ form.errors.picture }}{% else %}Вы забыли загрузить фотографию{% endif %}</span></div>
+            {% endif %}
+            <div class="clear"></div>
+        </div>
+    {% endfor %}
+</div>

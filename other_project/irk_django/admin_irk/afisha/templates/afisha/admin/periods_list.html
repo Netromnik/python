@@ -1,0 +1,6 @@
+{% for period in periods %}
+
+<tr class="{% cycle row1,row2 %} {% if period.is_ended  %}is_ended{% endif %}" {% if period.is_ended  %}style='display:none'{% endif %}>
+  {% include "afisha/admin/period_row.html" %}
+</tr>	
+{% endfor %}

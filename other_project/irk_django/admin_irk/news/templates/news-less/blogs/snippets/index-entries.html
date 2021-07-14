@@ -1,0 +1,26 @@
+{% load pytils_numeral staticfiles media_utils news_tags str_utils paginator_utils comments_tags thumbnail rating_tags date_tags %}
+{% for object in objects.object_list %}
+    <li{% if forloop.last and not objects.has_next %} class="g-last"{% endif %}>
+        {% if view != 'author' %}
+            <a href="{% url 'news:blogs:author' object.author.username %}" title="{{ object.author.get_full_name|typograf }}" class="b-news-blogs-post-list-author">
+                <figure class="g-relative">
+                    {% thumbnail object.author.profile.avatar 100x100 as thumb %}
+                    <img src="{{ thumb }}" alt="{{ object.author.get_full_name|typograf }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px">
+                    <figcaption>{{ object.author.get_full_name|typograf }}</figcaption>
+                </figure>
+            </a>
+        {% endif %}
+        <article class="b-news-blogs-post-list-content">
+            <header>
+                <h3><a href="{{ object.get_absolute_url }}" title="{{ object.title|typograf }}">{{ object.title|typograf }}</a></h3>
+            </header>
+            <p>{{ object.caption|truncatewords:50|typograf }}</p>
+            <footer class="g-color-gray">
+                <time>{{ object.created|dates:'%d %B|%d %B %Y' }}</time>
+                {% if object.view_cnt %}<span class="icon-inline icon-left icon-visits">{{ object.view_cnt|get_plural:'просмотр, просмотра, просмотров' }}</span>{% endif %}
+                {% comments_cnt object new_layout=True %}
+                {% rating_result object "ratings/widgets/like_blogs_count.html" %}
+            </footer>
+        </article>
+    </li>
+{% endfor %}

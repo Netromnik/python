@@ -1,0 +1,9 @@
+{% extends "letter.html" %}
+{% load site_utils %}
+{% block content %}
+
+<h1>Здравствуйте{% if subscriber.user %}, {{ subscriber.user }} {% endif %}</h1>
+
+<p>Опубликованы ответы на вопросы в пресс-конференции <a href="https://{% get_site_url www domain %}{% url 'news:experts:read' subscriber.expert.category.slug subscriber.expert.pk%}">{{ subscriber.expert.title }}</a> сайта «Твой Иркутск» (www.irk.ru)!</p>
+
+{% endblock %}

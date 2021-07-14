@@ -1,0 +1,13 @@
+<tr>
+	<td><span class="label">{{ field.label }}</span></td>
+	<td>
+		<div>
+			<div class="body">
+				<span class="field{% if field.errors %} error{% endif %} {{ class_name|default:'' }}{% if field.field.required %} required{% endif %}">{{ field }}</span>
+				{% if field.help_text %}<span class="help-text">{{ field.help_text }}</span>{% endif %}
+				{% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}	
+				<div class="clear"></div>		
+			</div>
+		</div>
+	</td>
+</tr>

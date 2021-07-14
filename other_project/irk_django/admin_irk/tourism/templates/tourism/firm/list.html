@@ -1,0 +1,141 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% comment %}
+    @name=Туризм список отелей
+{% endcomment %}
+
+{% load staticfiles media_utils options pages field_tags math_utils str_utils thumbnail site_utils adv_tags comments_tags paginator_utils map_tags search_utils phones_tags %}
+
+{% block title %} {{ section.name|typograf:"title"|safe }} | {{ block.super }}{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="//maps.api.2gis.ru/2.0/loader.js?pkg=full&skin=dark&lazy=true"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="b-content-block">
+        <section class="b-tourism-order-tour">
+            {% if can_create %}
+                <h4><a href="{% url 'tourism:firm:create' section_slug=section.slug %}">Добавить</a></h4>
+            {% endif %}
+        </section>
+        <h1>{{ section.name|typograf:"title"|safe }}</h1>
+    </div>
+
+
+    {% if page == 1 and tops|length %}
+    <!-- Блок с платным списком агенств -->
+    <div class="b-content-block">
+        <div class="b-adwords-list-h-v">
+            <ul class="b-list-h">
+                <li>
+                    <ul class="b-list-v">
+                        {% for firm in tops|slice:"0::2" %}
+                        <li>
+                            <header>
+                                <h4>
+                                    <a href="{% url 'tourism:firm:read' section_slug=section.slug firm_id=firm.pk %}" class="b-agency-title">
+                                        {{ firm|typograf:'title'|safe }}
+                                    </a>
+                                </h4>
+                            </header>
+                            <article class="b-adwords-list-info">
+                                {% for address in firm.address_set.all|slice:"1" %}
+                                    <p class="g-map-address-link">{% map_address address %}</p>
+                                    {% if address.phones %}
+                                        <p class="b-adwords-list-phone">{{ address.phones|typograf|safe }}</p>
+                                    {% endif %}
+                                    {% if firm.url %}
+                                        <span class="b-agency-site g-color-green">{{ firm.url|urlize|lower }}</span>
+                                    {% endif %}
+                                    {% if firm.mail %}
+                                        <span class="b-adwords-list-mail g-color-green"><script type="text/javascript">{{ firm.get_email|safe }}</script></span>
+                                    {% endif %}
+                                {% endfor %}
+                            </article>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+
+                <li>
+                    <ul class="b-list-v">
+                        {% for firm in tops|slice:"1::2" %}
+                        <li>
+                            <header>
+                                <h4>
+                                    <a href="{% url 'tourism:firm:read' section_slug=section.slug firm_id=firm.pk %}" class="b-agency-title">
+                                        {{ firm|typograf:'title'|safe }}
+                                    </a>
+                                </h4>
+                            </header>
+                            <article class="b-adwords-list-info">
+                                {% for address in firm.address_set.all|slice:"1" %}
+                                    <p class="g-map-address-link">{% map_address address %}</p>
+                                    {% if address.phones %}
+                                        <p class="b-adwords-list-phone">{{ address.phones|typograf|safe }}</p>
+                                    {% endif %}
+                                    {% if firm.url %}
+                                        <span class="b-agency-site g-color-green">{{ firm.url|urlize|lower }}</span>
+                                    {% endif %}
+                                    {% if firm.mail %}
+                                        <span class="b-adwords-list-mail g-color-green"><script type="text/javascript">{{ firm.get_email|safe }}</script></span>
+                                    {% endif %}
+                                {% endfor %}
+                            </article>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /Блок с платным списком агенств -->
+    {% endif %}
+
+    <!-- Блок со списком агенств -->
+    <div class="b-content-block b-tourism-company-list">
+
+        <ol class="b-list-v" start="{{ objects.start_index }}">
+        {% for firm in objects.object_list %}
+            <li>
+                <section>
+                    <header>
+                        <h5 class="g-title">
+                        <a href="{{ firm.get_absolute_url }}">{{ firm|typograf|safe }}</a>
+                        </h5>
+                    </header>
+
+                    {% for address in firm.address_set.all|slice:"1" %}
+                    <article class="b-company-info">
+                        <div class="g-map-address-link">
+                            {% map_address address %}
+                        </div>
+                        {% if address.phones %}
+                        <div class="b-company-phones">
+                            {{ address.phones|typograf|safe }}
+                        </div>
+                        {% endif %}
+                    </article>
+                    {% endfor %}
+                </section>
+            </li>
+        {% endfor %}
+        </ol>
+
+        <!-- Блок с информацией как поднять компанию в списке -->
+        <section class="b-tourism-company-list-help">
+            <h3 class="g-title">Поднять компанию в списке</h3>
+            <p>Для активации платных услуг свяжитесь с менеджером по телефонам: (3952) 488-850 или отправьте запрос на электронную почту: <span class="g-color-orange">{% filter urlize %}adv@irk.ru{% endfilter %}</span></p>
+        </section>
+        <!-- /Блок с информацией как поднять компанию в списке -->
+    </div>
+    <!-- Блок со списком агенств -->
+
+
+    <!-- Пагинатор -->
+    {% paginator objects q template='paginator/layout.html' name='организаций' %}
+    <!-- /Пагинатор -->
+
+{% endblock content %}

@@ -1,0 +1,8 @@
+{% load pytils_dt %}
+{% if period %}
+    <th><input type="checkbox" class="check_actions" value="{{ period.pk }}"/></th>
+    <td><a id="period_{{ period.pk }}" class="period" event_guide="{{ period.event_guide.pk }}" href="" date_from="{{ period.start_date|date:"Y-m-d" }}" date_to="{{ period.end_date|date:"Y-m-d" }}" sessions="{{ period.sessions_set.repr }}" price="{{ period.price|default_if_none:"" }}">{{ period.start_date|ru_strftime:" %d.%m.%Y " }}{% if period.is_day %}{% else %} - {{ period.end_date|ru_strftime:" %d.%m.%Y" }}{% endif %}</a></td>
+    <td>{% for session in period.sessions_set.all %}{{ session.time|time:"H:i" }} {% endfor %}</td>
+    <td>{{ period.price|default_if_none:"" }}</td>
+    <td><button id="deleteperiod_{{ period.pk }}" class="ui-button ui-state-default ui-corner-all delete_period" style="color:red">X</button></td>
+{% endif %}

@@ -1,0 +1,86 @@
+{% extends "afisha/layout_cr.html" %}
+
+{% load staticfiles media_utils paginator_utils str_utils thumbnail share_utils comments_tags cache_tags site_utils %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'contests.instance.meta' vary='object.id' tags='contests' %}{% spaceless %}
+        {% url 'afisha:contests:read' contest.slug as url %}
+        {% include 'share_meta.html' with url=url title=contest.title description=contest.caption image=contest.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block title %} {{ contest.title|typograf }} | {% if contest.is_closed %} Закрытые конкурсы {% else %} Открытые конкурсы {% endif %} | {{ block.super }}{% endblock %}
+
+{% block b-content-cr %}
+    <section class="b-contests">
+        {% if contest.project %}
+            <div class="special__link-container special__link-container_left g-margin-bottom-20">
+                {% include 'special/snippets/link.html' with name=contest.project.title|typograf url=contest.project.get_absolute_url %}
+            </div>
+        {% endif %}
+        <header class="g-subtitle">
+            <h1 class="g-font-size-30">{{ contest.title|typograf }}</h1>
+        </header>
+
+        {% thumbnail contest.image 300x100000 as thumb %}
+
+        {% if contest.is_closed %}
+            <div class="b-overlay">
+                <div class="b-overlay-closed"></div>
+                <img src="{{ thumb }}" class="b-contests-mainImg" alt="{{ contest.title|typograf }}">
+                <br clear="all">
+            </div>
+        {% else %}
+            <img src="{{ thumb }}" class="b-contests-mainImg" alt="{{ contest.title|typograf }}">
+            <br clear="all">
+            {% if contest.type == 'quiz' and not contest.is_closed and contest.user_can_add %}
+                <div class="b-joinblock" style="float:right;">
+                    <div class="pic">
+                        <img src="{% static 'img/contests/g-nophoto.png' %}" alt="">
+                    </div>
+                    <a href="{% url 'afisha:contests:participant_create' contest.slug %}" class="button"></a>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {# Текст для изображения #}
+        {% if contest.image_caption %}
+            <div id="picture-caption" class="g-indent">
+                <small class="g-color-gray">{{ contest.image_caption|typograf }}</small>
+            </div>
+        {% endif %}
+
+        <div class="b-content-article-text g-clear">
+            {{ contest.content|typograf:"admin"|safe }}
+            {% if contest.content|has_bb_code:'diff' %}
+                <script type="text/javascript" src="{% static 'js/lib/juxtapose.js' %}"></script>
+            {% endif %}
+        </div>
+
+        <div class="g-indent">
+            {% share_custom obj_pk=contest.pk url=contest.get_absolute_url description=contest.title stamp=contest.stamp object=contest %}
+        </div>
+
+        {# Не выводить участников для викорин #}
+        {% if contest.type != 'quiz' %}
+            <div class="b-contests-members">
+                {% if not contest.is_closed and contest.user_can_add %}
+                    <div class="b-joinblock">
+                        <div class="pic">
+                            <img src="{% static 'img/contests/g-nophoto.png' %}" alt="">
+                        </div>
+                        <a href="{% url 'afisha:contests:participant_create' contest.slug %}" class="button"></a>
+                    </div>
+                {% endif %}
+                {% for participant in participants %}
+                    {% include 'afisha/contests/snippets/participant_small.html' %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
+
+{% block b-aside-r %}
+    {% include 'afisha/base/b-aside-r-type2.html' with inner=True event_read=True %}
+{% endblock b-aside-r %}

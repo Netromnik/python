@@ -1,0 +1,174 @@
+{% load static staticfiles media_utils site_utils options adv_tags cache metric_tags pages str_utils utils_tags thumbnail phones_tags %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+    <title>Иркутск в годы Великой Отечественной войны и послевоенное время | Твой Иркутск</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-touch-icon-57x57.png' %}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-touch-icon-72x72.png' %}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/icons/apple-touch-icon-114x114.png' %}" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+
+    {% include 'share_meta.html' with url='/9may2021/' title='Иркутск в годы Великой Отечественной войны и послевоенное время' description='Иркутск в годы Великой Отечественной войны и послевоенное время' static_image='img/landing_pages/9may/share.png' static_image_width=800 static_image_height=420 %}
+
+    {% block style %}
+        {% less '/less/compile/landings/9may.less' %}
+    {% endblock style %}
+
+    {% if settings.DEBUG_ADAPTIVE or request.user_agent.is_gadget %}
+        {% block style_adaptive %}
+            {% less '/less/compile/adaptive/landings/9may.less' media='all' %}
+        {% endblock style_adaptive %}
+    {% endif %}
+
+    {% if settings.DEBUG %}
+        <script type="text/javascript">var less = {env: "development"};</script>
+        <script type="text/javascript" src="{% static 'js/lib/less/less-1.7.5.js' %}"></script>
+    {% endif %}
+
+    {% block js %}
+        <script type="text/javascript">
+            var POINTS_URL = "{% url 'landings_victory2020_points' %}";
+            var DOMAIN_MEDIA = "{{ MEDIA_URL }}";
+            var auth_no_redir = {};
+            var auth_callback = {};
+            var irk = {
+                staticPath: '{% get_static_prefix %}'
+            };
+        </script>
+        <script type="text/javascript" src="{% static 'js/lib/jquery-3.4.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lib/modernizr-2.6.2-bro-fix.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/apps-js/landing/9may.js' %}"></script>
+        <script type="text/javascript" src="//api-maps.yandex.ru/2.1/?lang=ru-RU"></script>
+
+        <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/lib/jquery-cookie.js' %}"></script>
+    {% endblock js %}
+
+    {% include 'google_analytics.html' %}
+</head>
+<body class="j-toggle-target-bodyhide" data-toggle-class="b-main-menu-opened">
+{% include 'yandex_metrika.html' %}
+
+{% include 'snippets/header.html' %}
+
+<div class="wrapper wrapper_overflow j-wrapper mobile-hidden">
+    <div class="curtain hide j-curtain">
+        <div class="curtain__info">
+            <h1 class="curtain__title">
+                Онлайн-гид IRK.ru об Иркутске
+                в годы Великой Отечественной войны
+            </h1>
+            <p class="curtain__text">
+                «В мороз, работая до пота,
+                с озноба мучась, как в огне,
+                мы здесь узнали, что работа
+                равна отвагою войне»
+                <span class="curtain__author">
+                    Борис Ручьев
+                </span>
+            </p>
+            <a href="#" class="curtain__enter j-curtain-enter">
+                Перейти к карте
+            </a>
+            <div class="curtain__alt">
+                Фото: Иркутский авиационный завод, 1941 год
+            </div>
+        </div>
+    </div>
+    <div class="may j-may">
+        <div class="may__info">
+            <div class="may__header">
+                <h2 class="may__title j-title">
+                    Иркутск в годы Великой Отечественной войны и&nbsp;послевоенное время
+                </h2>
+                <div class="back hide j-back">
+                    <span class="back__link j-back-link"></span>
+                </div>
+            </div>
+            <div class="may__content animate j-may-content">
+
+                <!--items block-->
+                <div class="may__items j-items">
+                    {% for article in articles %}
+                        <!--item-->
+                        <a href="#" class="may__item j-item" data-id="{{ article.id }}">
+                            <div class="may__item__image">
+                                {% thumbnail article.gallery.main_image.image 420x300 as thumb %}
+                                <img src="{{ thumb }}" class="may__item__img" alt="{{ article.gallery.main_image.alt|typograf }}" />
+                            </div>
+                            <div class="may__item__info">
+                                <h3 class="may__item__title">
+                                    {{ article.title }}
+                                </h3>
+                                <span class="may__item__address">
+                                    {{ article.address }}
+                                </span>
+                            </div>
+                        </a>
+                        <!--item close-->
+                    {% endfor %}
+                </div>
+                <!--items block close-->
+
+                <div class="may__articles j-articles hide">
+                    {% for article in articles %}
+                        <!--article-->
+                        <div class="may__article j-article" data-id="{{ article.id }}">
+                            {% thumbnail article.gallery.main_image.image 1000x1000 as thumb_big %}
+                            <a href="{{ thumb_big }}" class="may__article__image" data-fancybox="gallery-{{ article.id }}" data-caption="{{ article.gallery.main_image.alt|typograf }}">
+                                {% thumbnail article.gallery.main_image.image 420x300 as thumb %}
+                                <img src="{{ thumb }}" class="may__article__img" alt="{{ article.gallery.main_image.alt|typograf }}" />
+                            </a>
+                            <div class="may__article__info">
+                                <h3 class="may__article__title">
+                                    {{ article.title }}
+                                </h3>
+                                <span class="may__article__address">
+                                    {{ article.address }}
+                                </span>
+                            </div>
+                            <div class="may__article__content">
+                                {{ article.content|typograf }}
+                            </div>
+                            {% if article.gallery.main_gallery_pictures %}
+                                <div class="may__article__gallery">
+                                    <div class="gallery">
+                                        {% for picture in article.gallery.main_gallery_pictures %}
+                                            {% thumbnail picture.image 1000x1000 as thumb %}
+                                            <div class="gallery__item">
+                                                <a href="{{ thumb }}" class="gallery__item__link" data-fancybox="gallery-{{ article.id }}" data-caption="{{ picture.alt|typograf }}">
+                                                    <img class="gallery__item__img" src="{{ thumb }}" alt="{{ picture.alt|typograf }}" />
+                                                    {% if forloop.counter == 3 %}
+                                                        <span>{{ article.gallery.main_gallery_pictures|length }} фото</span>
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <!--article close-->
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="may__footer">
+                Благодарим музей истории г. Иркутска
+                за&nbsp;предоставленные архивные фото
+            </div>
+        </div>
+        <div class="may__map j-map">
+            <div id="map" style="width: 100%; height: 100%;"></div>
+        </div>
+    </div>
+</div>
+
+{% comment %}{% include 'snippets/footer.html' %}{% endcomment %}
+{% include 'liveinternet_counter.html' %}
+</body>
+</html>

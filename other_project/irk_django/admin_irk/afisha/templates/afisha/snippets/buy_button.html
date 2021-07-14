@@ -1,0 +1,22 @@
+{% load staticfiles %}
+{% comment %}
+Кнопка "Купить билет"
+    inputs:
+        session - сеанс на который покупается билет
+        additional_class - дополнительный класс css
+        metrika - цель для Яндекс.Метрики
+{% endcomment %}
+
+{% if session %}
+    <script src="{% static 'afisha/js/kassy.widget.js' %}"></script>
+
+    <button class="g-button_orange button {% if afisha %}{{ afisha }}{% endif %} j-kassy-open {% if not session.kassy_session.id %}g-disabled{% endif %} {{ additional_class }} {% if metrika %}j-metrika-goal{% endif %}"
+            {% if metrika %}data-metrika-goal="{{ metrika }}"{% endif %} type="button" data-kassy-agent="irk.ru"
+            data-kassy-city="irk"
+            data-kassy-pid="{{ session.kassy_session.id }}"
+            data-event-id="{{ session.event.id }}"
+            data-kassy-stat-url="{% url 'afisha:buy_button_click' %}"
+            >
+        Купить билет
+    </button>
+{% endif %}

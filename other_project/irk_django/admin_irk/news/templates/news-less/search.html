@@ -1,0 +1,30 @@
+{% extends 'news-less/layout.html' %}
+
+{% load staticfiles media_utils str_utils news_tags thumbnail comments_tags paginator_utils adv_tags date_tags %}
+
+{% block title %}Результаты поиска | {{ block.super }}{% endblock %}
+
+{% block b-content %}
+    <div class="b-search-page">
+        <div class="b-content-cr">
+            {# Центральная колонка #}
+            <section class="g-content-block">
+                {% if type == 'blogs' %}
+                    <h1>Результаты поиска по блогам: {{q|escape}}</h1>
+                {% else %}
+                    <h1>Результаты поиска: {{q|escape}}</h1>
+                {% endif %}
+                <ul class="g-button-group g-indent">
+                    <li>{% if sorting == "date" %}<a href="{{ request.path }}?q={{ q|escape }}">по релевантности</a>{% else %}<span class="g-active">по релевантности</span>{% endif %}</li>
+                    <li>{% if sorting == "date" %}<span class="g-active">по дате</span>{% else %}<a href="{{ request.path }}?sorting=date&q={{ q|escape }}">по дате</a>{% endif %}</li>
+                </ul>
+                <ul class="b-news-article-list j-resp-ajax-pag" start="{{ objects.start_index }}" data-page="{% if objects.has_next %}{{ objects.number }}{% else %}none{% endif %}">
+                    {% for material in objects %}
+                        {% include 'news-less/snippets/news_list_item.html' with showType=True %}
+                    {% endfor %}
+                </ul>
+                <div class="g-desktop">{% paginator objects q sorting template='paginator/layout.html' name='новостей' %}</div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

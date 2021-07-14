@@ -1,0 +1,13 @@
+{% extends 'guide/place.html' %}
+
+{% load afisha_tags %}
+
+{% block sked %}
+    {% if schedule and not review and not comments and not map %}
+        <div class="g-indent j-theater-sked">
+            <ul class="b-list-v b-afisha-events-horisontal">
+                {% include "guide/exhibitions/sessions.html" %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock sked %}

@@ -1,0 +1,153 @@
+{% load staticfiles media_utils math_utils str_utils pytils_dt pytils_numeral thumbnail %}
+
+{% spaceless %}
+
+{% if poll %}
+	<div class="b-polls-block" id="poll-{{ poll.pk }}-container">
+	{% if new %}
+        {% if voted %}
+        <ul class="b-poll-results">
+            {% for choice in poll.choices %}
+            <li>
+                {% thumbnail choice.image 60x60 as thumb %}
+                {% if thumb %}
+                    <div class="image"><img src="{{ thumb }}" alt="" width="{{ thumb.width }}" height="{{ thumb.height }}" /></div>
+                {% endif %}
+                <p>{{ choice.text|typograf }}</p>
+                <div class="b-poll-line" style="width:{% widthratio choice.votes_cnt poll.votes_cnt 100 %}%;">&nbsp;</div>
+                <span class="b-poll-percent">{{ choice.votes_cnt|percent:poll.votes_cnt }}%</span>
+            </li>
+            {% endfor %}
+
+            {% if request.user.is_authenticated %}
+                {% include 'polls/snippets/revote.html' %}
+            {% endif %}
+         </ul>
+        <div class="g-color-gray padding-left">
+            Всего проголосовало: <b class="g-color-black">{{ poll.votes_cnt }}&nbsp;{{ poll.votes_cnt|choose_plural:"человек,человека,человек" }}</b>.
+            <p>
+                {% if poll.is_active %}
+                    <small>
+                        Голосование проходит
+                        <nobr>до {{ poll.end|date:"j" }} {{ poll.end|ru_strftime:"%B %Y г." }}</nobr>
+                    </small>
+                {% else %}
+                    <small>
+                        Голосование проходило <nobr>с
+                        {% if poll.start|date:"m" == poll.end|date:"m" %}
+                            {{ poll.start|date:"j" }} по {{ poll.end|date:"j" }} {{ poll.end|ru_strftime:"%B %Y г." }}</nobr>
+                        {% else %}
+                            {{ poll.start|date:"j" }} {{ poll.start|ru_strftime:"%B" }}
+                            по {{ poll.end|date:"j" }} {{ poll.end|ru_strftime:"%B" }} {{ poll.end|ru_strftime:"%Y г." }}</nobr>
+                        {% endif %}
+                    </small>
+                {% endif %}
+            </p>
+        </div>
+        {% else %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var $pollForm = $('#poll-'+ {{ poll.pk }});
+                $pollForm.on('click', 'label', function(e) {
+                    e.preventDefault();
+                    $('#' + $(this).attr('for')).prop('checked', true);
+                    $pollForm.addClass('g-active');
+                    $pollForm.ajaxSubmit({
+                        beforeSubmit: function() {
+                            $('#poll-' + {{ poll.pk }} + '-container').append('<img src="{% static 'img/ajax-load48.gif' %}" class="preloader">');
+                        },
+                        success: function(data) {
+                            $('#poll-' + {{ poll.pk }} + '-container').replaceWith(data);
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <form method="post" action="{% url 'polls:vote' %}?new=true" id="poll-{{ poll.pk }}">{% csrf_token %}
+            <input type="hidden" name="poll" value="{{ poll.pk }}">
+            <ul>
+                {% for choice in poll.choices %}
+                <li>
+                    <div class="radio"><input type="radio" name="choice" id="poll-choice-{{ choice.pk }}" value="{{ choice.pk }}"></div>
+                    <div class="label"><label for="poll-choice-{{ choice.pk }}">{{ choice.text|typograf|safe }}</label></div>
+                </li>
+                {% endfor %}
+            </ul>
+            <button class="b-button" type="submit">Проголосовать</button>
+        </form>
+        {% endif %}
+
+        {% if arh_link %}
+            <span><a href="{% url 'polls:index' %}">Архив результатов</a></span>
+        {% endif %}
+
+	{% else %}
+
+		    <h1>{{ poll.title|typograf|safe }}</h1>
+		    {% if voted %}
+		    <ol class="b-list-v b-poll-v">
+		        {% for choice in poll.choices %}
+		        <li>
+                    <div class="dot"></div>
+		            <p>{{ choice.text|typograf|safe }}</p>
+		            <div class="b-aside-poll-line" style="width:{% widthratio choice.votes_cnt poll.votes_cnt 100 %}px;">&nbsp;</div>
+		            <span>&nbsp;{{ choice.votes_cnt }}&nbsp;({{ choice.votes_cnt|percent:poll.votes_cnt }}%)</span>
+		        </li>
+		        {% endfor %}
+		    </ol>
+		    {% else %}
+		    <script type="text/javascript">
+		        $(document).ready(function() {
+		            $('#poll-{{ poll.pk }}').submit(function() {
+		                $(this).ajaxSubmit({
+		                        beforeSubmit: function() {
+		                            $('#poll-{{ poll.pk }}-container').append('<img src="{% static 'img/ajax-load.gif' %}" style="float:right">');
+		                        },
+		                        success: function(data) {
+		                            $('#poll-{{ poll.pk }}-container').parent().html(data);
+		                        }
+		                    });
+		                return false;
+		            });
+		        });
+		    </script>
+
+		    <form method="post" action="{% url 'polls:vote' %}" id="poll-{{ poll.pk }}">{% csrf_token %}
+		        <input type="hidden" name="poll" value="{{ poll.pk }}">
+		        <ul>
+		            {% for choice in poll.choices %}
+		            <li>
+		            	<div class="radio"><input type="radio" name="choice" id="poll-choice-{{ choice.pk }}" value="{{ choice.pk }}"{% if forloop.first %} checked="checked"{% endif %}></div>
+		                <div class="label"><label for="poll-choice-{{ choice.pk }}">{{ choice.text|typograf|safe }}</label></div>
+		            </li>
+		            {% endfor %}
+		        </ul>
+		        <button class="b-button" type="submit">Проголосовать</button>
+		    </form>
+		    {% endif %}
+		    <div class="b-poll-result">
+			    Всего проголосовало: <b>{{ poll.votes_cnt }}</b><br/>
+			    <small class="gray">
+			    {% if poll.is_active %}
+			    	Голосование проходит <nobr>до {{ poll.end|ru_strftime:"%d %B %Y г." }}</nobr>
+			    {% else %}
+				    Голосование проходило с
+				    {% if poll.start|date:"m" == poll.end|date:"m" %}
+				    	{{ poll.start|date:"j" }} по {{ poll.end|date:"j" }} {{ poll.end|ru_strftime:"%B %Y г." }}
+				    {% else %}
+				    	{{ poll.start|date:"j" }} {{ poll.start|ru_strftime:"%B" }} по {{ poll.end|date:"j" }} {{ poll.end|ru_strftime:"%B" }} {{ poll.end|ru_strftime:"%Y г." }}
+				    {% endif %}
+			    {% endif %}
+			    </small>
+		    </div>
+		    {% comment %}
+			    {% if arh_link %}
+			   	<br /><span class="gray"><a href="{% url 'polls:index' %}">Архив результатов</a></span>
+			    {% endif %}
+			{% endcomment %}
+	{% endif %}
+	</div>
+{% endif %}
+
+{% endspaceless %}

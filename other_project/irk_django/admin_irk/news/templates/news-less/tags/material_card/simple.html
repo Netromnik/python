@@ -1,0 +1,115 @@
+{% comment %}
+
+Карточка материала
+
+    inputs:
+        material - событие
+        material_url - url адрес материала
+        material_image - изображение
+        is_orange - оранжевая рамка
+        is_big_image - большая фотография и увеличенный размер карточки (используется в сюжетах)
+        is_video - материал типа видео
+        is_expert - материала типа эксперт
+        is_lazyload - ленивая загрузка изображений
+        label_text - текст метки
+        label_class - класс метки
+        metrika_goal - цель для Яндекс.Метрики
+        audit_goal - цель для внутренней админки
+        request - запрос
+
+    Также можно передвать и другие параметры через вызов {% material_card material param=value %}
+{% endcomment %}
+
+{% load staticfiles news_tags str_utils comments_tags thumbnail date_tags utils_tags pytils_numeral cache_tags %}
+
+{% cache 3600 'news.tags.material_card' vary='material.pk,material.is_hidden,metrika_goal,audit_goal,request.user_agent.is_gadget,is_big_image,is_orange' tags='material' %}
+    {% if material.is_number_of_day %}
+        {% comment %} Цифра дня {% endcomment %}
+        <a href="{{ material_url }}" class="b-widget-article-number
+            {% if metrika_goal %} j-metrika-goal" data-metrika-goal="{{ metrika_goal }}"{% endif %}>
+            <div class="b-widget-article-number-value">{{ material.number_of_day_number|typograf }}</div>
+            <p>{{ material.number_of_day_text|typograf }}</p>
+            <span class="b-widget-article-number-link">подробнее</span>
+        </a>
+    {% else %}
+        {% comment %} Обычный вид виджета {% endcomment %}
+        <article class="b-widget-article
+            {% if material.is_hidden %}g-hidden-material{% endif %}
+            {% if is_orange %}orange{% endif %}
+            {% if is_big_image %}type2{% endif %}"
+        >
+            <header>
+                <a href="{{ material_url }}" class="{% if metrika_goal %}j-metrika-goal{% endif %} {% if audit_goal %}j-audit-goal-click{% endif %}"
+                   {% if metrika_goal %}
+                       data-metrika-goal="{{ metrika_goal }}"
+                   {% endif %}
+                   {% if audit_goal %}
+                       data-audit-goal="{{ audit_goal }}"
+                       data-audit-material="{{ audit_material }}"
+                   {% endif %}
+                   {% if target %}target="{{ target }}"{% endif %}
+                >
+                    {% if material_image %}
+                        <figure class="g-relative{% if is_video %} icon-block icon-video{% elif is_expert %} icon-block{% endif %}">
+                            {% if request.user_agent.is_gadget %}
+                                {% thumbnail material_image image_size_gadget as thumb %}
+                                <img alt="{{ material.title|typograf }}" style="max-width: 100%; width: 100%;"
+                                    {% if is_lazyload %}
+                                        class="j-lazy-load" data-original="{{ thumb }}" src="{% static 'img/gag_widget_340x200.gif' %}"
+                                    {% else %}
+                                        src="{{ thumb }}"
+                                    {% endif %}
+                                >
+                            {% else %}
+                                {% thumbnail material_image image_size as thumb %}
+                                <img alt="{{ material.title|typograf }}" width="{{ thumb.width }}" height="{{ thumb.height }}"
+                                    {% if is_lazyload %}
+                                        class="j-lazy-load" data-original="{{ thumb }}"
+                                    {% else %}
+                                        src="{{ thumb }}"
+                                    {% endif %}
+                                >
+                            {% endif %}
+
+                            {% if label_text %}
+                                <span class="b-widget-material-label b-widget-article-{{ label_class }}">
+                                    {{ label_text }}
+                                </span>
+                            {% endif %}
+                        </figure>
+                    {% endif %}
+
+                    <h4>{{ material|typograf }}</h4>
+                </a>
+            </header>
+
+            {% if material.caption and material.title|length < 63 %}
+                <p>{{ material.caption|typograf|truncatechars:'70' }}</p>
+            {% endif %}
+
+
+            <a href="{{ material_url }}" class="b-widget-article-link {% if metrika_goal %}j-metrika-goal{% endif %} {% if audit_goal %}j-audit-goal-click{% endif %}"
+                {% if metrika_goal %}
+                    data-metrika-goal="{{ metrika_goal }}"
+                {% endif %}
+                {% if audit_goal %}
+                    data-audit-goal="{{ audit_goal }}"
+                    data-audit-material="{{ audit_material }}"
+                {% endif %}
+            ></a>
+            {% if metrika_goal %}
+                <span class="j-metrika-goal" data-metrika-goal="{{ metrika_goal }}">
+                    {% comments_cnt material new_layout=True url=material_url %}
+                </span>
+            {% else %}
+                {% comments_cnt material new_layout=True url=url %}
+            {% endif %}
+
+            {% if is_expert %}
+                <a href="{{ material_url }}#questions" class="icon-inline icon-left icon-comment">
+                    {{ material.questions_count }}&nbsp;{{ material.questions_count|choose_plural:'вопрос,вопроса,вопросов' }}
+                </a>
+            {% endif %}
+        </article>
+    {% endif %}
+{% endcache %}

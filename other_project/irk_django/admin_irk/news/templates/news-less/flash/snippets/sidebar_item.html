@@ -1,0 +1,33 @@
+{% load str_utils news_tags thumbnail comments_tags date_tags gallery_tags %}
+
+{% if entry.gallery.main_gallery %}
+    {% spaceless %}{% gallery entry.gallery.main_gallery "10000x75" class='b-list-h' %}{% endspaceless %}
+{% endif %}
+
+{% spaceless %}
+    <div class="g-indent">
+        <a href="{{ entry.get_absolute_url }}" class="g-color-black visited">
+            {% if entry.is_tweet %}
+                {{ entry.content|twitter_urlize|safe }}
+            {% elif entry.is_site %}
+                {{ entry.title|typograf }}
+            {% elif entry.is_sms %}
+                {{ entry|typograf }}
+            {% elif entry.is_vk_dtp %}
+                {{ entry.content|typograf }}
+            {% endif %}
+        </a>
+    </div>
+{% endspaceless %}
+
+{% if entry.video_thumbnail %}
+    {% thumbnail entry.video_thumbnail 260x96 as thumb %}
+    <a class="b-widget-list-cite-item-preview-video icon-block icon-video" href="{{ entry.get_absolute_url }}">
+        <img src="{{ thumb }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px">
+    </a>
+{% endif %}
+
+<div class="b-news-flash-list-item-info">
+    <time datetime="{{ entry.created|date:'Y-m-d H:i' }}" class="g-color-gray g-margin-right-5">{{ entry.created|dates:'%d %B в %H:%M|%d %B %Y в %H:%M' }}</time>
+    {% comments_cnt entry new_layout=True %}
+</div>

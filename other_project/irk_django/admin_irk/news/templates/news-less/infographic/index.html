@@ -1,0 +1,36 @@
+{% extends 'news-less/layout_cr.html' %}
+
+{% load adv_tags staticfiles media_utils str_utils comments_tags thumbnail paginator_utils news_tags date_tags rating_tags %}
+
+{% block title %}Инфографика | {{ block.super }}{% endblock %}
+
+{% block b-content-class %} b-infographics{% endblock %}
+
+{% block b-content %}
+    <ul class="b-list-v b-infographics-list b-big j-resp-ajax-pag" data-page="{% if objects.has_next %}{{ objects.number }}{% else %}none{% endif %}">
+        {% for object in objects %}
+            <li {% if forloop.last %}class="g-last"{% endif %}>
+                {% with object.preview as thumb_img %}
+                    {% thumbnail thumb_img 940x700 as thumb %}
+                    <header>
+                        <h3><a href="{{ object.get_absolute_url }}" title="{{ object.title|typograf }}">{{ object.title|typograf }}</a></h3>
+                        <time class="g-color-gray">{{ object.stamp|dates:'%d %B|%d %B %Y' }}</time>
+                        {% comments_cnt object new_layout=True %}
+                        {% rating_result object 'ratings/widgets/like_blogs_count.html' %}
+                    </header>
+                    <article>
+                        <figure>
+                            <a href="{{ object.get_absolute_url }}" title="{{ object.title|typograf }}">
+                                <img src="{{ thumb }}" alt="{{ object.caption|typograf }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px">
+                                {% comment %}
+                                {% if object.caption %}<figcaption>{{ object.caption|typograf:'title'|safe }}</figcaption>{% endif %}
+                                {% endcomment %}
+                            </a>
+                        </figure>
+                    </article>
+                {% endwith %}
+            </li>
+        {% endfor %}
+        {% paginator objects template='paginator/layout.html' %}
+    </ul>
+{% endblock b-content %}

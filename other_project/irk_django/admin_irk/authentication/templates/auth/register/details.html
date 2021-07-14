@@ -1,0 +1,74 @@
+{% extends "auth/layout.html" %}
+
+{% load profile_utils staticfiles %}
+
+{% block title %}Регистрация | {{ block.super }}{% endblock %}
+
+{% block h1 %}Регистрация на IRK.ru{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.extend.js' %}"></script>
+    <script type="text/javascript" src="{% static 'auth/js/auth.js' %}"></script>
+{% endblock %}
+
+{% block main_content %}
+    <ul class="b-list-h b-auth-breadcrumbs">
+        <li><a href="{% url 'authentication:register:index' %}">1 Тип регистрации</a></li>
+        <li class="g-active">2 Данные профиля</li>
+        <li class="g-last">3 Окончание регистрации</li>
+    </ul>
+    <section class="b-auth-register">
+        {% if type != 'phone' %}
+        <header class="b-auth-register-switcher">
+            <span class="g-left{% if action != "auth" %} g-active{% endif %} j-account-new">Создать новый аккаунт</span>
+            <span class="g-right{% if action == "auth" %} g-active{% endif %} j-account-attach">Связать с существующим аккаунтом</span>
+        </header>
+        {% endif %}
+        <form class="b-auth-register-phone j-form-new{% if action == "auth" %} g-hide{% endif %}" id="form_auth_register_phone" action="" method="post">{% csrf_token %}
+            <div class="row">
+                {% if type == 'phone' %}
+                <label for="id_code">{{ form.name.label }}<span class="g-color-red">*</span></label>
+                    {{ form.name }}
+                    {% if form.name.errors %}<div class="hint g-color-red g-clear">{{ form.name.errors }}</div>{% endif %}
+                {% else %}
+                    <p>Ваш будущий псевдоним на сайте:</p>
+                    <p><strong>{{ username }}</strong></p>
+                {% endif %}
+            </div>
+            <input id="action" name="action" value="register" type="hidden"/>
+            <div class="footer">
+                <input type="submit" value="Зарегистрироваться"/>
+            </div>
+        </form>
+        <form class="b-auth-register-phone j-form-attach{% if action != "auth" %} g-hide{% endif %}" id="form_auth_social_attached" action="" method="post">{% csrf_token %}
+            <div class="hint g-color-red">
+                {{ auth_form.non_field_errors }}
+            </div>
+            <div class="row">
+                {{ auth_form.email.label_tag }}
+                {{ auth_form.email }}
+                <div class="hint g-color-red">
+                    {{ auth_form.email.errors }}
+                </div>
+            </div>
+            <div class="row">
+                {{ auth_form.password.label_tag }}
+                <input type="password" name="password" id="id_password" autocomplete="off">
+                <div class="hint g-color-red">
+                    {{ auth_form.password.errors }}
+                </div>
+                <input id="id_password_show" name="password_show" type="checkbox">
+                <label class="password_show" for="id_password_show">
+                    показать пароль
+                </label>
+                <div class="hint"></div>
+            </div>
+            <input id="action" name="action" value="auth" type="hidden"/>
+            <div class="footer">
+                <input type="submit" value="привязать"/>
+            </div>
+        </form>
+    </section>
+{% endblock main_content %}

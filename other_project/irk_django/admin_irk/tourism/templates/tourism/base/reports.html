@@ -1,0 +1,17 @@
+{% load str_utils staticfiles media_utils thumbnail comments_tags news_tags cache_tags %}
+
+{% cache 86400 'tourism.index.reports' vary='is_moderator' tags='longread' %}{% spaceless %}
+<div class="tourism-articles">
+    {% if object_list %}
+        <ul class="tourism-list" id="j-tourism-list" data-url="{% url 'tourism:index'  %}" data-page="2">
+            {% include 'tourism/article/article_list.html' %}
+        </ul>
+
+        <div class="tourism-loading">
+            <a href="/tourism/" class="tourism-loading__link j-showmore" data-target="j-tourism-list">
+                Показать больше статей
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endspaceless %}{% endcache %}

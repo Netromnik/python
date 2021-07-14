@@ -1,0 +1,70 @@
+{% load thumbnail str_utils comments_tags pytils_numeral cache_tags %}
+{% cache 3600 'blogs.tags.sidebar' vary='home,is_lazyload,request.user_agent.is_gadget,entries.count' tags='blogs' %}
+{% if entries %}
+    {% if home %}
+        <h3 class="g-block g-margin-bottom-20 g-color-black"><a href="{% url 'news:blogs:index' %}" class="g-inline-block">Блоги</a></h3>
+        <ul class="b-home-widget-blogs-list g-margin-bottom-50 j-analytics-impression{% if home and request.user_agent.is_gadget %} adaptive-transform{% endif %}"
+            data-analytics-category="Home Blogs Block">
+            {% for entry in entries %}
+            <li class="b-home-widget-blogs-list-item">
+                <header class="b-home-widget-blogs-list-item-header">
+                    {% thumbnail entry.author.profile.avatar 60x60 crop as thumb %}
+                    <a href="{% url 'news:blogs:author' entry.author.username %}" class="b-home-widget-blogs-list-item-avatar-container">
+                        <img class="b-home-widget-blogs-list-item-avatar{% if is_lazyload %} j-lazy-load" data-original="{{ thumb }}"{% else %}src="{{ thumb }}"{% endif %} width="{{ thumb.width }}px" height="{{ thumb.height }}px" alt="{{ entry.title|typograf }}">
+                    </a>
+                    <h3 class="b-home-widget-blogs-list-item-name g-color-black">
+                        <a href="{% url 'news:blogs:author' entry.author.username %}">
+                            {{ entry.author.get_full_name|typograf }}
+                        </a>
+                    </h3>
+                </header>
+                <article class="b-home-widget-blogs-list-item-article g-all-block-list-item">
+                    <h4 class="b-home-widget-blogs-list-item-title g-color-black">
+                        <a href="{{ entry.get_absolute_url }}">
+                            {{ entry.title|typograf }}
+                        </a>
+                    </h4>
+                    <p class="b-home-widget-blogs-list-item-caption">{{ entry.caption|typograf|truncatechars:85 }}</p>
+                    <a href="{{ entry.get_absolute_url }}" class="g-all-block-link"></a>
+                </article>
+                {% if entry.comments_cnt %}
+                    <a href="{{ entry.get_absolute_url }}#comments" class="icon-inline icon-left icon-comment">{{ entry.comments_cnt|get_plural:'отзыв,отзыва,отзывов' }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h3 class="g-block g-margin-bottom-10 g-color-black"><a href="{% url 'news:blogs:index' %}">Блоги</a></h3>
+        <ul class="b-widget-blogs-list">
+            {% for entry in entries %}
+            <li class="b-widget-blogs-list-item g-indent">
+                <header class="b-widget-blogs-list-item-header">
+                    {% thumbnail entry.author.profile.avatar 60x60 crop as thumb %}
+                    <a href="{% url 'news:blogs:author' entry.author.username %}" class="b-widget-blogs-list-item-avatar-container">
+                        <img {% if is_lazyload %}class="j-lazy-load" data-original="{{ thumb }}"{% else %}src="{{ thumb }}"{% endif %} width="{{ thumb.width }}px" height="{{ thumb.height }}px" alt="{{ entry.title|typograf }}">
+                    </a>
+                    <h3 class="b-widget-blogs-list-item-name g-color-black">
+                        <a href="{% url 'news:blogs:author' entry.author.username %}">
+                            <span>{{ entry.author.first_name|typograf }}</span>
+                            <span>{{ entry.author.last_name|typograf }}</span>
+                        </a>
+                    </h3>
+                </header>
+                <article class="b-widget-blogs-list-item-article g-all-block-list-item">
+                    <h4 class="b-widget-blogs-list-item-title g-color-black">
+                        <a href="{{ entry.get_absolute_url }}">
+                            {{ entry.title|typograf }}
+                        </a>
+                    </h4>
+                    <p class="b-widget-blogs-list-item-caption">{{ entry.caption|typograf|truncatechars:85 }}</p>
+                    <a href="{{ entry.get_absolute_url }}" class="g-all-block-link"></a>
+                </article>
+                {% if entry.comments_cnt %}
+                    <a href="{{ entry.get_absolute_url }}#comments" class="b-widget-blogs-list-item-comments">{{ entry.comments_cnt|get_plural:'отзыв,отзыва,отзывов' }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endif %}
+{% endcache %}

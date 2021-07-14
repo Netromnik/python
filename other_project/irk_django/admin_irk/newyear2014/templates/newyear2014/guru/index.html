@@ -1,0 +1,108 @@
+{% extends 'newyear2014/layout.html' %}
+{% load staticfiles adv_tags media_utils thumbnail str_utils pytils_numeral newyear2014_tags %}
+
+{% block title %}Как встретить Новый год | {{ block.super }}{% endblock title %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.extend.js' %}"></script>
+    <script>
+        $(function() {
+            var genderCheck = function() {
+                if ($('.b-brownbuttons.gender span').hasClass('g-active')) {
+                    $('.b-brownbuttons.gender span').removeClass('error');
+                } else {
+                    $('.b-brownbuttons.gender span').addClass('error');
+                    return false;
+                }
+            }
+            $('#id_guru').validate({
+                rules: {
+                    gender: {
+                        required: true,
+                        select: true
+                    },
+                    eyes: {
+                        required: true
+                    },
+                    age: {
+                        required: true,
+                        number: true
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    // пустое, чтобы не выводил сообщений
+                }
+            });
+            $('#id_guru').on('submit', function() {
+                genderCheck();
+            });
+            $('.b-brownbuttons span').on('click', function(){
+                $(this).parent().find('span').removeClass('g-active');
+                $(this).addClass('g-active');
+            });
+            $('.b-ny2014-guru-form .gender span').on('click', function(){
+                genderCheck();
+                if ($(this).hasClass('male')) {
+                    $('#id_gender').val('m');
+                } else {
+                    $('#id_gender').val('f');
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block b-content-parent %}
+    <section class="b-content g-ny2014-menu g-noborder">
+        {% main_menu request.path %}
+        {% ibanner ID=408 as banner1 %}
+        {% if banner1 %}<div class="g-intend">{{ banner1 }}</div>{% endif %}
+        <section class="b-ny2014-guru">
+            <header>
+                <h1>Как встретить Новый год</h1>
+            </header>
+            <div class="b-ny2014-guru-form">
+                {% if answer %}
+                    <div class="b-ny2014-guru-form-answer">{{ answer.content|typograf:'admin'|safe }}</div>
+                {% else %}
+                    <div class="flash">
+                        <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0" WIDTH="848" HEIGHT="911">
+                            <PARAM NAME=movie VALUE="{% static 'newyear2014/snow.swf' %}">
+                            <PARAM NAME=quality VALUE="high">
+                            <PARAM NAME=wmode VALUE="transparent">
+                            <EMBED src="{% static 'newyear2014/snow.swf' %}" quality="high" wmode="transparent"
+                                   WIDTH="848"
+                                   HEIGHT="911"
+                                   TYPE="application/x-shockwave-flash"
+                                   PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash">
+                            </EMBED>
+                        </OBJECT>
+                    </div>
+                <form id="id_guru" action="" method="post">{% csrf_token %}
+                    <h5>Ваш Пол:</h5>
+                    {{ form.gender }}
+                    <label for="id_gender" class="b-brownbuttons gender">
+                        <span class="male">Мужской</span>
+                        <span class="female">Женский</span>
+                    </label>
+                    <h5>Ваш цвет глаз:</h5>
+                    <input type="text" id="id_eyes" value="" name="eyes">
+                    <h5>Возраст:</h5>
+                    {{ form.age }}
+                    <h5>Есть ли у вас бубен?</h5>
+                    <div class="b-brownbuttons">
+                        <span class="g-active">есть</span>
+                        <span>нет</span>
+                    </div>
+                    <button class="button">Спросить</button>
+                </form>
+                {% endif %}
+            </div>
+        </section>
+
+    </section>
+{% endblock b-content-parent %}
+
+

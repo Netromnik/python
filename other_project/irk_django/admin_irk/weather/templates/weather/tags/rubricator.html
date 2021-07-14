@@ -1,0 +1,36 @@
+{% comment %}
+Рубрикатор для Погоды
+inputs:
+    main_items - пункты меню
+
+{% endcomment %}
+
+<ul class="b-content-header-menu b-weather-content-header-menu">
+    {% for item in main_items %}
+        <li class="content-header-menu-{{ forloop.counter }}{% if item.is_active %} g-active{% endif %}" >
+            {% if item.is_current %}
+                <span>{{ item.name }}</span>
+            {% else %}
+                <a href="{{ item.url }}" class="g-hover">{{ item.name }}</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+
+    <li class="g-relative g-mobile_320 {% if not other_items|length > 0 %}g-not-desktop{% endif %} more g-last {% if select_more %}g-active{% endif %}">
+                <span class="g-jlink j-reveal-button-toggle touchstart" data-target="header-more"><span
+                        class="g-jlink g-color-black">еще</span></span>
+                <span class="g-jlink g-not-mobile j-reveal-button-toggle click" data-target="header-more"><span
+                        class="g-jlink g-color-black">еще</span></span>
+        <ul class="b-content-header-menu-more g-accelerate j-reveal-block-toggle j-reveal-block-toggle-header-more">
+            {% for item in main_items %}
+                <li class="hide content-header-menu-{{ forloop.counter }}{% if item.is_active %} g-active{% endif %}">
+                    {% if item.is_current %}
+                        <span>{{ item.name }}</span>
+                    {% else %}
+                        <a href="{{ item.url }}">{{ item.name }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+</ul>

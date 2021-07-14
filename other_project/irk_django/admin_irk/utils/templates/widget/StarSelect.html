@@ -1,0 +1,48 @@
+<input type="hidden" value="{{ value }}" name="{{ stars }}" id="id_{{ name }}">
+<div class="stars_select" id="stars_{{ name }}">
+	{% for item in rng %}
+		{% if not value %}
+			<span id="star_{{ name }}_{{ item }}" class="star{% if item > default %}-empty{% endif %}"></span>
+		{% else %}
+			<span id="star_{{ name }}_{{ item }}" class="star{% if item > value %}-empty{% endif %}"></span>
+		{% endif %}
+    {% endfor %}
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	/*console.log('DOM ready');*/
+	var {{ name }}_data = {
+		amount: {{ amount }},
+		def: {{ default }},
+		selected: false
+	};
+		
+	$('#stars_{{ name }} span').mouseover(function() {
+		var id = parseInt(this.id.replace('star_{{ name }}_', ''));		
+		for (var i=1; i<=id; i++) {
+			$('#star_{{ name }}_'+i).addClass('star').removeClass('star-empty');
+		}
+	});
+	$('#stars_{{ name }} span').mouseout(function() {
+		for (var i=1; i<={{ name }}_data.amount; i++) {
+			$('#star_{{ name }}_'+i).removeClass('star').addClass('star-empty');
+		}
+		var total;
+		if ({{ name }}_data.selected == false) {
+			total = {{ name }}_data.def;
+		} else {
+			total = parseInt($('#id_{{ name }}').val());
+		}
+		/*console.log(total);*/
+		for (var i=1; i<=total; i++) {
+			$('#star_{{ name }}_'+i).removeClass('star-empty').addClass('star');
+		}
+
+	});
+	$('#stars_{{ name }} span').click(function() {
+		var id = parseInt(this.id.replace('star_{{ name }}_', ''));	
+		$('#id_{{ name }}').val(id);
+		{{ name }}_data.selected = true;
+	});
+});
+</script>

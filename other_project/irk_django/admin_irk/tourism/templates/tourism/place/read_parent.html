@@ -1,0 +1,28 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils str_utils thumbnail comments_tags tourism_tags pytils_dt adv_tags %}
+
+{% block title %}{{ place.title|typograf:"title"|safe }} | Места отдыха | {{ block.super }}{% endblock %}
+
+{% block content %}
+    <!-- Хлебные крошки -->
+    <div class="b-content-block b-breadcrumbs">
+        <nav>
+            <ul class="b-list-h">
+                <li><a href="{% url 'tourism:index' %}">Туризм</a></li>
+                {% if place.type_slug == 'abroad' %}
+                    <li><a href="{% url 'tourism:places' 'abroad' %}">Места отдыха</a></li>
+                {% elif place.type_slug == 'russia' %}
+                    <li><a href="{% url 'tourism:places' 'russia' %}">Места отдыха</a></li>
+                {% elif place.type_slug == 'baikal' %}
+                    <li><a href="{% url 'tourism:places' 'baikal' %}">Места отдыха</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    <!-- /Хлебные крошки -->
+
+    <article class="b-tourism-place-block">
+        {% include "tourism/place/inc/place.html" %}
+    </article>
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% extends 'news-less/layout.html' %}
+
+{% load adv_tags media_utils staticfiles %}
+
+{% block title %}
+    Эксперт | {{ block.super }}
+{% endblock %}
+
+{% block text_widget %}{% ibanner id=309 template='adv/banners/text_widget_layout.html' %}{% endblock %}
+
+{% block top_banner %}{% include 'experts/base/top_banner.html' %}{% endblock %}
+
+
+{% block b-footer-layout-banner %}
+    {% ibanner id=134 as banner %}
+    {% ibanner id=544 as programmatic_footer %}
+    {% if request.user_agent.is_gadget and programmatic_footer %}
+         <div class="g-margin-bottom-20 g-centered-div g-not-desktop">{{ programmatic_footer }}</div>
+    {% elif banner %}
+        <div class="b-footer-layout-banner g-desktop">{{ banner }}</div>
+    {% endif %}
+{% endblock %}
+

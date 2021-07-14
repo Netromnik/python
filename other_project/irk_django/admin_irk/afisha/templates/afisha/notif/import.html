@@ -1,0 +1,10 @@
+{% extends "to_moder.html" %}
+
+{% load site_utils str_utils %}
+
+{% block body_letter %}
+    <h3>Уведомления об импорте с {{ name }}</h3>
+    {% for item in items %}
+        <p>{{ item }}</p>
+    {% endfor %}
+{% endblock %}

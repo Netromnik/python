@@ -1,0 +1,36 @@
+{% extends app_layout %}
+
+{% load staticfiles cache_tags str_utils %}
+
+{% block title %}{{ poll.title|typograf }} | Голосования | {{ block.super }}{% endblock title %}
+
+{% block container %}<div class="b-container-padding"><div class="g-overflow">{{ block.super }}</div></div>{% endblock %}
+
+{% block container-class-content %} b-container_nopt{% endblock %}
+
+{% block meta %}
+    {% with object=poll %}
+        {#  Мета-данные для социальных сетей и поисковиков #}
+        {% cache 86400 'polls.instance.meta' vary='object.id' tags='object' %}{% spaceless %}
+            {% include 'share_meta.html' with card='summary_large_image' url=object.get_absolute_url title=object.title description=object.caption image=object.wide_image %}
+        {% endspaceless %}{% endcache %}
+    {% endwith %}
+{% endblock %}
+
+{% block content-cr-class %} b-content-cr_fix{% endblock %}
+
+{% block b-content-cr %}
+    {% if poll.project %}
+        <div class="special__link-container special__link-container_left g-margin-bottom-20">
+            {% include 'special/snippets/link.html' with name=poll.project.title|typograf url=poll.project.get_absolute_url %}
+        </div>
+    {% endif %}
+    {% include 'polls/read_content.html' with object=poll %}
+{% endblock %}
+
+{# залипуха для раздела туризм, пока в туризме правая колонка по умолчанию не станет 300px #}
+{% block b-content-class %} b-tourism-article{% endblock %}
+
+{% block b-aside-r %}
+    {% include 'news-less/news/b-aside-r.html' %}
+{% endblock %}

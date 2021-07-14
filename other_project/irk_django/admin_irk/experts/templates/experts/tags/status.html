@@ -1,0 +1,31 @@
+{% load pytils_dt %}
+<div class="b-expert-conf-answer">
+    {% if not expert.is_consultation %}
+        {# Пресс-конференции #}
+
+        {% if expert.stamp_end >= today %}
+            <div class="b-expert-stroke b-expert-stroke-green">до {{ expert.stamp_end|ru_strftime:'%d %B' }}</div>
+        {% endif %}
+
+        {% if expert.is_answered %}
+            <div class="b-expert-stroke b-expert-stroke-orange">Ответы даны {{ expert.stamp_publ|ru_strftime:"%d %B"|capfirst }}</div>
+        {% endif %}
+
+        {% if not expert.is_answered and expert.stamp_publ < today %}
+            <div class="b-expert-stroke b-expert-stroke-gray">Ответы задерживаются</div>
+        {% endif %}
+
+        {% if not expert.is_answered and expert.stamp_publ >= today and expert.stamp_end < today %}
+            <div class="b-expert-stroke b-expert-stroke-orange">Ответы {{ expert.stamp_publ|ru_strftime:'%d %B' }}</div>
+        {% endif %}
+
+    {% else %}
+        {# Консультации #}
+        {% if expert.stamp_end >= today %}
+            <div class="b-expert-stroke b-expert-stroke-green">до {{ expert.stamp_end|ru_strftime:'%d %B' }}</div>
+        {% else %}
+            <div class="b-expert-stroke b-expert-stroke-orange">Завершена {{ expert.stamp_end|ru_strftime:'%d %B' }}</div>
+        {% endif %}
+
+    {% endif %}
+</div>

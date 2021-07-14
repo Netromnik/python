@@ -1,0 +1,187 @@
+{% load thumbnail comments_tags str_utils staticfiles rating_tags pytils_dt %}
+
+
+{% if comment.parent.pk %}
+
+    <!--item children-->
+    <li class="list-comments__item j-comments-item{% if not comment.is_visible %} deleted{% endif %}" id="comment_{{ comment.pk }}" data-id="{{ comment.pk }}">
+        <div class="baloon-container">
+            <div class="baloon j-baloon{% if comment.parent.text|length < 100 %} baloon_min{% endif %}">
+
+                <div class="baloon__header">
+                    <div class="baloon__avatar">
+                        {% thumbnail comment.parent.user.profile.image 30x30 crop="30x30" as thumb_parent %}
+                        <img src="{{ thumb_parent }}" />
+                    </div>
+                    <div class="baloon__user">
+                        <a href="{{ comment.parent.user.profile.get_absolute_url }}" target="__blank" class="baloon__username">
+                            {{ comment.parent.user }}
+                        </a>
+                        <div class="baloon__time">
+                            {{ comment.parent.created|ru_strftime:"%d %B %Y в %H:%M" }}
+                        </div>
+                    </div>
+                </div>
+                <div class="baloon__text">
+                    {{ comment.parent.text|typograf:'user'|safe  }}
+                </div>
+            </div>
+        </div>
+
+        <div class="list-comments__article j-user-container{% if not comment.is_visible %} deleted{% endif %}">
+            <a href="#comment_{{ comment.parent.pk }}" class="list-comments__avatar list-comments__avatar_child j-comment-baloon" data-parent-id="{{ comment.parent.pk }}" title="Нажмите для просмотра комментария">
+                <span class="list-comments__avatar-link">
+                    {% if comment.user.profile.image %}
+                        {% thumbnail comment.user.profile.image 30x30 crop="30x30" as thumb_user %}
+                        <img src="{{ thumb_user }}" class="j-comment-avatar" data-id="{{ comment.pk }}" alt="{{ comment.user }}" />
+                    {% else %}
+                        <img src="{% static 'img/user_avatar_gag.png' %}" alt="{{ comment.user }}" />
+                    {% endif %}
+                </span>
+                <span class="list-comments__avatar-link">
+                    {% if comment.parent.user.profile.image %}
+                        {% thumbnail comment.parent.user.profile.image 30x30 crop="30x30" as thumb_parent %}
+                        <img src="{{ thumb_parent }}" alt="{{ comment.parent.user }}" />
+                    {% else %}
+                        <img src="{% static 'img/user_avatar_gag.png' %}" alt="{{ comment.parent.user }}" />
+                    {% endif %}
+                </span>
+            </a>
+            <div class="list-comments__header j-user-header">
+
+                {% if is_moderator %}
+                    {% user_menu comment.user next_link=object.get_absolute_url %}
+                {% else %}
+                    <a href="{{ comment.user.profile.get_absolute_url }}" class="list-comments__username list-comments__username_mr5 j-comment-user" data-id="{{ comment.pk }}">
+                        {{ comment.user }}
+                    </a>
+                {% endif %}
+
+                <span class="list-comments__time j-comment-time">
+                    {{ comment.created|ru_strftime:"%d %B %Y в %H:%M" }}
+                </span>
+                {% if comment.is_edited %}
+                    <span class="list-comments__edited">(изменено)</span>
+                {% endif %}
+                {% rating comment as rating_var %}
+                {{ rating_var.html }}
+            </div>
+            <div class="list-comments__content j-comment-text">
+                {% if comment.is_first %}
+                    <p>
+                        <i>Мой первый комментарий!</i>
+                    <p>
+                {% endif %}
+                {{ comment.text|typograf:'user'|safe }}
+            </div>
+            <div class="list-comments__footer j-comment-footer">
+                {% if request.user.is_authenticated %}
+                    {% if not object.disable_comments %}
+                        {% if not request.user.profile.is_banned %}
+                            <a href="{% url 'comments:create' %}" class="list-comments__footer-link j-comments-answer-link" data-id="{{ comment.pk }}" data-level="2">
+                                ответить
+                            </a>
+
+                            {% if comment.user.pk == request.user.pk %}
+                                {% if comment.is_editable %}
+                                    <a href="#" class="list-comments__footer-link j-comments-edit-link" data-id="{{ comment.pk }}" data-time-create="{{ comment.created_timestamp }}" data-time-end="{{ comment.end_edit_timestamp }}" data-get-text-url="{% url 'comments:text' comment.pk %}" data-save-url="{% url 'comments:edit' comment.pk %}">
+                                        изменить
+                                    </a>
+                                    <span class="j-timer" data-time-end="{{ comment.end_edit_timestamp }}"></span>
+                                {% endif %}
+                            {% endif %}
+
+                        {% endif %}
+                    {% endif %}
+                    {% if is_moderator %}{% admin_comment_menu %}{% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </li>
+    <!--item-->
+
+{% else %}
+
+    <!--item first level -->
+    <li class="list-comments__item j-comments-item{% if not comment.is_visible %} deleted{% endif %}" id="comment_{{ comment.pk }}" data-id="{{ comment.pk }}">
+        <div class="list-comments__article j-user-container{% if not comment.is_visible %} deleted{% endif %}">
+            <div class="list-comments__avatar">
+                <a href="{{ comment.user.profile.get_absolute_url }}" class="list-comments__avatar-link" title="{{ comment.user }}">
+                    {% if comment.user.profile.image %}
+                        {% thumbnail comment.user.profile.image 30x30 crop="30x30" as thumb %}
+                        <img src="{{ thumb }}" alt="{{ comment.user }}" class="j-comment-avatar" data-id="{{ comment.pk }}" />
+                    {% else %}
+                        <img src="{% static 'img/user_avatar_gag.png' %}" alt="{{ comment.user }}" />
+                    {% endif %}
+                </a>
+            </div>
+            <div class="list-comments__header j-user-header">
+
+                {% if is_moderator %}
+                    {% user_menu comment.user next_link=object.get_absolute_url %}
+                {% else %}
+                    <a href="{{ comment.user.profile.get_absolute_url }}" class="list-comments__username j-comment-user" data-id="{{ comment.pk }}">
+                        {{ comment.user }}
+                    </a>
+                {% endif %}
+
+                <span class="list-comments__time j-comment-time">
+                    {{ comment.created|ru_strftime:"%d %B %Y в %H:%M" }}
+                </span>
+                {% if comment.is_edited %}
+                    <span class="list-comments__edited">(изменено)</span>
+                {% endif %}
+                {% rating comment as rating_var %}
+                {{ rating_var.html }}
+            </div>
+            <div class="list-comments__content j-comment-text">
+                {% if comment.is_first %}
+                    <p>
+                        <i>Мой первый комментарий!</i>
+                    <p>
+                {% endif %}
+                {% if is_preview %}
+                    {{ comment.text|truncate_words_to_str_length:"300"|typograf:'user'|safe }}
+                {% else %}
+                    {{ comment.text|typograf:'user'|safe }}
+                {% endif %}
+            </div>
+            {% if not is_preview %}
+                <div class="list-comments__footer j-comment-footer">
+                    {% with comment.get_visible_children_count as child_count %}
+                        {% if request.user.is_authenticated %}
+                            {% if not object.disable_comments %}
+                                {% if not request.user.profile.is_banned %}
+                                    <a href="{% url 'comments:create' %}" class="list-comments__footer-link j-comments-answer-link" data-id="{{ comment.pk }}" data-level="1" {% if child_count %} data-child="true"{% endif%} data-child-url="{% url 'comments:children' comment.pk %}">
+                                        ответить
+                                    </a>
+
+                                    {% if comment.user.pk == request.user.pk %}
+                                        {% if comment.is_editable %}
+                                            <a href="#" class="list-comments__footer-link j-comments-edit-link" data-id="{{ comment.pk }}" data-time-create="{{ comment.created_timestamp }}" data-time-end="{{ comment.end_edit_timestamp }}" data-get-text-url="{% url 'comments:text' comment.pk %}" data-save-url="{% url 'comments:edit' comment.pk %}">
+                                                изменить
+                                            </a>
+                                            <span class="j-timer" data-time-end="{{ comment.end_edit_timestamp }}"></span>
+                                        {% endif %}
+                                    {% endif %}
+
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                        {% if child_count %}
+                            <a href="{% url 'comments:children' comment.pk %}" class="list-comments__footer-link j-comments-child-load" data-id="{{ comment.pk }}">
+                                <span class="j-comments-answer-label">посмотреть ответы</span> (<span class="j-comments-answer-counter">{{ child_count }}</span>)
+                            </a>
+                        {% endif %}
+                    {% endwith %}
+                    {% if is_moderator %}{% admin_comment_menu %}{% endif %}
+                </div>
+                <div class="list-comments__answers j-comment-answers" data-id="{{ comment.pk }}">
+                    <!--load ajax answers-->
+                </div>
+            {% endif %}
+        </div>
+    </li>
+    <!--item-->
+
+{% endif %}

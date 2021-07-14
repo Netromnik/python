@@ -1,0 +1,53 @@
+{% if postfix %}<input type="hidden" id="id_{{ name }}" {% if value.0 %}value="{{ value.0 }}"{% endif %} name="{{ name }}">{% endif %}
+<input
+    id="id_{{name}}{{ postfix }}"
+    class="autocomplete_input"
+    url="{{ url }}"
+    type="text"
+    {% if value %}{% if postfix and value.1 %}value="{{ value.1 }}"{% else %}value=""{% endif %}{% endif %}
+    name="{{ name }}{{ postfix }}"
+    autocomplete="off"
+    callback="{{ callback_name }}SuggestCallback" />
+
+<script type="text/javascript"><!--
+{% if postfix %}
+function {{ callback_name }}SuggestCallback(event, data, formatted) {
+    if(data != undefined) {
+        var id = data[0].split('=')[0];
+    } else {
+        var id = '';
+    }
+    jQuery('#id_{{ name }}').val(id);
+}
+{% endif %}
+jQuery(document).ready(function () {
+    var obj = jQuery('#id_{{ name }}{{ postfix }}');
+    
+    if (typeof(obj) == 'undefined')
+        return;
+
+    var url = jQuery(obj).attr("url");
+    
+    var width = jQuery(obj).attr("width");
+    
+    {% if postfix %}
+    var callback = jQuery(obj).attr("callback");
+    jQuery(obj).keyup(function(eventObject){
+        if(this.value.replace(/^\s+|\s+jQuery/g,"") == ''){
+            eval(callback+"(eventObject)");
+        }
+    });
+    {% endif %}
+    ac_options = {{ ac_options|safe }};
+    ac_options.formatResult = function(row, i, max) {
+        return row[0].split('=')[1];
+    }
+    ac_options.formatItem = function(row, i, max) {
+        return row[0].split('=')[1];
+    }
+    ac_options.formatMatch =  function(row, i, max) {
+        return row[0].split('=')[1];
+    }
+    jQuery(obj).autocomplete (url, ac_options){% if postfix %}.result(eval(callback)){% endif %};
+});
+--></script>

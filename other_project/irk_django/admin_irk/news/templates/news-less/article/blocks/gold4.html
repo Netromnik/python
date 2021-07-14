@@ -1,0 +1,18 @@
+{% load news_tags %}
+
+<li class="grid-list__item grid-list__item_x2 adaptive-card adaptive-card-transform">
+    {% material_card materials.0 is_big=True  target="_blank" %}
+</li>
+<li class="grid-list__item grid-list__item_x2 g-margin-bottom-40">
+    <ul class="grid-list">
+        <li class="grid-list__item grid-list__item_x2">
+            {% material_card materials.1 is_double=True target="_blank" is_lazyload=false %}
+        </li>
+        <li class="grid-list__item grid-list__item_nomb">
+            {% material_card materials.2 is_light=True target="_blank" %}
+        </li>
+        <li class="grid-list__item grid-list__item_nomb">
+            {% material_card materials.3 is_light=True target="_blank" %}
+        </li>
+    </ul>
+</li>

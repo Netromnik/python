@@ -1,0 +1,11 @@
+{% load adv_tags staticfiles media_utils str_utils news_tags comments_tags thumbnail blogs_tags %}
+
+<div class="b-news-blogs-hint">
+    <p class="g-color-gray g-margin-bottom-25 g-font-serif">Ответственность за публикуемую информацию в постах несут авторы блогов. Мнение редакции сайта IRK.ru может не совпадать с мнением блогеров.</p>
+    <h4 class="b-news-blogs-hint-hide">Как завести блог?</h4>
+    <p class="g-margin-bottom-15 g-font-serif b-news-blogs-hint-hide">Напишите небольшой рассказ о себе и вашем блоге на почту <a href="mailto:news@irk.ru" title="Пишите нам на почту">news@irk.ru</a></p>
+    <a href="/news/blogs/rules/" class="b-news-blogs-aside-link-rules b-news-blogs-hint-hide">Правила блогов IRK.ru</a>
+</div>
+<div class="g-aside-block">
+    <h4><a href="{% url 'news:blogs:authors' %}" class="b-news-blogs-aside-link-authors">Все авторы блогов</a></h4>
+</div>

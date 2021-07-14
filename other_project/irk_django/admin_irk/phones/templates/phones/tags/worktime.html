@@ -1,0 +1,64 @@
+{% load date_tags %}
+
+{% spaceless %}
+    {% if address %}
+        <div class="b-widget-worktime">
+            {% if address.twenty_four_hour %}
+                <span class="b-widget-worktime-caption">Круглосуточно</span>
+            {% elif address.address_worktimes.exists %}
+                {% if address.current_worktime and address.open_everyday_at_same_time %}
+                    <span class="b-widget-worktime-caption">
+                        Ежедневно {{ address.current_worktime.start_time|date:"H:i" }} &mdash; {% if address.current_worktime.end_time|date:"H:i" == "00:00" %}24:00{% else %}{{ address.current_worktime.end_time|date:"H:i" }}{% endif %}
+                        {% if address.has_dinner and address.dinner_everyday_at_same_time %}
+                            Oбед {{ address.dinner_everyday_at_same_time.dinner_start_time|date:"H:i" }} &mdash; {{ address.dinner_everyday_at_same_time.dinner_end_time|date:"H:i" }}
+                        {% endif %}
+                    </span>
+                {% else %}
+                    <div class="g-relative">
+                        {% if address.current_worktime %}
+                            <a href="#" class="b-widget-worktime-caption g-jlink j-reveal-button" data-target="worktime-{{ address.pk }}" data-speed="150">
+                                Сегодня {{ address.current_worktime.start_time|date:"H:i" }} &mdash; {% if address.current_worktime.end_time|date:"H:i" == "00:00" %}24:00{% else %}{{ address.current_worktime.end_time|date:"H:i" }}{% endif %}
+                            </a>
+                        {% else %}
+                            <span class="b-widget-worktime-caption">
+                                Сейчас закрыто.
+                                <a href="#" class="g-jlink j-reveal-button" data-target="worktime-{{ address.pk }}" data-speed="150">Режим работы</a>
+                            </span>
+                        {% endif %}
+
+                        <ul class="b-widget-worktime-schedule j-reveal-block j-reveal-block-worktime-{{ address.pk }} {% if not address.current_worktime %}pointer-pos-2{% endif %}">
+                            {% for weekday in weekdays %}
+                                <li{% if weekday.current_weekday and weekday.worktime %} class="g-active"{% endif %}>
+                                    <h5{% if weekday.weekday == weekday_sat or weekday.weekday == weekday_sun %} class="g-color-orange"{% endif %}>{{ weekday.weekday|number_to_weekday_name:'short' }}</h5>
+                                    {% if weekday.worktime %}
+                                        <div class="time">{{ weekday.worktime.start_time|date:"H:i" }}</div>
+                                        <div class="time">{% if weekday.worktime.end_time|date:"H:i" == "00:00" %}24:00{% else %}{{ weekday.worktime.end_time|date:"H:i" }}{% endif %}</div>
+                                    {% else %}
+                                        <div class="empty">&mdash;</div>
+                                    {% endif %}
+                                    {% if address.has_dinner %}
+                                        {% if address.dinner_everyday_at_same_time %}
+                                            {% if forloop.counter0 == 0 %}
+                                                <div class="dinner g-color-orange">
+                                                    обед {{ address.dinner_everyday_at_same_time.dinner_start_time|date:"H:i" }} &mdash; {{ address.dinner_everyday_at_same_time.dinner_end_time|date:"H:i" }}
+                                                </div>
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="dinner g-color-orange">{% if weekday.current_weekday %}обед{% else %}&nbsp;{% endif %}</div>
+                                            {% if weekday.worktime and weekday.worktime.dinner_start_time and weekday.worktime.dinner_end_time %}
+                                                <div class="time">{{ weekday.worktime.dinner_start_time|date:"H:i" }}</div>
+                                                <div class="time">{{ weekday.worktime.dinner_end_time|date:"H:i" }}</div>
+                                            {% else %}
+                                                <div class="empty">&mdash;</div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endspaceless %}

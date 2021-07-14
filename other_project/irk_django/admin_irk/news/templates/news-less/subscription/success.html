@@ -1,0 +1,21 @@
+{% extends "news-less/layout.html" %}
+
+{% load str_utils pytils_dt news_tags pages staticfiles media_utils %}
+
+{% block title %}Вы подписаны на рассылку новостей Ирк.ру | {{ block.super }}{% endblock %}
+
+{% block b-content-class %} subscription{% endblock %}
+
+{% block b-content %}
+    <div class="b-content-block b-title-search">
+        <ul class="b-list-h">
+            {% spaceless %}
+            <li><h1>Рассылка новостей от IRK.ru</h1></li>
+            {% endspaceless %}
+        </ul>
+    </div>
+    <section class="b-subscription arrow-top w-300">
+        <h3>Рассылка оформлена</h3>
+        <a href="{% url 'news:index' %}" class="b-submit">На главную</a>
+    </section>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'newyear2014/layout.html' %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            var isRequesting = false,
+                $instagramList = $('.b-instagram-list').find('.b-list-v'),
+                $footer = $('.b-instagram-footer');
+            $footer.find('.link').click(function() {
+                if (isRequesting) {
+                    return;
+                }
+                $footer.addClass('g-preloader');
+                isRequesting = true;
+                var max_id = $instagramList.find('li:last-child').attr('data-id');
+                $.get('{% url 'newyear2014.views.instagram.instagram_more' tag_id=tag.pk %}', {max_id: max_id}, function(response) {
+                    $footer.removeClass('g-preloader');
+                    $instagramList.append(response.html);
+                    isRequesting = false;
+                    if (!response.has_next) {
+                        $footer.hide();
+                    }
+                });
+
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block b-content %}
+    <div class="b-instagram g-clear">
+        <h1>
+            <span>#{{ tag.name }}</span>
+        </h1>
+        <div class="hint type2">
+            {{ tag.description }}
+        </div>
+    </div>
+    <hr class="b-instagram-separator-top"/>
+    <div class="b-instagram-list">
+        <ul class="b-list-v">
+            {% for image in images %}
+                {% include 'newyear2014/instagram/instagram-list-item.html' %}
+            {% endfor %}
+        </ul>
+
+        {% if has_next %}
+            <div class="b-instagram-footer">
+                <span class="smthn"></span>
+                <span class="link">Показать еще</span>
+                <span class="smthn"></span>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends layout %}
+
+{% load game_tags adv_tags staticfiles media_utils str_utils thumbnail paginator_utils share_utils cache_tags %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'project.instance.meta' vary='project.id' tags='project' %}{% spaceless %}
+        {% include 'share_meta.html' with object=project url=project.get_absolute_url title=project.title description=project.description image=project.branding card='summary_large_image' %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block title %}{{ project.title|typograf }} | {{ block.super }}{% endblock %}
+
+{% block layout-base-class %}{{ block.super }} header-flow-lock {% if request.user_agent.is_gadget %}black{% else %}transparent-header{% endif %}{% endblock layout-base-class %}
+
+{% block game2020 %}
+    {% if project.slug == 'club' %}
+        {% treasure 'abroad' %}
+    {% elif project.slug == 'building' %}
+        {% treasure 'special_building' %}
+    {% elif project.slug == 'recipe' %}
+        {% treasure 'recipes' %}
+    {% elif project.slug == 'experience' %}
+        {% treasure 'special_experience' %}
+    {% elif project.slug == 'alphabet' %}
+        {% treasure 'alphabet' %}
+    {% endif %}
+{% endblock %}
+
+{% block promo_A %}
+    <div class="b-special-branding j-special-branding">
+        {% thumbnail project.branding 1920x600 as thumb %}
+        {% if not request.user_agent.is_gadget %}
+            <img class="b-special-branding-image placeholder" src="{{ thumb }}" width="1920px" height="600px">
+        {% endif %}
+        <figure class="b-special-branding-inner"
+                {% if request.user_agent.is_gadget %}style="background-image: url({{ thumb }})"{% endif %}>
+            <figcaption class="b-special-branding-caption">
+                <h1 class="title">{{ project.title|typograf }}</h1>
+                <div class="text">{{ project.description|typograf:"admin" }}</div>
+                <div class="b-special-branding-share">
+                    {% share_custom obj_pk=project.pk url=project.get_absolute_url description=project.title stamp=subject.stamp additional_class='black' %}
+                </div>
+            </figcaption>
+            <img class="b-special-branding-image" src="{{ thumb }}" width="1920px" height="600px">
+        </figure>
+        {% if project.sponsor_set.all %}
+            <div class="b-sponsors-container">
+                <ul class="b-sponsors-list {% if project.sponsor_set.all|length > 5 %}full-width{% endif %}">
+                    {% for item in project.sponsor_set.all %}
+                        {% thumbnail item.image 200x90 as sponsor_image %}
+                        <li class="b-sponsors-list-item"><a class="b-sponsors-link" title="{{ item.name }}" href="{% url 'special:sponsor_click' sponsor_id=item.pk %}?sponsor={{ item.pk }}"><img class="b-sponsors-img" src="{{ sponsor_image }}" alt="{{ item.name }}" width="{{ sponsor_image.width }}" height="{{ sponsor_image.height }}"></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block adblock-message %}{% endblock %}
+
+{% block container %}
+    <div class="b-container-wrapper">{{ block.super }}</div>
+{% endblock %}
+
+{% block b-content-parent %}
+    <div class="b-content b-special">
+        <section class="g-content-block">
+            <h1 class="g-hide">{{ project.title|typograf }}</h1>
+            {% if project.html_head %}
+                <div class="b-special-video">
+                    <div class="container">
+                        {{ project.html_head|safe }}
+                    </div>
+                </div>
+            {% endif %}
+            <ul class="b-special-material-list" id="special-material-list"
+                data-url="{{ project.get_absolute_url }}" data-start="{{ page_info.next_start_index }}"
+                data-limit="{{ page_info.next_limit }}" data-content="true" data-page="1">
+
+                {% include 'special/index/material_list.html' with materials=materials %}
+            </ul>
+
+            {% if page_info.has_next %}
+                <div class="g-show-more j-showmore" data-type="json" data-target="special-material-list">
+                    <span class="g-jlink">Больше интересного</span>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+{% endblock b-content-parent %}

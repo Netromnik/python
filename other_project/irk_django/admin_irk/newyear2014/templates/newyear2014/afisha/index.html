@@ -1,0 +1,68 @@
+{% extends 'newyear2014/layout.html' %}
+
+{% load adv_tags afisha_tags thumbnail staticfiles str_utils pytils_dt comments_tags rating_tags paginator_utils date_tags %}
+
+{% block title %}Афиша | {{ block.super }}{% endblock title %}
+
+{% block b-content %}
+    <section class="b-content-cr b-ny2014-afisha">
+        <header class="b-ny2014-afisha g-intend">
+            {% week_paginator current_date end_date %}
+            <h1>Афиша</h1>
+        </header>
+        <ul class="b-list-v b-ny2014-afisha-day">
+            {% for object in object_list %}
+            <li>
+                <aside class="b-ny2014-afisha-aside">
+                    <div class="b-ny2014-afisha-aside-date">
+                        <span class="number">{{ object.date|ru_strftime:"%d" }}</span>
+                        <span class="month">{{ object.date|ru_strftime:"%B" }}</span>
+                        <small class="day g-color-gray">{{ object.date|ru_strftime:"%A" }}</small>
+                    </div>
+                    {% if object.date|ru_strftime:"%d %B" == today|ru_strftime:"%d %B" %}
+                        <div class="b-ny2014-afisha-aside-today">сегодня</div>
+                    {% endif %}
+                </aside>
+                <ul class="b-list-v b-ny2014-afisha-list">
+                    {% for event in object.events %}
+                        <li>
+                            <h5>
+                                <a href="{{ event.get_absolute_url }}">
+                                    {% if event.gallery.main_image.image %}
+                                        {% thumbnail event.gallery.main_image.image 160x1000 as thumb %}
+                                        <img src="{{ thumb }}" alt="{{ event.title|typograf|safe }}" title="{{ event.title|typograf|safe }}">
+                                    {% else %}
+                                        <span class="b-afisha-events-gag g-{{ event.type.alias }}"></span>
+                                    {% endif %}
+                                    {% if event.age_rating %}<span class="b-afisha-events-label-img">{{ event.age_rating }}+</span>{% else %}<span class="b-afisha-events-label-img">0+</span>{% endif %}
+                                    {{ event.title|typograf|safe }}</a>&nbsp;{% comment %}<span class="b-afisha-events-label g-{{ event.age_rating }}"></span>{% endcomment %}
+                            </h5>
+                            <div class="date-block">
+                                {% if event.schedule.first %}
+                                    <time>
+                                        {% if event.schedule.first.time %}<span class="time">{{ event.schedule.first.time|time:"H:i" }}</span>{% else %} <span class="time">уточняется</span>{% endif %}<span>{{ event.schedule.first.date|ru_strftime:"%d %B, %A"|capfirst }}</span>
+                                    </time>
+                                    {% if event.schedule.first.guide %}
+                                        <a href="{{ event.schedule.first.guide.get_absolute_url }}" class="g-color-gray">{{ event.schedule.first.guide|typograf }}</a>
+                                    {% else %}
+                                        <span class="g-color-gray">{{ event.schedule.first.event_guide.guide_name|typograf }}</span>
+                                    {% endif %}
+                                {% else %}
+                                    <time>уточняется</time>
+                                {% endif %}
+                            </div>
+                            <article>
+                                {{ event.caption_text|typograf|safe|truncatewords_html:40 }}
+                            </article>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+        <footer class="b-ny2014-afisha-footer">
+            {% week_paginator current_date end_date %}
+        </footer>
+    </section>
+    {% include 'newyear2014/base/b-aside-r.html' %}
+{% endblock b-content %}

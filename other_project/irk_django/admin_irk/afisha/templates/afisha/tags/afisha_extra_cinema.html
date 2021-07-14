@@ -1,0 +1,19 @@
+{% load str_utils thumbnail comments_tags date_tags %}
+
+{% if event_list|length > 0 %}
+    <section class="afisha-section afisha-section_gray j-article-scrollDepth-end">
+        <div class="grid-inner">
+            <h3 class="afisha-section__title">В кино на этой неделе</h3>
+            <ul id="cinema-more-materials" data-url="{{ url }}" data-start="{{ next_start_index }}" data-limit="{{ next_limit }}" class="grid-list">
+                {% include 'afisha/tags/afisha_extra_cinema_list.html' %}
+            </ul>
+            {% if has_next %}
+                <div class="afisha-more j-showmore" data-type="json" data-target="cinema-more-materials">
+                    <span class="afisha-more__link">
+                        Больше интересного
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endif %}

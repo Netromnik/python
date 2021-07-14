@@ -1,0 +1,39 @@
+{% load pytils_dt %}
+<div id="slider-range"  style="height:250px;float:left;"></div>
+<table id="eg_{{ eg.pk }}" style="width:80%;margin-top:10px;margin-bottom:10px;margin-left:10%;border:1px solid #c0c0c0;">
+	<thead>
+	<tr>
+		<th><input type="checkbox" class="all"/></th>
+		<th>Период (например, 13.09.10)</th>
+		<th>Сеансы</th>
+		<th>Цена</th>
+		<th>
+			<button class="ui-state-default ui-corner-all refresh" style="color:yellow;"><span class="ui-icon ui-icon-refresh " style="float:left;"></span></button>
+			<button class="ui-state-default ui-corner-all show-all" style="">Показать прошедшие</span></button>	
+		</th>
+		
+	</tr>
+	</thead>
+	<tr class='row2 add_row'>
+		<th>&nbsp;</th>
+		<th>{{ form.dates }}</th>
+		<th>{{ form.sessions }}</th>
+		<th>{{ form.price }}</th>
+		<th><button class="ui-button ui-state-default ui-corner-all add_periods" style="color:green;font-size:25px;">+</button></th>
+		
+	</tr>
+	
+	
+<tbody class='main'>
+{% with eg.period_set.admin_all as periods %}
+	{% include "afisha/admin/periods_list.html" %}
+{% endwith %}
+</tbody>
+<tfoot>
+	<tr>
+		<td colspan="5">
+			<button class="action" id="edit" class="ui-button ui-state-default ui-corner-all" style="color:green; font-size:15px;">Редактировать</button>
+		</td>
+	</tr>
+</tfoot>
+</table>

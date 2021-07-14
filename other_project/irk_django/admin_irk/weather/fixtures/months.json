@@ -1,0 +1,110 @@
+[
+    {
+        "fields": {
+            "alias": "jan",
+            "name": "Январь",
+            "number": 1
+        },
+        "model": "weather.month",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "alias": "feb",
+            "name": "Февраль",
+            "number": 2
+        },
+        "model": "weather.month",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "alias": "mar",
+            "name": "Март",
+            "number": 3
+        },
+        "model": "weather.month",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "alias": "apr",
+            "name": "Апрель",
+            "number": 4
+        },
+        "model": "weather.month",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "alias": "may",
+            "name": "Май",
+            "number": 5
+        },
+        "model": "weather.month",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "alias": "jun",
+            "name": "Июнь",
+            "number": 6
+        },
+        "model": "weather.month",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "alias": "jul",
+            "name": "Июль",
+            "number": 7
+        },
+        "model": "weather.month",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "alias": "aug",
+            "name": "Август",
+            "number": 8
+        },
+        "model": "weather.month",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "alias": "sep",
+            "name": "Сентябрь",
+            "number": 9
+        },
+        "model": "weather.month",
+        "pk": 9
+    },
+    {
+        "fields": {
+            "alias": "oct",
+            "name": "Октябрь",
+            "number": 10
+        },
+        "model": "weather.month",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "alias": "nov",
+            "name": "Ноябрь",
+            "number": 11
+        },
+        "model": "weather.month",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "alias": "dec",
+            "name": "Декабрь",
+            "number": 12
+        },
+        "model": "weather.month",
+        "pk": 12
+    }
+]

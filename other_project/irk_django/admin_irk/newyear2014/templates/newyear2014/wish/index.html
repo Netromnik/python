@@ -1,0 +1,45 @@
+{% extends 'newyear2014/layout.html' %}
+{% load staticfiles adv_tags media_utils thumbnail str_utils pytils_numeral newyear2014_tags %}
+
+{% block title %}Письмо Деду Морозу | {{ block.super }}{% endblock title %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.extend.js' %}"></script>
+    <script>
+        $(function() {
+            $('#id_mailto').validate({
+                rules: {
+                    content: {
+                        required: true,
+                        minlength: 6
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    // пустое, чтобы не выводил сообщений
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block b-content-parent %}
+    <section class="b-content g-ny2014-menu g-noborder">
+        {% main_menu request.path %}
+        {% ibanner ID=408 as banner1 %}
+        {% if banner1 %}<div class="g-intend">{{ banner1 }}</div>{% endif %}
+        <section class="b-ny2014-mailto">
+            <header>
+                <h1>Письмо Деду Морозу</h1>
+            </header>
+            <div class="b-ny2014-mailto-content">
+                <form id="id_mailto" action="." method="post">{% csrf_token %}
+                    {{ form.content }}
+                    <button type="submit">Отправить</button>
+                </form>
+            </div>
+        </section>
+
+    </section>
+{% endblock b-content-parent %}

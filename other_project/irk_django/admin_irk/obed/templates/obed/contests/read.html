@@ -1,0 +1,83 @@
+{% extends "obed/layout.html" %}
+
+{% load staticfiles media_utils paginator_utils str_utils thumbnail share_utils comments_tags cache_tags %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'contests.instance.meta' vary='object.id' tags='contests' %}{% spaceless %}
+        {% include 'share_meta.html' with url=contest.get_absolute_url title=contest.title description=contest.caption image=contest.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    {% less '/less/compile/apps/contests.less' %}
+{% endblock style %}
+
+{% block title %} {{ contest.title|typograf:"title"|safe }} | {% if contest.is_closed %} Закрытые конкурсы {% else %} Открытые конкурсы {% endif %} | {{ block.super }}{% endblock %}
+
+{% block b-content-parent %}
+<section class="b-contests">
+    {% if contest.project %}
+        <div class="special__link-container special__link-container_left g-margin-bottom-20">
+            {% include 'special/snippets/link.html' with name=contest.project.title|typograf url=contest.project.get_absolute_url %}
+        </div>
+    {% endif %}
+    <header class="g-subtitle">
+        <h1>{{ contest.title|typograf:"title"|safe }}</h1>
+    </header>
+
+    {% thumbnail contest.image 300x100000 as thumb %}
+
+    {% if contest.is_closed %}
+        <div class="b-overlay">
+            <div class="b-overlay-closed"></div>
+            <img src="{{ thumb }}" class="b-contests-mainImg" alt="{{ contest.title|typograf:"title"|safe }}">
+            <br clear="all">
+        </div>
+    {% else %}
+        <img src="{{ thumb }}" class="b-contests-mainImg" alt="{{ contest.title|typograf:"title"|safe }}">
+        <br clear="all">
+        {% if contest.type == 'quiz' and not contest.is_closed and contest.user_can_add %}
+            <div class="b-joinblock" style="float:right;">
+                <div class="pic">
+                    <img src="{% static 'img/contests/g-nophoto.png' %}" alt="">
+                </div>
+                <a href="{% url 'obed:contests:participant_create' contest.slug %}" class="button"></a>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {# Текст для изображения #}
+    {% if contest.image_caption %}
+        <div id="picture-caption">
+            <small class="g-color-gray">{{ contest.image_caption|typograf:'title'|safe }}</small>
+        </div>
+    {% endif %}
+
+    <br class="clear">
+    {{ contest.content|typograf:"admin"|safe }}
+
+    <div class="b-socials">
+        {# TODO скрывать для скрытых объектов #}
+        {% share contest %}
+    </div>
+
+    {# Не выводить участников для викорин #}
+    {% if contest.type != 'quiz' %}
+        <div class="b-contests-members">
+            {% if not contest.is_closed and contest.user_can_add %}
+                <div class="b-joinblock">
+                    <div class="pic">
+                        <img src="{% static 'img/contests/g-nophoto.png' %}" alt="">
+                    </div>
+                    <a href="{% url 'obed:contests:participant_create' contest.slug %}" class="button"></a>
+                </div>
+            {% endif %}
+            {% for participant in participants %}
+                {% include 'obed/contests/snippets/participant_small.html' %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

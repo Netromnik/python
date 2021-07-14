@@ -1,0 +1,31 @@
+<div class="news-paginator__calendar j-news-calendar-show">
+    <div class="b-calendar" id="id_calendar"></div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var Calendar = $('#id_calendar');
+        $('.j-news-calendar-show').click(function(event) {
+            event.preventDefault();
+
+            Calendar.animate({opacity: "show"}, 100, function() {
+                $.get('{% url 'news:calendar' %}', {
+                    date: '{{ date|date:'Ymd' }}',
+                    highlight: '{{ highlight|date:'Ymd' }}',
+                    link: {{ link|yesno:'true,false' }}
+                }, function(response) {
+                    Calendar.html(response).find('article').animate({opacity: "show"}, 200);
+                });
+            });
+
+            return false;
+        });
+        // скрываем блок календаря, при клике куда угодно...
+        $('body').on('click', function(){
+            Calendar.animate({opacity: "hide"}, 100).empty();
+        });
+        // ...кроме блока .b-calendar
+        $('.b-calendar').on('click', function(event) {
+            event.stopPropagation();
+        });
+    });
+</script>

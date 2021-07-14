@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+{% load options staticfiles media_utils weather_tags thumbnail adwords_tags str_utils news_tags adv_tags blogs_tags comments_tags pytils_dt cache_tags %}
+
+{% block title %}{{ request.csite.title }}{% endblock %}
+
+{% block meta_adaptive %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+{% endblock %}
+
+{% block style %}
+    {% less '/less/compile/apps/weather.less' %}
+{% endblock %}
+
+{% block style_adaptive %}
+    {% less '/less/compile/adaptive/apps/weather.less' media='all' %}
+{% endblock %}
+
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static "weather/js/weather.js" %}"></script>
+{% endblock js %}
+
+{% block js_adaptive %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'weather/js/adaptive-weather.js' %}"></script>
+{% endblock %}
+
+{% block container %}
+    {% block b-container-first %}
+        <div class="b-container g-zindex-initial">
+            {% block b-notification %}{% endblock %}
+
+            {% block b-adword-header %}
+                {% ibanner ID=125 as big_menu_banner_125 %}
+                {% if big_menu_banner_125 %}
+                    <div class="b-adwords-banner-overhead g-desktop">
+                        {{ big_menu_banner_125 }}
+                    </div>
+                {% endif %}
+            {% endblock b-adword-header %}
+
+            {% block b-container-first-header %}{% endblock %}
+        </div>
+    {% endblock %}
+
+    {% block b-container-second %}{% endblock %}
+
+    {% block b-container-third %}
+        <div class="b-container {% block b-container-third-class %}padding-top-20{% endblock %}">
+            {% block b-content-parent %}
+                <article class="b-content{% block b-content-class %}{% endblock %}">
+                    {% block b-content-header %}{% endblock b-content-header %}
+                    {% block b-content %}{% endblock b-content %}
+                    {% block b-content-footer %}{% endblock b-content-footer %}
+                </article>
+            {% endblock b-content-parent %}
+
+            {% block b-footer-layout-banner %}
+                {% ibanner id=469 as branding_footer %}
+                {% ibanner id=506 as banner %}
+                {% ibanner id=591 as programmatic_footer %}
+                {% if request.user_agent.is_gadget and programmatic_footer %}
+                     <div class="g-margin-bottom-20 g-centered-div g-not-desktop">{{ programmatic_footer }}</div>
+                {% elif banner and not branding_footer %}
+                    <div class="b-footer-layout-banner g-desktop">{{ banner }}</div>
+                {% endif %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block top_banner %}{% include 'weather/base/top_banner.html' %}{% endblock %}
+
+{% block text_widget %}{% ibanner id=304 template='adv/banners/text_widget_layout.html' %}{% endblock %}
+
+{% block float_banner %}
+    {% include 'weather/base/banner/b-banner-1000x50-float.html' %}
+{% endblock %}
+
+{% block promo_A %}
+    {% ibanner id=479 as branding_top %}
+    {% include 'snippets/branding_top.html' %}
+{% endblock %}
+
+{% block promo_B %}
+    {% ibanner id=469 as branding_footer %}
+    {% if branding_footer %}
+        <div class="b-branding-bottom g-desktop">
+            {{ branding_footer }}
+        </div>
+    {% endif %}
+{% endblock %}

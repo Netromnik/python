@@ -1,0 +1,41 @@
+{% load  polls_tags %}
+
+{% if not voted %}
+<form action="{% url 'polls:vote_quiz' %}?next={{ quiz_url }}" method="post" class="j-poll-quiz-container">{% csrf_token %}
+    <input type="hidden" name="quiz" value="new">
+{% endif %}
+
+    {% for poll in polls %}
+        {% pollobj poll %}
+    {% endfor %}
+
+{% if not voted %}
+    <div class="b-poll-quiz-submit"><input type="submit" class="disabled j-quiz-submit" disabled="disabled" value="Голосовать"></div>
+    <script type="text/javascript">
+        $(function () {
+            /* Голосование polls_quiz_submit */
+
+            var $formContainer = $('.j-poll-quiz-container'),
+                $forms = $('.j-poll-quiz', $formContainer),
+                $submit = $('.j-quiz-submit', $formContainer);
+
+                $('input[type=checkbox], input[type=radio]', $formContainer).on('change', function () {
+                    for (var i = 0; i < $forms.size(); i++) {
+                        if ($forms.eq(i).find(':checked').size() === 0) {
+                            $submit.attr('disabled', 'disabled').addClass('disabled');
+                            return true;
+                        }
+                    }
+
+                    $submit.removeAttr('disabled', 'disabled').removeClass('disabled');
+                    return true;
+                });
+
+                $formContainer.on('submit', function () {
+                    window.irk.utils.metrikaReachGoal('polls_quiz_submit');
+                    return true;
+                });
+        });
+    </script>
+</form>
+{% endif %}

@@ -1,0 +1,76 @@
+{% extends "admin/change_list.html" %}
+{% load pytils_dt %}
+{% block content_title %}<h1>
+
+Список размещений 
+{% if not client and not q %}
+	за 
+	{% if datetype == 2 %}
+		{{ date|ru_strftime:" %b %Yг." }}
+	{% else %}
+		{{ date|ru_strftime:" %d %B %Y (%A) "}}
+	{% endif %}
+{% endif %}
+{% if client %}
+	по клиенту {{ client }}
+{% endif %}
+{% if q %}
+	- результаты поиска "{{ q }}"
+{% endif %}
+</h1>{% endblock %}
+
+{% block content %}
+<style type="text/css">
+	.calend {
+		position:relative;
+		width:20%;
+		float:left;
+	}
+	#content-main {
+		width:78%;
+	}
+	.ui-datepicker-month {
+		cursor: pointer;
+	}
+</style>
+<div class="calend">
+<script type="text/javascript">
+    $(function() {
+        {% if date %}
+            var date = new Date({{ date.year }}, {{ date.month }} - 1, {{ date.day }});
+        {% endif %}
+        $("#datepicker").datepicker({
+            dateFormat:'yy-mm-dd',
+            gotoCurrent: true,
+            {% if date %}defaultDate:date,{% endif %}
+            regional:'ru',
+            buttonImageOnly: true,
+            onSelect:function(date, inst){
+                location.href = "?date="+date;
+            },
+            onChangeMonthYear:function(year, month, inst){
+                month = month<10?"0"+month:month;
+                $("#datepicker").attr('cmonth',month);
+                $("#datepicker").attr('cyear',year);
+            }
+        });
+        {% if date %}
+            $("#datepicker").attr('cmonth',"{{ date|date:"m" }}");
+            $("#datepicker").attr('cyear',"{{ date|date:"Y" }}");
+        {% endif %}
+    });
+
+    $(document).ready(function(){
+        $('#datepicker').click(function(eventObject){
+                if(eventObject.target.className=='ui-datepicker-month'){
+                    date = $("#datepicker").attr('cyear') + "-" + $("#datepicker").attr('cmonth');
+                    location.href = "?date="+date;
+                }
+            })
+    });
+	</script>
+<div id="datepicker"></div>
+{% if datetype == 0 %}Без периода{% else %}<a href="?date=0">Без периода</a>{% endif %}
+</div>
+{{ block.super }}
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends "afisha/layout.html" %}
+
+
+{% comment %}
+    @name=Афиша главная
+{% endcomment %}
+
+{% load image_tags event_admin profile_utils thumbnail site_utils str_utils pytils_dt adv_tags comments_tags cache_tags news_tags rating_tags share_utils gallery_tags map_tags afisha_tags admin_utils %}
+
+{% block title %}{{ event.title|typograf }} | {{ event_type }} | {{ block.super }}{% endblock %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'afisha.event.meta' vary='event.id' tags='afisha,event' %}{% spaceless %}
+        {% include 'share_meta.html' with url=event.get_absolute_url title=event.title description=event.content image=event.gallery.main_image.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block container %}<div class="b-container-padding"><div class="g-overflow">{{ block.super }}</div></div>{% endblock %}
+
+{% block b-content-parent %}
+<div class="grid-wrapper">
+    <div class="grid-inner">
+        <h1 class="cinema-title">
+            {{ event.title|typograf }}
+            {% get_object_admin_link event %}
+        </h1>
+        <div class="cinema-list__labels cinema-list__labels_read">
+            {% with schedule.0 as guide %}
+                {% if guide.schedule.first.kassy_session %}
+                    {% include 'afisha/snippets/buy_button.html' with session=guide.schedule.first additional_class='cinema-list__orange' metrika='afisha_buy_click' %}
+                {% endif %}
+                {% if event.comments_cnt %}
+                    <a href="#go_comments" class="cinema-button g-margin-right-10 g-margin-bottom-10">Отзывы</a>
+                {% endif %}
+                {% if guide.pk %}
+                        <a class="cinema-button order-place g-margin-right-10 g-margin-bottom-10" href="{{ guide.get_absolute_url }}">{{ guide|typograf }}</a>{% comment %} – {% map_address guide.main_address %}{% endcomment %}
+                {% else %}
+                    <span class="cinema-list__gray order-place order-place_gray g-margin-right-10 g-margin-bottom-10">
+                        <address>{{ guide|typograf }}</address>
+                    </span>
+                {% endif %}
+                {% if guide %}
+                    <span class="cinema-list__gray g-margin-right-10 g-margin-bottom-10">
+                        <b><time>{{ guide.schedule.first.time|time:"H:i" }}</time></b>
+                    </span>
+                    <span class="cinema-list__gray g-margin-right-10 g-margin-bottom-10">
+                        <b>
+                            {{ guide.schedule.first.date|ru_strftime:"%d %B, %A"|capfirst }}
+                            {% if guide.schedule.first.time %}{% else %}<span>уточняется</span>{% endif %}
+                        </b>
+                    </span>
+                {% endif %}
+                {% if event.duration %}
+                    <span class="cinema-list__gray g-margin-right-10 g-margin-bottom-10">
+                        <b>{{ event.duration|typograf }}</b>
+                    </span>
+                {% endif %}
+                <span class="cinema-list__gray g-margin-right-10 g-margin-bottom-10">
+                    <b>{% if event.age_rating %}{{ event.age_rating }}{% else %}0{% endif %}+</b>
+                </span>
+                {% if event.genre and event.genre.name != 'вечеринка' %}
+                    <span class="cinema-list__genre g-margin-right-20 g-margin-bottom-10">
+                        {{ event.genre|typograf }}
+                    </span>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="grid-list grid-list_nowrap grid-list_wrap-900">
+            <div class="grid-list__item grid-list__item_x3 grid-list__item_100">
+                <section class="afisha-section afisha-section_nopt">
+                    <article class="event-article">
+                        {{ event.content|typograf:'admin'|safe }}
+                        {% include "afisha/snippets/social_links.html" with event=event %}
+                    </article>
+                    <div class="MisprintSnippet error-snippet g-color-gray g-margin-bottom-30">
+                        Чтобы сообщить об опечатке, выделите текст и нажмите <kbd>Ctrl</kbd>+<kbd>Enter</kbd>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                window.irk.misprintEngine.init();
+                            });
+                        </script>
+                    </div>
+
+                    {% spaceless %}
+                    {% if event.gallery.main_gallery_pictures %}
+                         <div class="content-slider-wrapper content-slider-wrapper_event">
+                            {% if event.gallery.main_gallery_pictures|length > 1 %}
+                            <div class="content-slider__controls j-slider-nav">
+                                <!--<span class="content-slider__button content-slider__button_full j-slider-full"></span>-->
+                                <span class="content-slider__button content-slider__button_prev j-slider-prev disabled"></span>
+                                <span class="content-slider__button content-slider__button_next j-slider-next"></span>
+                            </div>
+                            {% endif %}
+                            <div class="content-slider{% if event.gallery.main_gallery_pictures|length > 1 %} content-slider_event j-articles-slider-content j-autoHeight{% endif %}">
+                                {% for picture in event.gallery.main_gallery_pictures %}
+                                    {% thumbnail picture.image '620x400' quality=92 x=picture.watermark as thumb %}
+                                    <figure class="content-slider__item">
+                                        <img class="content-slider__img" src="{{ thumb }}" alt="{{ picture.alt|typograf }}" />
+                                    </figure>
+                                {% endfor %}
+                            </div>
+                            {% if event.gallery.main_gallery_pictures|length > 4 %}
+                            <div class="content-slider__gallery j-slider-dots">
+                                {% for picture in event.gallery.main_gallery_pictures %}
+                                {% thumbnail picture.image 300x300 quality=90 x=picture.watermark as gallery_thumb %}
+                                    <div class="content-slider__thumb j-slider-dot">
+                                        <img src="{{ gallery_thumb }}" class="content-slider__thumb__img" alt="{{ picture.alt|typograf }}" />
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div class="content-slider__description j-slider-description">
+                                {% for picture in event.gallery.main_gallery_pictures %}
+                                    <span class="content-slider__description__item j-slider-photo-desc{% if forloop.counter == 1 %} active{% endif %}">
+                                        {{ picture.alt|typograf }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {% if event.gallery.main_image.image %}
+                            <div class="event-image">
+                                {% thumbnail event.gallery.main_image.image 805x1000 as thumb %}
+                                <img src="{{ thumb }}" title="{{ event.gallery.main_image.title }}" alt="{{ event.gallery.main_image.title }}" />
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    {% endspaceless %}
+
+                    <div class="g-margin-top-30">
+                        {% if not event.is_hidden %}
+                            {% share_custom obj_pk=event.pk url=event.get_absolute_url description=event.title stamp=event.stamp %}
+                        {% endif %}
+                    </div>
+
+                    {% filter_choices view filters.date 'choices' %}
+                    <div class="schedule-event j-datecontainer">
+                        <table class="schedule-table">
+                            <tbody>
+                            {% for guide in schedule %}
+                                {% for session in guide.schedule %}
+                                    <tr class="schedule-table__tr {% if forloop.last %}g-last{% endif %}">
+                                        <td class="schedule-table__td schedule-table__td_date">
+                                            <label>
+                                                {% if can_buy_tickets %}<input {% if not session.kassy_session %}disabled="disabled"{% endif %} class="j-kassy-radio" type="radio" name="event_buy_item" value="{{ session.kassy_session.id }}" {% if session.kassy_session and forloop.parentloop.first %}checked{% endif %}/> {% endif %}
+                                                <time>{{ session.date|ru_strftime:"%d %B"|capfirst }}, <span class="g-lower">{{ session.date|ru_strftime:"%A"|capfirst }}</span></time>
+                                            </label>
+                                        </td>
+                                        <td class="schedule-table__td schedule-table__td_time"><time>{{ session.time|time:"H:i" }}</time></td>
+                                        <td class="schedule-table__td">{% if guide.pk %}<a class="schedule-table__link" href="{{ guide.get_absolute_url }}">{{ guide|typograf }}</a>{% else %}{{ guide|typograf }}{% endif %}</td>
+                                        <td class="schedule-table__td schedule-table__td_price">{{ session.period.price|typograf:'admin'|safe }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if can_buy_tickets %}
+                        <div class="g-indent g-clearfix">
+                            {% include 'afisha/snippets/buy_button.html' with session=schedule.0.schedule.first metrika='afisha_buy_click' additional_class='cinema-list__orange j-kassy-radio-target' %}
+                        </div>
+                    {% endif %}
+                    {% if choices.prev_seven or choices.next_seven %}
+                        <div class="b-afisha-event-sked-paginator">
+                            {% if choices.prev_seven %}
+                                <a class="cinema-button {% if choices.next_seven %}cinema-button_right-quad{% endif %}" href="{% url 'afisha:event_read' year=choices.prev_seven.year month=choices.prev_seven|date:"m" day=choices.prev_seven|date:"d" event_id=event.id event_type=view.event_type_name %}#event=sked">
+                                    Раньше
+                                </a>
+                            {% endif %}
+                            {% if choices.next_seven %}
+                                <a class="cinema-button {% if choices.prev_seven %}cinema-button_left-quad{% endif %}" href="{% url 'afisha:event_read' year=choices.next_seven.year month=choices.next_seven|date:"m" day=choices.next_seven|date:"d" event_id=event.id event_type=view.event_type_name %}#event=sked">
+                                    Дальше
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    <div class="schedule-comments">
+                        <div class="g-relative">
+                            <div id="go_comments" class="g-anchor"></div>
+                        </div>
+                        {% comments event %}
+                    </div>
+                </section>
+            </div>
+            <aside class="grid-list__item">
+                <div class="j-transform" data-transform-target="aside">
+                    <ul class="grid-list grid-list_column grid-list_column-900">
+                        {% include 'afisha/base/b-aside-r-type2.html' %}
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+    </div>
+    {% include 'afisha/base/banner/banner_507.html' %}
+    {% block afisha_extra_materials %}
+        {% afisha_extra_materials %}
+    {% endblock %}
+</div>
+{% endblock %}

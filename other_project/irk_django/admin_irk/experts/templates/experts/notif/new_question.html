@@ -1,0 +1,12 @@
+{% load site_utils %}
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=windows-utf-8">
+        <title>Новый вопрос в пресс-конференции</title>
+    </head>
+    <body>
+        <p><b>Новый вопрос в пресс-конференции  &laquo;{{ expert.title }}&raquo;</b></p>
+        <p>{{ question.question }}</p>
+        <p><a href="http://{% get_site_url www %}{{ expert.get_absolute_url }}">просмотр конференции</a></p>
+    </body>
+</html>

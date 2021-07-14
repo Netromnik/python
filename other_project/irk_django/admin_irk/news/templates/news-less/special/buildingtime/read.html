@@ -1,0 +1,9 @@
+{% extends 'news-less/article/read.html' %}
+
+{% load static %}
+
+{% block article-under-content %}
+    <a href="{% url 'special:index' 'buildingtime' %}">
+        <img src="{% static 'img/special/news_buildingtime/ebtonov805.jpg' %}" style="padding-bottom:15px">
+    </a>
+{% endblock %}

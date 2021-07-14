@@ -1,0 +1,23 @@
+{% extends 'layout_article.html' %}
+
+{% load staticfiles cache_tags str_utils %}
+
+{% block title %}{{ object.title|typograf }} | Статьи | {{ block.super }}{% endblock title %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'article.instance.meta' vary='object.id' tags='article,object' %}{% spaceless %}
+        {% include 'share_meta.html' with card='summary_large_image' url=object.get_absolute_url title=object.title description=object.caption image=object.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/ifvisible.js' %}"></script>
+{% endblock %}
+
+{% comment %}
+{% block b-content %}
+    {% include 'news-less/article/read_base.html' with wide=True %}
+{% endblock %}
+{% endcomment %}

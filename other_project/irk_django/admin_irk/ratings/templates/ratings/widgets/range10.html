@@ -1,0 +1,35 @@
+{% load math_utils str_utils pytils_numeral %}
+{% if not new_makeup2 %}
+<div class="rating-of">
+	<ul class="{%if new_makeup%}new-{% endif %}rating {% if is_rated or disabled %}disabled{% endif %}" rel="{{ content_type.pk }}|{{ obj.pk }}">
+		<li class="star {% if rating.average|ceil >= 1 %}checked{% if rating.average|ceil == 1 %}-half{% endif %}{% endif %}"></li>
+		<li class="star {% if rating.average|ceil >= 3 %}checked{% if rating.average|ceil == 3 %}-half{% endif %}{% endif %}"></li>
+		<li class="star {% if rating.average|ceil >= 5 %}checked{% if rating.average|ceil == 5 %}-half{% endif %}{% endif %}"></li>
+		<li class="star {% if rating.average|ceil >= 7 %}checked{% if rating.average|ceil == 7 %}-half{% endif %}{% endif %}"></li>
+		<li class="star {% if rating.average|ceil >= 9 %}checked{% if rating.average|ceil == 9 %}-half{% endif %}{% endif %}"></li>
+	</ul>
+	<div class="rating-result g-color-gray">
+		{% if rating %}{{ rating.total_cnt }}&nbsp;{{ rating.total_cnt|choose_plural:"голос, голоса, голосов" }}{% endif %}
+	</div>
+</div>
+{% else %}
+    <div class="b-ratings-block{% if new_line%} b-ratings-block-new-line{% endif %}">
+        <ul class="b-list-h b-ratings-stars{% if is_rated or disabled %} g-disabled{% endif %}" rel="{{ content_type.pk }}|{{ obj.pk }}">
+            <li class="{% if rating.average|ceil >= 1 %}g-checked{% if rating.average|ceil == 1 %}-half{% endif %}{% endif %}"></li>
+            <li class="{% if rating.average|ceil >= 3 %}g-checked{% if rating.average|ceil == 3 %}-half{% endif %}{% endif %}"></li>
+            <li class="{% if rating.average|ceil >= 5 %}g-checked{% if rating.average|ceil == 5 %}-half{% endif %}{% endif %}"></li>
+            <li class="{% if rating.average|ceil >= 7 %}g-checked{% if rating.average|ceil == 7 %}-half{% endif %}{% endif %}"></li>
+            <li class="{% if rating.average|ceil >= 9 %}g-checked{% if rating.average|ceil == 9 %}-half{% endif %}{% endif %}"></li>
+        </ul>
+        <small class="g-color-gray">
+            {% if rating and not without_text%}
+                &nbsp;{{ rating.total_cnt }}&nbsp;{{ rating.total_cnt|choose_plural:"голос, голоса, голосов" }}: {{ rating.average|division:2|stringformat:"1.1f"|float_point }}&nbsp;из&nbsp;5
+            {% endif %}
+            {% if not rating and not without_text%}
+             &nbsp;
+            {% endif %}
+            {% if not user.is_authenticated and not disabled and rating and not without_text %}.&nbsp;{% endif %}
+	    </small>
+    </div>
+    
+{% endif %}

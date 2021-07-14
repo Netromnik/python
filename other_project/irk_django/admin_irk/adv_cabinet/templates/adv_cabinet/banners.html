@@ -1,0 +1,20 @@
+{% extends 'adv_cabinet/layout.html' %}
+
+{% load static %}
+{% load render_bundle from webpack_loader %}
+
+{% block title %}Статистика размещений – {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    <div id="app">
+        <page-banner-list></page-banner-list>
+    </div>
+
+{% endblock %}
+
+{% block bottom_scripts %}
+
+    {% render_bundle 'adv_cabinet' %}
+
+{% endblock %}

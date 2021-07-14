@@ -1,0 +1,39 @@
+{% extends 'admin/object_history.html' %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="../../../../">Начало</a> &rsaquo;
+    <a href="../../../">Профили</a> &rsaquo;
+    <a href="../../">Бан лист пользователей</a> &rsaquo;
+    <a href="../">{{ object|truncatewords:"18" }}</a> &rsaquo;
+	История
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+	<div class="module">
+
+	<table id="change-history">
+		<thead>
+			<tr>
+				<th scope="sol">Модератор</th>
+				<th scope="sol">Причина</th>
+				<th scope="sol">Дата начала</th>
+				<th scope="sol">Дата окончания</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for object in objects %}
+			<tr>
+				<th scope="row">{{ object.moderator }}</th>
+				<td>{{ object.reason }}</td>
+				<td>{{ object.created }}</td>
+				<td>{{ object.ended }}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% load staticfiles media_utils str_utils pytils_dt thumbnail comments_tags map_tags %}
+
+<section>
+    <header>
+        <h5 class="places-list__title">
+            <a class="places-list__link" href="{{ firm.get_absolute_url }}">
+                {{ firm.guide.name|typograf }}
+            </a>
+        </h5>
+    </header>
+    <div class="places-list__address">
+        {% if firm.main_address.phones %}
+            {{ firm.main_address.phones|typograf:"title"|safe }}
+        {% endif %}
+    </div>
+    <div class="places-list__bottom">
+        {% map_address firm.main_address %}
+        {% comments_cnt firm new_layout=True extra_class='places-list__comments' %}
+    </div>
+    <div id="j-places-map{{ firm.main_address.id }}" class="places-list__map j-places-map j-places-map{{ firm.main_address.id }}" data-map-id="{{ firm.main_address.id }}"></div>
+</section>

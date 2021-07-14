@@ -1,0 +1,7 @@
+{% extends "polls/read_content.html" %}
+{% load staticfiles cache_tags str_utils thumbnail comments_tags share_utils site_utils news_tags polls_tags pytils_dt pytils_numeral %}
+
+{% block b-content-article-header-image %}
+    {% thumbnail object.image 620x1000 quality=92 stretch=1 as thumb %}
+    <img src="{{ thumb }}" alt="{% if object.image_label %}{{ object.image_label|typograf }}{% else %}{{ object.title|typograf }}{% endif %}" width="{{ thumb.width }}px">
+{% endblock %}

@@ -1,0 +1,23 @@
+{% load pages math_utils str_utils %}
+
+<ul>
+{% for page in menu %}
+	{% if page.level_next %}
+		<ul>
+	{% endif %}
+
+	{% ifequal page.page.url context.request.path %}
+		<li class="selected">{{ page.page.title|typograf:"title" }}</li>
+	{% else %}
+		<li><a href="{% get_url page.page %}">{{ page.page.title|typograf:"title" }}</a></li>
+	{% endifequal %}
+	{% if page.level_prev %}
+		{% for i in page.diff_level_range %}
+			</ul>
+		{% endfor %}
+	{% endif %}
+{% endfor %}
+	
+{% for i in clevel_range%}
+</ul>
+{% endfor %}

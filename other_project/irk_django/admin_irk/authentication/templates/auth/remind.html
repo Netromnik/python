@@ -1,0 +1,24 @@
+{% extends "auth/layout.html" %}
+
+{% load profile_utils staticfiles %}
+
+{% block h1 %}Восстановление пароля{% endblock %}
+{% block title %}Восстановление пароля{% endblock %}
+
+{% block main_content %}
+    <section class="b-auth-register">
+        <form class="b-auth-register-phone" method="post" action="." id="auth-remind">{% csrf_token %}
+            <div class="row">
+                <label for="id_name">{{ form.email.label }} <span class="g-color-red">*</span></label>
+                {{ form.email }}
+                <div class="hint g-color-red"></div>
+            </div>
+            <div class="row">
+                {% if message %}{{message.email}}{% endif %}
+            </div>
+            <div class="footer">
+                <input type="submit" value="Восстановить пароль"/>
+            </div>
+        </form>
+    </section>
+{% endblock %}

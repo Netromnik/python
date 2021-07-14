@@ -1,0 +1,7 @@
+{% load news_tags %}
+
+{% for material in materials %}
+    <li class="grid-list__item">
+        {% material_card material is_double=False is_lazyload=True is_light=True %}
+    </li>
+{% endfor %}

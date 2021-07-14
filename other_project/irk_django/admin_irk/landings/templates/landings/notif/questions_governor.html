@@ -1,0 +1,9 @@
+{% extends "letter.html" %}
+
+{% load site_utils str_utils %}
+
+{% block content %}
+    <p>{{question.text}}</p>
+    <p>Контакт: {{question.contact}}</p>
+    <p>Населенный пункт: {{question.locality}}</p>
+{% endblock %}

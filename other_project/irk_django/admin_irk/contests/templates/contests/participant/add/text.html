@@ -1,0 +1,59 @@
+{% extends 'contests/layout_cr.html' %}
+
+{% load gallery_tags form_tags staticfiles media_utils str_utils %}
+
+{% block title %}Добавление участника | {{ block.super }}{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/add_odd.js' %}"></script>
+{% endblock %}
+
+{% block b-content-cr %}
+    <div class="g-margin-bottom-30">
+        <a class="g-color-black g-font-bold g-font-size-16" href="{{ contest.get_absolute_url }}"><span class="b-contests-arrow-left"></span>&nbsp;{{ contest.title|typograf }}</a>
+    </div>
+
+    <h1 class="b-contests-title-h1">Принять участие в конкурсе</h1>
+
+    <form class="b-contests-participant-form" method="POST" enctype="multipart/form-data">{% csrf_token %}
+        <ul class="b-contests-participant-form-list">
+            <li>
+                <h3 class="b-contests-participant-form-tag-name">{{ form.title.label_tag }}</h3>
+                {{ form.title }}
+            </li>
+            <li>
+                <h3 class="b-contests-participant-form-tag-name">{{ form.description.label_tag }}</h3>
+                {{ form.description }}
+            </li>
+            <li>
+                <h3 class="b-contests-participant-form-tag-name">{{ form.full_name.label_tag }}</h3>
+                {{ form.full_name }}
+            </li>
+            <li>
+                <h3 class="b-contests-participant-form-tag-name">{{ form.phone.label_tag }}</h3>
+                {{ form.phone }}
+                {{ form.phone.errors }}
+            </li>
+            <li>
+                <button class="b-contests-button-orange small" type="submit">Отправить</button>
+            </li>
+        </ul>
+{#        <table id="tableNewView">#}
+{##}
+{##}
+{#            {% tr_field_contests form.title 'title' %}#}
+{#            {% tr_field_contests form.description 'description' %}#}
+{##}
+{##}
+{#            <tr>#}
+{#                <th></th>#}
+{#                <td>#}
+{#                    <button class="b-button" type="submit">Отправить</button>#}
+{#                </td>#}
+{#            </tr>#}
+{##}
+{#        </table>#}
+    </form>
+
+{% endblock %}

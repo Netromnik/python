@@ -1,0 +1,8 @@
+<li class="magazine-list__item j-magazine-list__item"{% if next_magazine.get_absolute_url %} data-magazine-list-next="{{ next_magazine.get_absolute_url }}"{% endif %}>
+    <div class="b-container">
+        <div class="b-content">
+            {% include 'magazine/snippets/magazine_header.html' %}
+        </div>
+    </div>
+    {% include 'magazine/snippets/magazine_content.html' %}
+</li>

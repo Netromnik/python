@@ -1,0 +1,42 @@
+{% load str_utils comments_tags thumbnail utils_tags cache_tags staticfiles pytils_dt pytils_numeral %}
+
+<!--item-->
+{% spaceless %}
+<a href="{{ event.get_absolute_url }}" class="card">
+    <div class="card__info">
+        <div class="card__info__top">
+            {% if event.genre != None or event.genre == '' %}
+            <span class="card__label">
+                {{ event.genre|typograf }}
+            </span>
+            {% endif %}
+            <span class="card__time">
+                {% if event.schedule.first %}
+                    {% if event.schedule.first.time != None %}
+                        <time datetime="{{ event.schedule.first.date|ru_strftime:"%Y-%m-%d" }} {{ event.schedule.first.time|time:"H:i" }}">
+                            {{ event.schedule.first.date|ru_strftime:"%d %B, %a"|capfirst }} {{ event.schedule.first.time|time:"H:i" }}
+                        </time>
+                    {% else %}
+                        <time datetime="{{ event.schedule.first.date|ru_strftime:"%Y-%m-%d" }}">{{ event.schedule.first.date|ru_strftime:"%d %B, %a"|capfirst }}</time> уточняется
+                    {% endif %}
+                {% else %}
+                    уточняется
+                {% endif %}
+            </span>
+        </div>
+        <div class="card__info__bottom">
+            <h4 class="card__title">
+                {{ event.title|typograf }}
+            </h4>
+            <div class="card__desc">
+                {{ event.caption|truncatechars:70|typograf }}
+            </div>
+        </div>
+    </div>
+    <div class="card__bg">
+        {% thumbnail event.gallery.main_image.image 770x360 crop as thumb %}
+        <img src="{{ thumb }}" />
+    </div>
+</a>
+{% endspaceless %}
+<!--item close-->

@@ -1,0 +1,19 @@
+{% load site_utils %}
+<html>
+<head>
+    <title>Ответ на ваш вопрос в пресс-конференции на сайте Ирк.ру изменен</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+</head>
+<body>
+<p>Здравствуйте, {{ question.user }}!</p>
+<p><small>Отвечать на это письмо НЕ НУЖНО.</small></p>
+<p>Ваш вопрос по &laquo;{{ expert.title }}&raquo;:<br>
+{{ question.question }}
+</p>
+<p>{{ expert.specialist }} отвечает:<br>
+{{ question.answer }}
+</p>
+<p>Чтобы просмотреть другие ответы по пресс-конференции &laquo;{{ expert.title }}>&raquo;,
+перейдите по ссылке <a href="http://{% get_site_url www %}{{ expert.get_absolute_url }}">{% get_site_url www %}{{ expert.get_absolute_url }}</a>.</p>
+</body>
+</html>

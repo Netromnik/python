@@ -1,0 +1,5 @@
+{% for comment in object_list %}
+    <li>
+        {% include 'obed/comments/list_item.html' with truncate="175" %}
+    </li>
+{% endfor %}

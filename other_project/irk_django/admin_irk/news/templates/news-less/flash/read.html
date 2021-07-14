@@ -1,0 +1,84 @@
+{% extends 'news-less/layout_cr.html' %}
+
+{% load staticfiles media_utils news_tags thumbnail str_utils comments_tags gallery_tags date_tags adv_tags %}
+
+{% block title %}{% if entry.title %}{{ entry.title|typograf:"title"|safe }}{% else %}{{ entry.content|typograf:"title"|safe }}{% endif %} | {{ block.super }}{% endblock %}
+
+{% block b-adword-header %}{% include 'news-less/base/banner/b-adwords-banner-underhead-flash.html' %}{% endblock b-adword-header %}
+
+{% block promo_A %}
+    {% ibanner id=477 as branding_top %}
+    {% include 'snippets/branding_top.html' %}
+{% endblock %}
+
+{% block promo_B %}
+    {% ibanner id=467 as branding_footer %}
+    {% if branding_footer %}
+        <div class="b-branding-bottom g-desktop">
+            {{ branding_footer }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block b-content-cr %}
+    {# Центральная колонка #}
+    <article class="b-content-article g-content-block">
+        {% if entry.is_tweet %}
+            <div class="b-content-article-text"><p>{{ entry.content|twitter_urlize|safe }}</p></div>
+            {% if video_url %}
+                <div class="g-video g-indent"><iframe width="100%" height="100%" src="{{ video_url }}" frameborder="0" allowfullscreen></iframe></div>
+            {% endif %}
+            {% if entry.gallery.main_gallery|length > 0 %}
+                {% gallery entry.gallery.main_gallery "10000x75" class="b-list-h g-indent" %}
+            {% endif %}
+            <footer class="g-font-base b-news-flash-list-item-info">
+                <time datetime="{{ entry.created|date:'Y-m-d H:i' }}" class="g-color-gray">{{ entry.created|dates:'%d %B %H:%M|%d %B %Y %H:%M' }}</time>,
+                <span class="g-color-gray">&#64; twitter</span>{% if entry.username %},
+                <b>{{ entry.username|typograf }}</b>{% endif %}
+            </footer>
+        {% elif entry.is_vk_dtp %}
+            <div class="b-content-article-text"><p>{{ entry.content|typograf:'user' }}</p></div>
+            {% if entry.gallery.main_gallery|length > 0 %}
+                {% gallery entry.gallery.main_gallery "10000x75" class="b-list-h g-indent" %}
+            {% endif %}
+            <footer class="g-font-base b-news-flash-list-item-info">
+                <time datetime="{{ entry.created|date:'Y-m-d H:i' }}" class="g-color-gray">{{ entry.created|dates:'%d %B %H:%M|%d %B %Y %H:%M' }}</time>,
+                <span class="g-color-gray">vk.com</span>{% if entry.username %},
+                <b>{{ entry.username|typograf }}</b>{% endif %}
+            </footer>
+        {% elif entry.is_site %}
+            {% if entry.content %}
+                <header>
+                    <h1>{{ entry.title|typograf }}</h1>
+                </header>
+                <div class="b-content-article-text">{{ entry.content|typograf:'user' }}</div>
+            {% else %}
+                <div class="b-content-article-text"><p>{{ entry.title|typograf }}</p></div>
+            {% endif %}
+            {% if video_url %}
+                <div class="g-video g-indent"><iframe width="100%" height="100%" src="{{ video_url }}" frameborder="0" allowfullscreen></iframe></div>
+            {% endif %}
+            {% if entry.gallery.main_gallery|length > 0 %}
+                {% gallery entry.gallery.main_gallery "10000x75" class="b-list-h g-indent" %}
+            {% endif %}
+            <footer class="g-font-base b-news-flash-list-item-info">
+                    <time datetime="{{ entry.created|date:'Y-m-d H:i' }}" class="g-color-gray">{{ entry.created|dates:'%d %B %H:%M|%d %B %Y %H:%M' }}</time>,
+                    <span class="g-color-gray">&#64; сайт</span>{% if entry.author %},
+                    <b>{{ entry.author|typograf }}</b>{% endif %}
+            </footer>
+        {% elif entry.is_sms %}
+            <div class="b-content-article-text"><p>{{ entry|typograf }}</p></div>
+            <footer class="g-font-base b-news-flash-list-item-info">
+                <time datetime="{{ entry.created|date:'Y-m-d H:i' }}" class="g-color-gray">{{ entry.created|dates:'%d %B %H:%M|%d %B %Y %H:%M' }}</time>,
+                <span class="g-color-gray">&#64; sms</span>
+                {% if show_hidden %} (<b>{{ entry.username }}</b>){% endif %}
+            </footer>
+        {% endif %}
+    </article>
+    {% comments entry %}
+{% endblock %}
+
+
+{% block b-aside-r %}
+    {% include 'news-less/flash/b-aside-r.html' %}
+{% endblock b-aside-r %}

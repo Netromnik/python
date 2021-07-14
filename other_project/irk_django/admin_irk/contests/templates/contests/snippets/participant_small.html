@@ -1,0 +1,19 @@
+{% load thumbnail str_utils rating_tags %}
+<div class="b-contests-partaker">
+    {% if participant.gallery.main_image.image %}
+        {% thumbnail participant.gallery.main_image.image 300x633 as thumb %}
+        <a href="{{ participant.get_absolute_url }}" class="b-contests-partaker-image-link">
+            <img class="g-block" src="{{ thumb }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt="{% if participant.contest.type == 'ig' %}{{ participant.username }}{% else %}{{ participant.title|typograf }}{% endif %}" />
+        </a>
+    {% endif %}
+    {% if not participant.contest.is_blocked %}
+        {% if not participant.contest.is_closed and participant.is_active %}
+            {% rating participant 'ratings/widgets/like_button_small.html' %}
+        {% else %}
+            {% rating participant 'ratings/widgets/like_button_small.html' closed %}
+        {% endif %}
+    {% else %}
+        {% rating participant 'ratings/widgets/like_button_small.html' closed %}
+    {% endif %}
+    <div class="b-contests-partaker-title"><a class="b-contests-partaker-title-link" href="{% if participant.contest.type == 'ig' %}http://instagram.com/{{ participant.username }}{% else %}{{ participant.get_absolute_url }}{% endif %}">{% if participant.contest.type == 'ig' %}#{{ participant.username }}{% else %}{{ participant|typograf }}{% endif %}</a></div>
+</div>

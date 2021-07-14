@@ -1,0 +1,11 @@
+{% extends 'contests/layout.html' %}
+
+{% block b-content %}
+    <section class="b-content-cr">
+        {% block b-content-cr %}{% endblock b-content-cr %}
+    </section>
+
+    <aside class="b-aside-r">
+        {% block b-aside-r %}{% include 'contests/base/b-aside-r.html' %}{% endblock b-aside-r %}
+    </aside>
+{% endblock b-content %}

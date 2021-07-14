@@ -1,0 +1,90 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils form_tags str_utils %}
+
+{% block title %} Мои объявления | Туризм в Иркутске на IRK.ru {% endblock %}
+
+{% block content %}
+    <!-- Хлебные крошки -->
+    <div class="b-content-block b-breadcrumbs">
+        <nav>
+            <ul class="b-list-h">
+                <li><a href="{% url 'tourism:index' %}">Туризм</a></li>
+                <li><a href="{% url 'tourism:companion:search' %}">Поиск компаньона</a></li>
+                <li>Мои объявления</li>
+            </ul>
+        </nav>
+    </div>
+    <!-- /Хлебные крошки -->
+
+    <section class="b-content-block b-tourism-companion-my-block b-tourism-companion-index-block">
+        <header class="b-content-block">
+            <div class="b-companion-topfield">
+                <a href="{% url 'tourism:companion:create' %}">Добавить</a>
+                <h1>Мои объявления:</h1>
+            </div>
+            <div class="b-tourism-companion-submenu">
+                {% if visible == 0 %}<span style="border-left: solid 1px #cecece;">Закрытые</span>{% else %}<a href="{% url 'tourism:companion:my' %}?visible=0">Закрытые</a>{% endif %}
+                {% if visible == 1 %}<span style="border-right: solid 1px #cecece;">Открытые</span>{% else %}<a href="{% url 'tourism:companion:my' %}?visible=1">Открытые</a>{% endif %}
+            </div>
+            <br clear="all">
+        </header>
+
+
+        <article class="b-companion-search-result-block">
+            {% if companions %}
+            <ul class="b-list-v">
+                {% for companion in companions %}
+                <li>
+                    {% if companion.name %}<span class="b-companion-author">{{ companion.name|typograf:'title'|safe }}</span>{% endif %}
+                    <div class="b-info-grayblock b-companion-my-info">
+                        <header>
+                            <span class="b-companion-author-gender-info"><strong>{{ companion.get_my_composition_display|capfirst }}</strong></span> ищет <span class="b-companion-team-info"><strong>{{ companion.get_find_composition_display }}</strong></span>, место отдыха
+                            {% if companion.place %}<span class="b-companion-place-info"><strong>{{ companion.place }}</strong></span>{% endif %}
+                        </header>
+                        {% if companion.description %}<p>{{ companion.description }}</p>{% endif %}
+                        {% if companion.about %}
+                        <h4>О себе</h4>
+                        <p>{{ companion.about }}</p>
+                        {% endif %}
+
+                        <footer>
+                            <a href="{% url 'tourism:companion:delete' companion.pk %}">Удалить</a>
+                            <a href="{% url 'tourism:companion:edit' companion.pk %}">Редактировать</a>
+                        </footer>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>У вас нет объявлений.</p>
+            {% endif %}
+        </article>
+    </section>
+{% endblock %}
+
+        <div class="my-result">
+        <h3>Мои объявления:</h3>
+        {% if visible == 1 %}Открытые{% else %}<a href="{% url 'tourism:companion:my' %}?visible=1">Открытые</a>{% endif %}
+        {% if visible == 0 %}Закрытые{% else %}<a href="{% url 'tourism:companion:my' %}?visible=0">Закрытые</a>{% endif %}
+        <hr><hr>
+        {% if companions %}
+            {% for companion in companions %}
+                <div>
+                    <div>Имя: {{ companion.name }}</div>
+                    <div>О себе: {{ companion.about }}</div>
+                    <div>Мой состав: {{ companion.get_my_composition_display }}</div>
+                    <div>Ищу состав: {{ companion.get_find_composition_display }}</div>
+                    <div>Место отдыха: {{ companion.place }}</div>
+                    <div>Дополнительно: {{ companion.description }}</div>
+                    <div>Телефон: {{ companion.phone }}</div>
+                    <div>Почта: {{ companion.email }}</div>
+                </div>
+                <a href="{% url 'tourism:companion:delete' companion.pk %}">Удалить</a><br>
+                <a href="{% url 'tourism:companion:edit' companion.pk %}">Редактировать</a>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>У вас нет объявлений.</p>
+        {% endif %}
+    </div>

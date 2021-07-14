@@ -1,0 +1,302 @@
+{% load staticfiles %}
+
+<script>
+    window.FileAPI = {
+        debug: false // debug mode
+        , staticPath: "{% static 'js/lib/FileAPI/' %}" // path to *.swf
+    };
+</script>
+
+<script src="{% static 'js/lib/FileAPI/FileAPI.js' %}"></script>
+<script src="{% static 'js/lib/FileAPI/FileAPI.exif.js' %}"></script>
+<script src="{% static 'js/lib/jquery.fileapi.js' %}"></script>
+
+<div class="b-upload b-upload_dnd" id="multiupload">
+    <div class="b-upload__dnd" id="upload-photo">Перетащите сюда файлы, для их добавления.</div>
+    <div class="js-upload btn btn-success btn-small">
+        <span>Загрузить</span>
+    </div>
+    <div class="btn btn-add js-fileapi-wrapper">
+        <span>Добавить</span>
+        <input type="file" name="Filedata">
+    </div>
+    <ul class="b-list-v errorlist j-upload-errorlist">
+    </ul>
+    <div class="js-files b-upload__files">
+        <div class="js-file-tpl b-thumb" data-id="<%=uid%>">
+            <div data-fileapi="file.rotate.cw" class="b-thumb__rotate"></div>
+            <div class="image">
+                <div class="b-thumb__preview__pic"></div>
+            </div>
+            <div data-fileapi="file.remove" class="b-thumb__del" title="Удалить">удалить</div>
+            <div class="b-thumb__progress progress progress-small">
+                <div class="bar"></div>
+            </div>
+            <div class="b-thumb__name"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        'use strict';
+
+        var $body = $('body'),
+                $lastSessionBox = $('.b-upload-lastsession'),
+                $uploadBox = $('.b-upload__files'),
+                $initialForms = $('#id_gallerypicture_set-INITIAL_FORMS'),
+                $totalForms = $('#id_gallerypicture_set-TOTAL_FORMS'),
+                imagePosition = $lastSessionBox.find('.js-file-tpl').length, // общее количество боксов с фотографиями
+                newImagePosition = 0, // счетчик количества фотографий только новых фотографий в $uploadBox
+                $errorList = $('.j-upload-errorlist'),
+                $togglerWatermarks = $('#toggle_watermarks');
+
+        var fileApiError = function (evt, data) {
+            $errorList.html('');
+            if (data.other.length) {
+                var errors = data.other[0].errors;
+                if (typeof (errors.maxSize) != "undefined") {
+                    uploadShowErrorlist('Файл должен быть не более 5 мб.');
+                }
+                if (typeof (errors.minHeight) != "undefined" || typeof (errors.minWidth)) {
+                    uploadShowErrorlist('Размер изображения не должен превышать 8192x4320 пикселей');
+                }
+                if (typeof (errors.maxFiles) != "undefined") {
+                    uploadShowErrorlist('Можно загрузить не более 48 фотографий');
+                }
+
+            }
+        };
+        var uploadShowErrorlist = function (error) {
+            $errorList.append('<li>' + error + '</li>');
+        };
+
+        $initialForms.val(imagePosition);
+        $('#multiupload').fileapi({
+            url: '{% url "gallery:admin_multiupload_handler" %}',
+            data: {
+                'content_type_id':{{ content_type_id|default_if_none:'null' }},
+                'object_id':{{ object_id|default_if_none:'null' }},
+                'prefix': '{{ prefix }}',
+                'title': ''
+            },
+            multiple: true,
+            autoUpload: false,
+            maxSize: FileAPI.MB * 5,
+            maxFiles: 48,
+            imageSize: {
+                maxWidth: 8192,
+                maxHeight: 4320
+            },
+            elements: {
+                ctrl: {upload: '.js-upload'},
+                emptyQueue: {hide: '.js-upload'},
+                list: '.js-files',
+                file: {
+                    tpl: '.js-file-tpl',
+                    preview: {
+                        el: '.image',
+                        width: 100,
+                        height: 100
+                    },
+                    upload: {show: '.progress', hide: '.b-thumb__rotate'},
+                    complete: {hide: '.progress'},
+                    progress: '.progress .bar'
+                },
+                dnd: {
+                    el: '.b-upload__dnd',
+                    hover: 'b-upload__dnd_hover',
+                    fallback: '.b-upload__dnd-not-supported'
+                }
+            },
+            onDrop: fileApiError,
+            onSelect: fileApiError,
+            onFileComplete: function (err, upload) {
+                var input1 = '<div class="j-gallery-main" style="display: none;"><input class="main_input" id="id_gallerypicture_set-' + imagePosition + '-main" name="gallerypicture_set-' + imagePosition + '-main" type="checkbox"></div>',
+                    input9 = '<div class="j-gallery-best" style="display: none;"><input class="best_input" id="id_gallerypicture_set-' + imagePosition + '-best" name="gallerypicture_set-' + imagePosition + '-best" type="checkbox"></div>',
+                    input2 = '<input id="id_gallerypicture_set-' + imagePosition + '-id" name="gallerypicture_set-' + imagePosition + '-id" type="hidden" value="' + upload.result.gallerypicture + '">',
+                    input3 = '<input class="delete_input" id="id_gallerypicture_set-' + imagePosition + '-DELETE" name="gallerypicture_set-' + imagePosition + '-DELETE" type="hidden">',
+                    input4 = '<input id="id_gallerypicture_set-' + imagePosition + '-picture_1" name="gallerypicture_set-' + imagePosition + '-picture_1" type="hidden" value="' + upload.result.picture + '">',
+                    input5 = '<input id="id_gallerypicture_set-' + imagePosition + '-picture_2" name="gallerypicture_set-' + imagePosition + '-picture_2" type="text">',
+                    input6 = '<input id="id_gallerypicture_set-' + imagePosition + '-gallery" name="gallerypicture_set-' + imagePosition + '-gallery" type="hidden" value="' + upload.result.gallery + '">',
+                    input7 = '<div class="gallery-bb-input"><input type="text" value="[image ' + upload.result.gallerypicture + ']"></div>',
+                    input8 = '<div class="b-thumb-position">' +
+                            '<span># ' + imagePosition + '</span>' +
+                            '<input style="width: 3em !important; text-align: inherit;" type="hidden" class="position" id="id_gallerypicture_set-' + imagePosition + '-position" name="gallerypicture_set-' + imagePosition + '-position" value="' + imagePosition + '">' +
+                            '</div>',
+                    deleteButton = '<div data-counter="' + imagePosition + '" class="thumb__del j-thumb__del j-thumb-uploadBox" title="Удалить">удалить</div>',
+                    mainButton = '<div data-counter="' + imagePosition + '" class="thumb__main j-thumb__main j-thumb-uploadBox" title="Главная">главная</div>',
+                    bestButton = '<div data-counter="' + imagePosition + '" class="thumb__best j-thumb__best j-thumb-uploadBox" title="Лучшая">лучшая</div>',
+                    checkbox;
+
+                if ($togglerWatermarks.prop('checked') === true) {
+                    checkbox = '<label for="id_gallerypicture_set-' + imagePosition + '-picture_3"><input class="j-thumb__watermark" data-counter="' + imagePosition + '" id="id_gallerypicture_set-' + imagePosition + '-picture_3" name="gallerypicture_set-' + imagePosition + '-picture_3" type="checkbox" checked="checked"> Ватермарк</label>'
+                } else {
+                    checkbox = '<label for="id_gallerypicture_set-' + imagePosition + '-picture_3"><input class="j-thumb__watermark" data-counter="' + imagePosition + '" id="id_gallerypicture_set-' + imagePosition + '-picture_3" name="gallerypicture_set-' + imagePosition + '-picture_3" type="checkbox"> Ватермарк</label>'
+                }
+                $uploadBox
+                    .find('.js-file-tpl').eq(newImagePosition)
+                    .attr('id', "file_" + imagePosition)
+                    .append(input4, input5, input6, input2, input7, input3, input1, input9, bestButton, mainButton, deleteButton, checkbox)
+                    .prepend(input8);
+                imagePosition = imagePosition + 1;
+                newImagePosition = newImagePosition + 1;
+                $initialForms.val(imagePosition);
+                $totalForms.val(imagePosition);
+            },
+            onComplete: function (e) {
+                $uploadBox.find('.b-thumb').appendTo($lastSessionBox);
+                $('#multiupload').trigger('reset');
+                imagePosition = $lastSessionBox.find('.js-file-tpl').length;
+                newImagePosition = 0;
+                sortFix();
+                $('html, body').animate({scrollTop: $('#last-photo').offset().top}, 300);
+            }
+        });
+
+        $body.on('click', '.j-thumb__del', function () {
+            var $deleteButton = $(this),
+                id = parseInt($deleteButton.attr('data-counter'), 10),
+                imageId = $('#id_gallerypicture_set-' + id + '-picture_1').val();
+
+            $.ajax({
+                url: "{% url 'gallery:delete_image' %}",
+                data: {
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                    'id': imageId
+                },
+                dataType: 'json',
+                type: "POST",
+                success: function (data, textStatus, jqXHR) {
+                    if (textStatus === "success") {
+                        if ($deleteButton.hasClass('j-thumb-uploadBox')) {
+                            newImagePosition = newImagePosition - 1;
+                            $('#file_' + id).find('.b-thumb__del').click();
+                        } else {
+                            $('#file_' + id).remove();
+                        }
+                        imagePosition = imagePosition - 1; // обновляем счетчик картинок
+                        // находим порядковый номер последней картинки и меняем все её инпуты и параметры на тот, что был удалён
+                        if (id !== imagePosition) { // если удаленная картинка последняя в списке, то удаляем без лишних манипуляций
+                            var item = $('#file_' + imagePosition);
+                            item.attr('id', 'file_' + id)
+                                    .find('input')
+                                    .each(function () {
+                                        var self = $(this),
+                                                name = self.attr('name');
+                                        if (name !== undefined) { // если поле без названия, то манипуляций с ним не требуется
+                                            name = name.split('-');
+                                            name = name[0] + '-' + id + '-' + name[2];
+                                            self.attr('id', 'id_' + name)
+                                                    .attr('name', name);
+                                        }
+                                    });
+                            item.find('.j-thumb__main, .j-thumb__del')
+                                    .attr('data-counter', id);
+                        }
+                        $initialForms.val(imagePosition);
+                        $totalForms.val(imagePosition);
+                        $body.triggerHandler('checkToggleWatermarksStatus');
+                    }
+                }
+            });
+            return false;
+        });
+
+        $body.on('click', '.j-thumb__main', function () {
+            var $mainButton = $(this),
+                id = parseInt($mainButton.attr('data-counter'), 10),
+                imageId = $('#id_gallerypicture_set-' + id + '-picture_1').val(),
+                $mainInput = $('#id_gallerypicture_set-' + id + '-main');
+
+            $.ajax({
+                url: "{% url 'gallery:main_image' %}",
+                data: {
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                    'id': imageId
+                },
+                success: function (data, textStatus, jqXHR) {
+                    $('input.main_input').removeAttr('value');
+                    $('.j-gallery-main').find('input[type=checkbox]').prop('checked', false);
+                    $mainInput.prop('checked', true);
+                    $('.js-file-tpl').removeClass('main');
+                    $('#file_' + id).addClass('main');
+                }
+            });
+            return false;
+        });
+
+        $body.on('click', '.j-thumb__best', function () {
+            var $bestButton = $(this),
+                id = parseInt($bestButton.attr('data-counter'), 10),
+                imageId = $('#id_gallerypicture_set-' + id + '-picture_1').val(),
+                $bestInput = $('#id_gallerypicture_set-' + id + '-best'),
+                data = {
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                    'id': imageId
+                },
+                isBest = $bestButton.parents('.b-thumb').hasClass('best');
+
+            if (isBest) {
+                data.remove = true;
+            }
+
+            $.ajax({
+                url: "{% url 'gallery:best_image' %}",
+                data: data,
+                success: function (data, textStatus, jqXHR) {
+                    $('input.best_input').removeAttr('value');
+                    $('.j-gallery-best').find('input[type=checkbox]').prop('checked', false);
+                    $('.js-file-tpl').removeClass('best');
+                    
+                    if (!isBest) {
+                        $('#file_' + id).addClass('best');
+                        $bestInput.prop('checked', true);
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        $body.on('click', '.j-thumb__watermark', function (e) {
+            var $watermarkButton = $(this),
+                id = parseInt($watermarkButton.attr('data-counter'), 10),
+                imageId = $('#id_gallerypicture_set-' + id + '-picture_1').val();
+
+            $.ajax({
+                url: "{% url 'gallery:set_watermark' %}",
+                data: {
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                    'id': imageId
+                },
+                type: "POST",
+                success: function (data, textStatus, jqXHR) {
+                },
+                error: function (data) {
+                    $watermarkButton.prop('checked', !$watermarkButton.prop('checked'));
+                }
+            });
+        });
+
+        var $photoList = $('.b-upload__files, .b-upload-lastsession'),
+                sortFix = function (event, ui) {
+                    $('.js-file-tpl', $photoList).each(function () {
+                        var $currentPhoto = $(this),
+                                index = $currentPhoto.index() + 1;
+                        $currentPhoto.find('.position').val(index);
+                        $currentPhoto.find('.b-thumb-position').find('> span').text('# ' + index);
+                    })
+                };
+        $photoList.sortable({
+            cursor: 'move',
+            scroll: false,
+            items: '.js-file-tpl',
+            activate: function (event, ui) {
+                // указываем какой элемент по счету редактор схватил
+                $photoList.data('sorting-item', $(ui.item).index());
+            },
+            stop: sortFix
+        });
+    });
+</script>

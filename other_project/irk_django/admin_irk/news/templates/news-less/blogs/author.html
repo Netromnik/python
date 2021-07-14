@@ -1,0 +1,29 @@
+{% extends 'news-less/layout_cr.html' %}
+
+{% load pytils_numeral staticfiles media_utils news_tags str_utils paginator_utils comments_tags thumbnail date_tags rating_tags %}
+
+{% block title %}{{ author.get_full_name|typograf }} | Блоги | {{ block.super }}{% endblock %}
+
+{% block b-content-class %}{{ block.super }} blogs{% endblock %}
+
+{% block b-content-cr %}
+    {% include 'news-less/blogs/snippets/b-author.html' with view='author' %}
+
+    <section class="b-news-blogs-post-list g-content-block">
+        <h2 class="g-hide">Записи {{ author.get_full_name|typograf }}</h2>
+
+        <ul class="b-list-v j-resp-ajax-pag" data-page="{% if objects.has_next %}{{ objects.number }}{% else %}none{% endif %}">
+            {% include 'news-less/blogs/snippets/author-entries.html' %}
+        </ul>
+        {% paginator objects template='paginator/layout.html' %}
+    </section>
+{% endblock %}
+
+{% block b-aside-r %}
+    {% if user_is_author %}
+        <div class="g-aside-block">
+            <a href="{% url 'news:blogs:create' request.user.username %}" class="b-blogs-add-button">Добавить пост</a>
+        </div>
+    {% endif %}
+    {% include 'news-less/blogs/b-aside-r.html' %}
+{% endblock %}

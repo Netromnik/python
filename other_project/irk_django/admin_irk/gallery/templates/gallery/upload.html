@@ -1,0 +1,18 @@
+{% load staticfiles media_utils %}
+ <div class="picture">
+    {{ form }}
+    <div class="gallery-bb-input">
+                        <input type="text" value="[image {{ form.instance.pk }}]">
+    </div>
+    <div class="action-block">
+        <span class="main-image">
+            <a class="noLink main-link" href="" rev="{{ forloop.counter0 }}"><img alt="" src="{% static 'tourism/img/action-apply.png' %}" align="absmiddle"> <span class="g-jsLink jsLink">главная</span></a>
+        </span>
+        <span class="delete-image">
+            <a class="noLink delete-link" href="" rev="{{ forloop.counter0 }}"><img alt="" src="{% static 'tourism/img/action-delete.png' %}" align="absmiddle"> <span class="g-jsLink jsLink">удалить</span></a>
+        </span>
+        <span class="restore-image">
+            <a class="noLink restore-link" href="" rev="{{ forloop.counter0 }}"><img alt="" src="{% static 'tourism/img/action-restore.png' %}" align="absmiddle"> <span class="g-jsLink jsLink">востановить</span></a>
+        </span>
+    </div>
+</div>

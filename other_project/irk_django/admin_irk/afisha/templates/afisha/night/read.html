@@ -1,0 +1,19 @@
+{% extends "afisha/event/read_base.html" %}
+
+{% load event_admin profile_utils thumbnail site_utils str_utils pytils_dt adv_tags comments_tags cache_tags news_tags afisha_tags staticfiles %}
+
+{% block days-items %}
+    <li><span class="g-active">Все</span></li>
+    <li class="j-filter-date"><span data-date="friday">Пятница</span></li>
+    <li class="j-filter-date"><span data-date="saturday">Суббота</span></li>
+    <li class="j-filter-date"><span data-date="sunday">Воскресенье</span></li>
+    <li class="b-calendar-open j-calendar-open">
+        <span><span class="icon-calendar-new"></span></span>
+        <div class="b-calendar">
+            <a href="#" class="b-calendar-close"></a>
+            <article></article>
+        </div>
+    </li>
+{% endblock days-items %}
+
+{% block time %}{% endblock %}

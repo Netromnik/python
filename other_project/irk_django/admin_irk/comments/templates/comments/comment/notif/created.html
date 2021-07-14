@@ -1,0 +1,17 @@
+{% extends "to_moder.html" %}
+
+{% load site_utils str_utils comments_tags %}
+
+{% block user_name %}{{ comment.user }}{% endblock %}
+
+{% block body_letter %}
+    <p>Новый комментарий к "<a href="https://{% get_site_url www %}{{ comment.target.get_absolute_url }}">{{ comment.target|typograf }}</a></p>
+    <p>Текст сообщения: <br/><i>{{ comment.text|wordwrap:800|typograf:'user' }}</i></p>
+    <p>Автор: {{ comment.user }}</p>
+    <p>
+        <a href="https://{% get_site_url www %}{{ comment.get_absolute_url }}">Посмотреть на сайте</a><br/>
+        {% if not hide_delete_link %}
+            <a href="https://{% get_site_url www %}{% url 'comments:delete' comment.pk %}">Удалить сообщение</a>
+        {% endif %}
+    </p>
+{% endblock %}

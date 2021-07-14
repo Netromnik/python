@@ -1,0 +1,15 @@
+{% load comments_tags thumbnail str_utils date_tags %}
+{% for news in objects %}
+    <li>
+        <header class="g-title">
+            <h4>{% if news.gallery.main_image.image %}{% thumbnail news.gallery.main_image.image 140x200 as thumb %}<a href="{{ news.get_absolute_url }}" title="{{ news.gallery.main_image.alt|typograf:"title"|safe }}"><span><img src="{{ thumb }}" alt="{{ news.gallery.main_image.alt|typograf:"title"|safe }}" style="width:{{ thumb.width }}px; height: {{ thumb.height }}px;"></span>{{ news.title|typograf:'title'|safe }}</a>
+            {% elif news.preview %}{% thumbnail news.thumbnail 140x200 as thumb %}<a href="{{ news.get_absolute_url }}" title="{{ news.gallery.main_image.alt|typograf:"title"|safe }}"><span><img src="{{ thumb }}" alt="{{ news.gallery.main_image.alt|typograf:"title"|safe }}" style="width:{{ thumb.width }}px; height: {{ thumb.height }}px;"></span>{{ news.title|typograf:'title'|safe }}</a>
+            {% else %}<a href="{{ news.get_absolute_url }}" title="{{ news.title|typograf:'title'|safe }}">{{ news.title|typograf:'title'|safe }}</a>{% endif %}</h4>
+            <small class="g-color-gray">{% comments_cnt news new_layout=True %}</small>
+        </header>
+        <article>
+            <a class="g-hide" href="{{ news.get_absolute_url }}"></a>
+            <p>{{ news.caption|truncatesentences:"2"|typograf:"title"|safe }}</p></article>
+        <footer><small class="g-color-gray"><time>{{ news.stamp|dates:'%d.%m|%d.%m.%Y' }}{% if news.published_time %}&nbsp;&nbsp;{{ news.published_time|date:"H:i" }}{% endif %}</time>{% if news.category %}&nbsp;&nbsp;<a href="{{ news.category.get_absolute_url }}">{{ news.category }}</a>{% elif news.preview %}&nbsp;&nbsp;<a href="{% url 'news:infographic:index' %}" class="b-news-articles-infographic-link">Наглядно</a>{% endif %}</small></footer>
+    </li>
+{% endfor %}

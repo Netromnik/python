@@ -1,0 +1,4 @@
+{% load pytils_numeral %}
+{% if rating %}
+    <span class="icon-inline icon-left icon-like">{{ rating.total_cnt }} {{ rating.total_cnt|choose_plural:"человек,человека,человек" }}</span>
+{% endif %}

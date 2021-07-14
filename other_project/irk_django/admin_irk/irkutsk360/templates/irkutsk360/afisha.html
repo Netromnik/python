@@ -1,0 +1,27 @@
+{% extends 'irkutsk360/index.html' %}
+{% load static staticfiles media_utils str_utils thumbnail paginator_utils irkutsk360_tags %}
+
+{% block bg_header %}afisha{% endblock %}
+
+{% block active_link %}afisha{% endblock %}
+
+{% block content_page %}
+
+    <div class="anniversary__inner">
+        <div class="anniversary__grid-wrapper">
+            <div class="grid" id="afisha-ajax" data-page="2">
+                {% include 'irkutsk360/afisha_list.html' %}
+            </div>
+        </div>
+        <div class="anniversary__buttons">
+            <div class="g-loading-button">
+                <span class="g-loading-button__more g-height-60 g-line-height-60 g-font-bold j-showmore" data-type="json" data-target="afisha-ajax">
+                    <span>Показать еще</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+

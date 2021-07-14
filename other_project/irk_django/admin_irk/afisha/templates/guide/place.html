@@ -1,0 +1,199 @@
+{% extends "afisha/layout_place.html" %}
+
+{% load staticfiles media_utils paginator_utils str_utils thumbnail comments_tags afisha_tags share_utils map_tags adv_tags pytils_dt %}
+
+{% block title %}{% if comments %}Отзывы на {% endif %}{{ object.guide.name|typograf:"title"|safe }}{% if curr_hall %} ({{ curr_hall|typograf:"title"|safe }}){% endif %} {% if current_date != current_date.today %}{{ current_date|ru_strftime:"%d %B" }} {% endif %}| Гид по Иркутску на IRK.ru {% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="//maps.api.2gis.ru/2.0/loader.js?pkg=full&skin=dark&lazy=true"></script>
+    {{ block.super }}
+    <rb:rich key="{{ settings.RAMBLER_WIDGET_KEY }}" xmlns:rb="//kassa.rambler.ru"></rb:rich>
+    <script src="https://kassa.rambler.ru/s/widget/js/TicketManager.js"></script>
+{% endblock %}
+
+{% block container %}<div class="b-container-padding"><div class="g-overflow">{{ block.super }}</div></div>{% endblock %}
+
+{% block text_widget %}{% ibanner id=314 template='adv/banners/text_widget_layout.html' %}{% endblock %}
+
+{% block content %}
+
+<div class="place-card">
+    <section>
+        <header>
+            {% if object.gallery.main_image.image and not request.user_agent.is_gadget %}
+                <div class="place-card__header">
+                    <h1 class="place-card__title">
+                        {{ object.guide.name|typograf:"title"|safe }}
+                    </h1>
+                    <div class="place-card__image">
+                        {% thumbnail object.gallery.main_image.image 880x1000 as thumb %}
+                        <img src="{{ thumb }}" title="{{ object.gallery.main_image.alt|typograf:"title"|safe }}" alt="{{ object.gallery.main_image.alt|typograf:"title"|safe }}">
+                    </div>
+                </div>
+            {% else %}
+                <h1 class="place-card__title place-card__title_noimage">
+                    {{ object.guide.name|typograf }}
+                </h1>
+            {% endif %}
+        </header>
+        <div class="place-card__info">
+            <div class="place-card__column place-card__column_tel">
+                {% if object.main_address.phones %}
+                <p>
+                    {% with object.main_address.phones|split_string:"," as phones %}
+                        {% for phone in phones %}
+                            {{ phone }}<br>
+                        {% endfor %}
+                    {% endwith %}
+                </p>
+                {% endif %}
+            </div>
+            <div class="place-card__column place-card__column_pl">
+                {% if object.main_address.worktime %}
+                <p>
+                    <b>{{ object.main_address.worktime|typograf|safe }}</b>
+                </p>
+                {% endif %}
+                <p>
+                    {% map_address object.main_address %}
+                </p>
+            </div>
+            <div class="place-card__column place-card__column_right">
+                {% if object.url %}
+                <p>
+                    <a href="{{ object.url }}" class="g-color-lightblue" target="_blank">{{ object.url }}</a>
+                </p>
+                {% endif %}
+                {% if object.mail %}
+                <p>
+                    <a href="mailto:{{ object.mail|typograf|safe }}" class="g-color-lightblue">{{ object.mail|typograf|safe }}</a>
+                </p>
+                {% endif %}
+            </div>
+        </div>
+        <div id="j-places-map{{ object.main_address.id }}" class="place-card__map j-places-map j-places-map{{ object.main_address.id }}"></div>
+        {% if object.price_description %}
+        <div class="place-card__desc">
+            {{ object.price_description }}
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+    {% block establishment %}
+        <ul class="place-list">
+            {% if schedule %}
+                <li class="place-list__item j-sked-open g-first {% if not review and not comments and not map %}g-active{% endif %}">
+                    {% if review or comments or map %}<a href="{% url 'guide:read' firm_id=object.id %}">Репертуар</a>{% else %}Репертуар{% endif %}
+                </li>
+            {% endif %}
+            {% if not schedule %}
+                <li class="place-list__item {% if not comments and not map %}g-active{% endif %}">
+                    {% if not comments and not map %}Описание{% else %}<a href="{% url 'guide:read' firm_id=object.id %}?review=1">Описание</a>{% endif %}
+                </li>
+            {% else %}
+                <li class="place-list__item {% if review %}g-active{% endif %}">
+                    {% if review %}Описание{% else %}<a href="{% url 'guide:read' firm_id=object.id %}?review=1">Описание</a>{% endif %}
+                </li>
+            {% endif %}
+            <li class="place-list__item j-comment-open{% if not has_map %} g-last{% endif %}{% if comments %} g-active{% endif %}">
+                {% if not comments %}
+                    <a href="{% url 'guide:read' firm_id=object.id %}?comments=1">Отзывы{% if object.comments_cnt %} ({{ object.comments_cnt }}){% endif %}</a>
+                {% else %}
+                    Отзывы{% if object.comments_cnt %} ({{ object.comments_cnt }}){% endif %}
+                {% endif %}
+            </li>
+            {% if has_map %}
+                <li class="place-list__item g-not-mobile_320 g-last{% if map %} g-active{% endif %}">
+                    {% if map %}{% if object.hall_set.all|length > 1 %}Схемы залов{% else %}Схема зала{% endif %}{% else %}<a href="{% url 'guide:read' firm_id=object.id %}?map=1">{% if object.hall_set.all|length > 1 %}Схемы залов{% else %}Схема зала{% endif %}</a>{% endif %}
+                </li>
+            {% endif %}
+        </ul>
+        {% if review or not schedule and not comments and not map %}
+            <article class="b-afisha-establishment-review g-indent">
+                {% if object.article %}
+                    {{ object.article|typograf:'admin'|safe }}
+                {% else %}
+                    {% if object.description %}<p>{{ object.description|typograf:'admin'|safe }}<p>{% endif %}
+                {% endif %}
+                {% if object.gallery.main_image.alt %}
+                    <small class="g-color-gray">{{ object.gallery.main_image.alt|typograf:"title"|safe }}</small>
+                {% endif %}
+            </article>
+            <div class="g-indent">
+                {% if not object.is_hidden %}
+                    {% share_custom obj_pk=object.pk url=object.get_absolute_url description=object.title stamp=object.stamp %}
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if has_map and map %}
+            <ul class="b-list-v photoList overlayPhoto b-afisha-hallpics">
+                {% if object.map %}
+                    <li>
+                        {% thumbnail object.map 740x1000 as thumb %}
+                            {% thumbnail hall.map 120x48 as thumb2 %}
+                        <a href="{{ thumb }}" rev="{{ thumb2 }}">
+                            <img src="{{ thumb }}" title="{{ object.name|typograf }}" alt="{{ object.name|typograf }}">
+                        </a>
+                    </li>
+                {% endif %}
+                {% for hall in object.hall_set.all|dictsort:"position" %}
+                    {% if hall.map %}
+                        <li>
+                            {% thumbnail hall.map 800x1000 as thumb %}
+                            {% thumbnail hall.map 120x48 as thumb2 %}
+                            <a href="{{ thumb }}" rev="{{ thumb2 }}">
+                            {% thumbnail hall.map 740x1000 as thumb %}
+                                <h4>
+                                    {{ hall.name|typograf }}
+                                </h4>
+                                <img src="{{ thumb }}" title="{{ hall.name|typograf }}" alt="{{ hall.name|typograf }}">
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endblock establishment %}
+
+    {% if comments%}
+        <div class="g-indent">
+            {% comments object %}
+        </div>
+    {% endif %}
+
+    {% block sked %}
+        {% if schedule and not review and not comments and not map %}
+            {% filter_choices view filters.date 'choices' %}
+            {% guide_calendar_paginator choices.calendar data.date object %}
+            <div class="g-indent j-theater-sked">
+                <table class="b-afisha-theater-sked">
+                    <tbody>
+                        {% include "guide/sessions.html" %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+        {% if has_map %}
+            <div class="g-mobile_320 afisha-more__link">
+                {% if map %}
+                    {% if object.hall_set.all|length > 1 %}
+                        Схемы залов
+                    {% else %}
+                        Схема зала
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'guide:read' firm_id=object.id %}?map=1">
+                        {% if object.hall_set.all|length > 1 %}
+                            Схемы залов
+                        {% else %}
+                            Схема зала
+                        {% endif %}
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endblock sked %}
+
+    {% block sked-full %}{% endblock sked-full %}
+{% endblock content %}

@@ -1,0 +1,10 @@
+{% extends 'to_moder.html' %}
+
+{% block body_letter %}
+    <h3>Новые новости на <a href="http://news.yandex.ru">Яндекс новости</a></h3>
+    {% for item in news %}
+        <p><div><a href="{{ item.link }}">{{ item.title }}</a></div>
+           <div>{{ item.summary }}</div></p>
+    {% endfor %}
+{% endblock %}
+

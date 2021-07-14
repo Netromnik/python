@@ -1,0 +1,63 @@
+{% load str_utils comments_tags thumbnail utils_tags cache_tags staticfiles %}
+
+{% cache 3600 'news.tags.material_card_mobile' vary='material.pk,material.is_hidden,metrika_goal,audit_goal' tags='material' %}
+    <article class="b-widget-article-double-mobile{% if material.is_hidden %} g-hidden-material{% endif %}">
+        <a href="{{ material.get_absolute_url }}" class="b-widget-article-double-mobile-link
+            {% if metrika_goal %}j-metrika-goal{% endif %}
+            {% if audit_goal %}j-audit-goal-click{% endif %}
+            {% if 'impression' in track %}j-analytics-impression{% endif %}
+            {% if 'click' in track %}j-analytics-click{% endif %}"
+           {% if metrika_goal %}
+               data-metrika-goal="{{ metrika_goal }}"
+           {% endif %}
+           {% if audit_goal %}
+               data-audit-goal="{{ audit_goal }}"
+               data-audit-material="{{ audit_material }}"
+           {% endif %}
+           {% if analytics_cat %}
+               data-analytics-category="{{ analytics_cat }}"
+               data-analytics-label="{{ material.title|escape }}"
+           {% endif %}
+           {% if target %}target="{{ target }}"{% endif %}
+        >
+            {% if material.wide_image %}
+                {% thumbnail material.wide_image 620x250 crop as thumb %}
+                <img alt="{{ material.title|typograf }}"
+                    {% if is_lazyload %}
+                        src="{% static 'img/gag_widget_340x200.gif' %}" class="j-lazy-load"
+                        data-original="{{ thumb }}"
+                    {% else %}
+                        src="{{ thumb }}"
+                    {% endif %}
+                >
+            {% endif %}
+            <section{% if not material.comments_cnt or material.comments_cnt == 0%} class="bottom-20"{% endif %}>
+                <header>
+                    {% if label_text %}
+                        <span class="b-widget-material-category">{{ label_text }}</span>
+                    {% endif %}
+                    <h4>{{ material.title|typograf }}</h4>
+                </header>
+                <p>{{ material.caption|truncatechars:70|typograf }}</p>
+            </section>
+        </a>
+        <footer>
+            <span class="{% if metrika_goal %}j-metrika-goal{% endif %} {% if audit_goal %}j-audit-goal-click{% endif %}
+                {% if 'impression' in track %}j-analytics-impression{% endif %} {% if 'click' in track %}j-analytics-click{% endif %}"
+                {% if metrika_goal %}
+                    data-metrika-goal="{{ metrika_goal }}"
+                {% endif %}
+                {% if audit_goal %}
+                    data-audit-goal="{{ audit_goal }}"
+                    data-audit-material="{{ audit_material }}"
+                {% endif %}
+                {% if analytics_cat %}
+                    data-analytics-category="{{ analytics_cat }}"
+                    data-analytics-label="{{ material.title|escape }}"
+                {% endif %}
+            >
+                {% comments_cnt material new_layout=True new_card="double" %}
+            </span>
+        </footer>
+    </article>
+{% endcache %}

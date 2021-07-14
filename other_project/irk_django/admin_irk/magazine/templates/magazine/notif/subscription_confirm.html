@@ -1,0 +1,16 @@
+{% extends "letter.html" %}
+{% load site_utils %}
+{% block content %}
+
+Здравствуйте<br/>
+
+Данное письмо отправлено автоматически, отвечать на него НЕ НУЖНО.<br/>
+
+Вы успешно подписались на журнал сайта «Твой Иркутск» (www.irk.ru)!<br/>
+
+Чтобы подтвердить подписку нажмите на эту ссылку:<br/>
+<a href="https://{% get_site_url www domain %}{% url 'magazine:confirm' %}?hash={{ subscriber.hash }}">https://{% get_site_url www domain %}{% url 'magazine:confirm' %}?hash={{ subscriber.hash }}</a><br/>
+или просто скопируйте ее в свой браузер.<br/>
+
+<p>Если вы не подтвердите подписку в течение двух дней, то она будет удалена.</p>
+{% endblock %}

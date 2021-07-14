@@ -1,0 +1,16 @@
+{% extends 'contests/layout_cr.html' %}
+
+{% load str_utils %}
+
+{% block title %} Текст добавлен | {{ block.super }}{% endblock %}
+
+{% block b-notification %}{% endblock %}
+
+{% block b-content-cr %}
+    <div class="g-margin-bottom-30">
+        <a class="g-color-black g-font-bold g-font-size-16" href="{{ contest.get_absolute_url }}"><span class="b-contests-arrow-left"></span>&nbsp;{{ contest.title|typograf }}</a>
+    </div>
+
+    <p class="b-thankyou"><b>Спасибо за участие!</b> Ваш текст отправлен на модерацию, после проверки он появится на сайте.</p>
+
+{% endblock %}

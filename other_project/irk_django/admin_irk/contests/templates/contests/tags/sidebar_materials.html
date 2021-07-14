@@ -1,0 +1,20 @@
+{% load news_tags adv_tags %}
+
+{% if materials %}
+    <section class="b-news-aside-article-list g-aside-block">
+        <h3 class="g-hide">Материалы</h3>
+        <ul>
+            {% if show_banner %}
+                {% ibanner ID=511 as banner_511 %}
+                <li class="g-indent">
+                    {{ banner_511 }}
+                </li>
+            {% endif %}
+            {% for material in materials %}
+                <li class="g-indent">
+                    {% material_card material is_light=True is_wide=True %}
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endif %}

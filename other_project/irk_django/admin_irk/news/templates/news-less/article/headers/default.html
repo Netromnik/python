@@ -1,0 +1,43 @@
+{% load static staticfiles media_utils site_utils options cache thumbnail cache_tags str_utils thumbnail news_tags pytils_dt pytils_numeral admin_utils %}
+
+{# header v1 default #}
+<div class="article__header article__header_v1">
+    {% block article-header-inner %}
+        <div class="article__header__inner article__header__inner_v1">
+
+            {% if object.project %}
+                <div class="article__special">
+                    {% include 'special/snippets/link.html' with name=object.project.title|typograf url=object.project.get_absolute_url %}
+                </div>
+            {% endif %}
+
+            <h1 class="article__title">
+                {{ object.title|typograf }}
+                {% get_object_admin_link object %}
+            </h1>
+            <div class="article__info">
+                {# автор #}
+                {% if object.author %}
+                    <span class="article__info__item article__info__item_author">
+                        {{ object.author|typograf:'admin' }}
+                    </span>
+                {% endif %}
+                {# дата #}
+                <time datetime="{{ object.stamp|date:'Y-m-d' }}" class="article__info__item">
+                    {{ object.stamp|ru_strftime:'%d %B %Y г.' }}
+                </time>
+                {# кол-во комментариев #}
+                {% if object.comments_cnt %}
+                    <a href="#comments" class="article__info__item">
+                        {{ object.comments_cnt|get_plural:'комментарий,комментария,комментариев' }}
+                    </a>
+                {% endif %}
+                {# время чтения #}
+                <span class="article__info__item">
+                    около {{ object.content|time_to_read|get_plural:"минуты,минут,минут" }} на чтение
+                </span>
+
+            </div>
+        </div>
+    {% endblock %}
+</div>

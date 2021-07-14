@@ -1,0 +1,29 @@
+{% extends 'experts/layout_cr.html' %}
+
+{% load experts_tags news_tags str_utils cache_tags adv_tags thumbnail date_tags comments_tags pytils_dt %}
+
+{% block calendar-date %}
+    {% news_calendar ribbon_materials.0.stamp ribbon_materials.0.stamp %}
+{% endblock %}
+
+{# Центральная колонка #}
+{% block b-content-cr %}
+    <section class="g-margin-bottom-75">
+        {# Лента материалов #}
+        {% cache 86400 'news.index.ribbon' vary='request.path,is_moderator' tags='expert' %}
+            <ul class="b-news-article-list" id="expert-article-list" data-url="{{ request.path }}" data-page="2" data-start="{{ next_start_index }}" data-limit="{{ next_limit }}" data-content="true">
+                {% for material in expert_list %}
+                    {% include 'news-less/snippets/news_list_item.html' with showType=True expert_index=True %}
+                {% endfor %}
+            </ul>
+        {% endcache %}
+
+        {% if has_next %}
+            <div class="news-paginator">
+                <span class="news-paginator__more j-showmore" data-target="expert-article-list" data-type="json" data-counter-target="j-filter-duosort-page-counter">
+                    Показать еще
+                </span>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

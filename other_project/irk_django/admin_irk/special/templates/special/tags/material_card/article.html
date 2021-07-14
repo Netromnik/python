@@ -1,0 +1,31 @@
+{% comment %}
+    Статья на индексе спецпроекта
+
+    inputs:
+        material - материал
+{% endcomment %}
+
+{% load str_utils utils_tags pytils_dt comments_tags thumbnail %}
+
+<article class="b-special-material">
+    <header>
+        <a href="{{ material.get_absolute_url }}" class="b-special-material-title-link">
+            <figure class="b-special-material-poster {% if material|classname == 'Video' %}icon-block icon-video{% endif %}">
+                {% thumbnail material.wide_image 620x293 as thumb %}
+                <img src="{{ thumb }}" alt="{{ material.caption_short|typograf }}" width="620px" height="293px">
+            </figure>
+            <h2 class="b-special-material-title">{{ material.title|typograf }}</h2>
+        </a>
+    </header>
+    <h4 class="b-special-material-subtitle g-desktop">{{ material.label }}</h4>
+    <p class="b-special-material-desc">{{ material.caption }}</p>
+    <div class="g-color-gray b-special-material-summary">
+        <time datetime="{{ material.stamp|ru_strftime:"%Y-%m-%d %H:%M" }}">
+            {{ material.stamp|ru_strftime:"%d %B %Y г." }}
+        </time>
+        {% comments_cnt material new_layout=True %}
+    </div>
+    {% if request.user_agent.is_gadget %}
+        <a href="{{ material.get_absolute_url }}" class="b-special-material-link g-mobile_320"></a>
+    {% endif %}
+</article>

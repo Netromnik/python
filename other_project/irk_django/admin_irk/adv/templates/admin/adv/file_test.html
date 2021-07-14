@@ -1,0 +1,68 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data">{% csrf_token %}
+	<fieldset class="module aligned">
+		<h2> Проверка файла </h2>
+		<div class="form-row">
+			<div class="field-box">
+				{{ form.file }}<button type="submit">Проверить</button>
+			</div>	
+		</div>
+	</fieldset>
+</form>
+
+{% if info.error %}
+    <ul class="errorlist">
+        <li>
+            {{ info.error }}
+        </li>
+    </ul>
+
+{% else %}
+
+    {% if info.fps or info.frames %}
+        <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" style="width:225px;height:100px;"><param name="movie" value="{% get_media_prefix %}img/tmp/{{ info.name }}?link1=http://www.yandex.ru/">
+            <param name="quality" value="high"><param name="wmode" value="transparent">
+            <embed src="{% get_media_prefix %}img/tmp/{{ info.name }}?link1=http://www.yandex.ru/" quality="high" style="width:225px;height:100px;" type="application/x-shockwave-flash" wmode="transparent">
+        </object>
+    {% else %}
+        <img src="{% get_media_prefix %}img/tmp/{{ info.name }}" />
+    {% endif %}
+    <div>
+        <h3>{{ file_name }}</h3>
+        <table>
+            <tr>
+
+                <th>Ширина</th>
+                <td>{{ info.width }} px</td>
+
+                <th>Высота</th>
+                <td>{{ info.height }} px</td>
+
+                <th>Тип</th>
+
+                <td {% if info.version > 10 %}style="color:red"{% endif %}>{{ info.type }}</td>
+
+
+                <th>Размер</th>
+                <td>{{ info.kb }} КБ</td>
+
+            </tr>
+            {% if info.fps %}
+                <tr>
+
+                    <th>fps</th>
+                    <td>{{ info.fps }}</td>
+
+                    <th>frames</th>
+                    <td>{{ info.frames }}</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+
+{% endif %}
+
+{% endblock %}

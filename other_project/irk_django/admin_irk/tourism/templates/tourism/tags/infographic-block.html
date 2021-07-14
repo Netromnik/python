@@ -1,0 +1,22 @@
+{% load staticfiles media_utils form_tags thumbnail str_utils date_tags comments_tags %}
+
+{% if objects %}
+    <section class="b-aside-block b-news-aside-article-block">
+        <header>
+            <h3><a href="{% url 'tourism:infographic:index' %}">Наглядно</a></h3>
+        </header>
+        <ul class="b-list-v">
+            {% for object in objects %}
+                {% with object.thumbnail as thumb_img %}
+                    {% thumbnail thumb_img 140x200 as thumb %}
+                    <li>
+                        <header class="g-title">
+                            <h5><a href="{% url 'tourism.views.infographic.read' object.pk %}" title="{{ object.title|typograf:'title'|safe }}"><img src="{{ thumb }}" alt="{{ object.title|typograf:'title'|safe }}" style="width:{{ thumb.width }}px; height: {{ thumb.height }}px;">{{ object.title|typograf:'title'|safe }}</a></h5>&nbsp;
+                            <small class="g-color-gray">{{ object.stamp|date:"d.m" }}&nbsp;&nbsp;{% comments_cnt object new_layout=True %}</small>
+                        </header>
+                    </li>
+                {% endwith %}
+            {% endfor %}
+        </ul>
+</section>
+{% endif %}

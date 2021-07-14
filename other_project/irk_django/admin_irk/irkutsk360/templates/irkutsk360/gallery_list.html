@@ -1,0 +1,27 @@
+{% load static staticfiles media_utils str_utils thumbnail paginator_utils irkutsk360_tags date_tags comments_tags gallery_tags %}
+
+{% for object in object_list %}
+    <!--item-->
+    <a href="{{ object.get_absolute_url }}" title="{{ object.title|typograf }}" class="gallery__item" target="_blank">
+        <time class="gallery__item__time">
+            {{ object.stamp|dates:'%d %B|%d %B %Y' }}
+        </time>
+        <div class="gallery__item__info">
+            <h4 class="gallery__item__title">
+                {{ object.title|typograf }}
+            </h4>
+            <div class="gallery__item__desc">
+                {{ object.caption_short|typograf }}
+            </div>
+        </div>
+        <div class="gallery__item__image">
+            {% if object.image %}
+                {% with object.image as thumb_img %}
+                    {% thumbnail thumb_img 1180x1000 as thumb %}
+                    <img src="{{ thumb }}" alt="{{ object.caption_short|typograf }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px">
+                {% endwith %}
+            {% endif %}
+        </div>
+    </a>
+    <!--item close-->
+{% endfor %}

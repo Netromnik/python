@@ -1,0 +1,26 @@
+{% extends 'afisha/layout.html' %}
+
+{% load staticfiles media_utils adv_tags site_utils afisha_tags %}
+
+{% block container %}<div class="b-container-padding"><div class="g-overflow">{{ block.super }}</div></div>{% endblock %}
+
+{% block b-content-parent %}
+    <div class="grid-wrapper">
+        <div class="grid-inner">
+            <div class="grid-list grid-list_pb">
+                <div class="grid-list__item grid-list__item_mobile-hide">
+                    {% block b-aside-l %}{% endblock b-aside-l %}
+                </div>
+                <div class="grid-list__item grid-list__item_x2">
+                    <article>
+                        {% block content %}{% endblock content %}
+                    </article>
+                </div>
+                <aside class="grid-list__item">
+                    {% include 'afisha/base/b-aside-r-type2.html' %}
+                </aside>
+            </div>
+        </div>
+        {% afisha_extra_announcements %}
+    </div>
+{% endblock %}

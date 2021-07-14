@@ -1,0 +1,27 @@
+{# Дефолтный пагинатор #}
+
+{% if paginator.paginator.num_pages > 1 %}
+<div class="b-paginator-2">
+    {% if paginator.has_previous %}
+        <span class="b-paginator-2-link-left"><a id="i-paginator-prevPage" href="./?page={{ paginator.previous_page_number }}&amp;{{ url_params|default:'' }}{{ url_hash|default:'' }}">&larr;&nbsp;Предыдущая</a></span>
+    {% else %}
+        <span class="b-paginator-2-link-left">&larr;&nbsp;Предыдущая</span>
+    {% endif %}
+
+    {% if paginator.has_next %}
+        <span class="b-paginator-2-link-right"> <a id="i-paginator-nextPage" href="./?page={{ paginator.next_page_number }}&amp;{{ url_params|default:'' }}{{ url_hash|default:'' }}">Следующая&nbsp;&rarr;</a></span>
+    {% else %}
+        <span class="b-paginator-2-link-right"> Следующая&nbsp;&rarr;</span>
+    {% endif %}
+
+    <ul class="b-list-h b-paginator-2-nums">
+        {% for page in paginator.page_range %}
+            {% if page == paginator.number %}
+                <li class="b-paginator-2-nums-item g-active">{{ page }}</li>
+            {% else %}
+                <li class="b-paginator-2-nums-item"><a href="./?page={{ page }}&amp;{{ url_params|default:'' }}{{ url_hash|default:'' }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

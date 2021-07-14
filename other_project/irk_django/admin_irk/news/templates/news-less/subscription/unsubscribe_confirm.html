@@ -1,0 +1,27 @@
+{% extends "news-less/layout.html" %}
+
+{% block title %}Отписаться от рассылки новостей | {{ block.super }}{% endblock %}
+
+{% block b-content-class %} subscription{% endblock %}
+
+{% block b-content %}
+<div class="b-content-block b-title-search">
+    <ul class="b-list-h">
+        {% spaceless %}
+        <li><h1>Рассылка новостей от IRK.ru</h1></li>
+        {% endspaceless %}
+    </ul>
+</div>
+
+<section class="b-subscription arrow-top w-300">
+    <p><strong>Вы действительно хотите отказаться от рассылки?</strong></p>
+    <p class="g-color-darkBlue"><strong>{{ email }}</strong></p>
+    <form method="POST" action="">{% csrf_token %}
+        <input type="hidden" name="email" value="{{ email }}">
+        <input type="hidden" name="hash" value="{{ hash }}">
+        <input type="hidden" name="remove" value="1">
+        <input type="submit" class="b-submit two-inline" id="save" value="Отписаться" />
+        <a href="{% url 'news:subscription:index' %}" class="b-submit two-inline">Отмена</a>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% load staticfiles media_utils %}
+
+{% if widget.new %}
+
+    <script type="text/javascript">
+        section_items = window['section_items'] || {};
+        var section = {
+            count_items : 10,
+            count_show : 0,
+            show : function () {
+
+                for (var id in section_items) {
+
+                    if (section_items[id] == 'hide') {
+                        $('#ajax-block-' + id).show();
+                        section_items[id] = 'show';
+                        section.count_show++;
+                        if (section.count_show == section.count_items) $('#add-section').hide();
+                        break;
+                    }
+
+                }
+
+            },
+
+            hide : function (id) {
+                $('#ajax-block-' + id + ' input').val('');
+                $('#ajax-block-' + id).hide();
+                section_items[id] = 'hide';
+                if (section.count_show == section.count_items) $('#add-section').show();
+                section.count_show--;
+
+            },
+
+            init : function () {
+
+                if (window.section_items == undefined) return false;
+
+                for (var id in section_items) {
+                    if (section_items[id] == 'show') section.count_show++;
+                }
+
+                $('#add-section a').click(function () {
+                    section.show();
+                    return false;
+
+                });
+                $('a.del-section').click(function () {
+
+                    var id = parseInt(this.rev);
+                    section.hide(id);
+                    return false;
+
+                });
+            }
+
+        };
+        if (!window.section_init) {
+            window.section_init = true;
+
+            $(document).ready(function() {
+                $('div.form-row.field-section').append('<div id="add-section">' +
+                        '<a class="noLink" href="#">' +
+                        '<img src="{% static 'tourism/img/action-add.png' %}" aling="absmiddle">' +
+                        '<span class="jsLink">Добавить еще одну рубрику</span>' +
+                        '</a>' +
+                        '</div>');
+                section.init();
+                $('#add-section > a').attr('rev', section.count_show+1);
+            });
+        }
+    </script>
+{% endif %}
+
+<div class="ajax-field-block" id="ajax-block-{{ widget.idx }}" {% if widget.idx > 0 and not widget.value %} style="display: none;"{% endif %}>
+	<input type="hidden" name="{{ widget.name }}" id="{{ widget.attrs.id }}" {% if widget.value %}value="{{ widget.value }}"{% endif %} />
+	<input type="text" name="{{ widget.name }}_autocomplete" id="{{ widget.attrs.id }}_autocomplete" {% if widget.value_text %}value="{{ widget.value_text }}"{% endif %} autocomplete="off" />
+	<div id="{{ widget.attrs.id }}_error" class="error-text">Такой рубрики не существует</div>
+	{% if widget.value %}
+		{% if widget.idx > 0 or  not widget.params.is_required   %}
+			<a id="del-section-{{ widget.idx }}" rev="{{ widget.idx }}" class="noLink del-section" href="">
+				<img alt="удалить" src="{% static 'tourism/img/action-delete.png' %}" align="absmiddle" />
+			</a>
+		{% endif %}
+	{% endif %}
+	<script type="text/javascript">
+	section_items[{{ widget.idx }}] = '{% if widget.value or widget.idx == 0 %}show{% else %}hide{% endif %}';
+	(function($){
+		$(document).ready(function() {
+			var matchKeyUp{{ widget.idx }} = true;
+			{{ widget.callback }}{{ widget.idx }} = function(event, data, formatted) {
+				if (event.type == 'result') {
+					var id = data[0].split('=')[0];
+					$('#{{ widget.attrs.id }}').val(id).change();
+					matchKeyUp{{ widget.idx }} = false;
+				} else {
+					if (!matchKeyUp{{ widget.idx }} && event.type == 'keyup') {
+						matchKeyUp{{ widget.idx }} = true;
+						return;
+					}
+					$('#{{ widget.attrs.id }}').removeAttr('value');
+				}
+			};
+
+			var obj = $('#{{ widget.attrs.id }}_autocomplete');
+			obj.keyup(function(eventObject) {
+				if(this.value.replace(/^\s+|\s+$/g, '') !== ''){
+					eval('{{ widget.callback }}{{ widget.idx }}(eventObject)');
+				}
+			});
+			$(obj).autocomplete('{{ widget.url }}{% if widget.params.level %}?level={{ widget.params.level }}{% endif %}{% if widget.params.metasection %}?metasection={{ widget.params.metasection }}{% endif %}', {
+				delay: 100,
+				width: 600,
+				minChars: 3,
+				matchContains: true,
+				formatResult: function(row, i, max) {
+					return row[0].split('=')[1];
+				},
+				formatItem: function(row, i, max) {
+                    var parts = row[0].split('=');
+					return parts[1] + ' - ' + parts[0];
+				},
+				formatMatch: function(row, i, max) {
+					return row[0].split('=')[1];
+				}
+			}).result(eval('{{ widget.callback }}{{ widget.idx }}'));
+		});
+	})(jQuery);
+	</script>
+</div>

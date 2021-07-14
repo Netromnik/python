@@ -1,0 +1,11 @@
+
+{% for thank in thanks %}
+    <div class="card">
+        <h3 class="card__title">
+            {{ thank.name }}
+        </h3>
+        <div class="card__text">
+            {{ thank.text}}
+        </div>
+    </div>
+{% endfor %}

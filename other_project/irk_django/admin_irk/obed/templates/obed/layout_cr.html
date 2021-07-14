@@ -1,0 +1,11 @@
+{% extends 'obed/layout.html' %}
+
+{% block b-content %}
+    <div class="b-content-cr g-content-resp j-article-aside-float-target j-article-aside-float-target-content">
+        {% block b-content-cr %}{% endblock b-content-cr %}
+    </div>
+
+    <aside class="b-aside-r j-article-aside-float" data-float-target="content">
+        {% block b-aside-r %}{% endblock b-aside-r %}
+    </aside>
+{% endblock b-content %}

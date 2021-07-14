@@ -1,0 +1,156 @@
+{% load staticfiles media_utils pytils_numeral %}
+
+{{ gallery_form.management_form }}
+{{ gallery_form.non_form_errors }}
+
+{% if not nostyle %}
+<style type="text/css">
+    #edit-gallery {width: 80%;}
+    #edit-gallery input[type=text] {width: 220px; font-size: 0.857em;}
+    #edit-gallery input[type=text] {height:15px !important; }
+    #edit-gallery input[type=file] {font-size: 87%; width: 220px; float: left; margin-right: 10px;}
+
+    #edit-gallery input[type=file], x:-moz-any-link, x:default {width: auto;}
+
+    #edit-gallery div.input-file {float: left; width: 120px; overflow: hidden;}
+    #edit-gallery div.input-file input {width: 110px; text-align: right;}
+    #edit-gallery div.input-text {float: left; margin-left: 120px;}
+    #edit-gallery li.hideLi {display: none;}
+    #edit-gallery li {overflow: hidden;}
+
+    #edit-gallery .action-block {margin-top: 3px;}
+    #edit-gallery li.deleted .main-image {display: none;}
+    #edit-gallery  li {clear: left; padding: 5px 5px;margin:0;}
+    #edit-gallery li.main {background-color: #dadada;}
+    #edit-gallery li.deleted div.picture {opacity: 0.4; filter:alpha(opacity: 40);}
+    #edit-gallery div.body {padding: 0.5em 0;}
+    .main-image, .delete-image, .restore-image {font-size: 87%; color: #666; margin:1px 2px;}
+    ul.pic-block li.selected .main-image {display: inline;}
+    ul.pic-block li.selected .delete-image {display: inline;}
+    ul.pic-block li.selected {background-color: #e0ecff;}
+    #pic-block2 {margin-top: 7px;}
+    #edit-gallery li .restore-image {display: none;}
+    #edit-gallery li.main .main-image {display: none;}
+    #edit-gallery li.deleted .main-image {display: none;}
+    #edit-gallery li.deleted .delete-image {display: none;}
+    #edit-gallery li.deleted .restore-image {display: inline;}
+    .main-image a {color: #666;}
+    .main-image a:hover {color: red;}
+    #content .add-fields {color: #339900; margin: 1em 0 0 1em; }
+    #content .add-fields a {color: #339900;}
+    #add-fields {background: url('{% static "tourism/img/action-add.png" %}') no-repeat left center; height: 30px; padding-left: 35px; display: inline-block; margin-top: 5px; margin-bottom: 15px;}
+    #add-fields span { margin-top: 4px; display: block; }
+    .image {float: left; margin: 0.1em 0.6em 0 0;}
+    .image div.crop {height: 75px; overflow: hidden;}
+    .image p {color: #999; font-size: 70%;}
+    #edit-gallery li.main .image p {color: #666666;}
+    .action-block a img { vertical-align: middle; }
+    div.field-block {float: left;}
+</style>
+{% endif %}
+
+<div id="edit-gallery">
+    <ul id="pic-block1" class="b-list-v">
+        {{ formset.management_form }}
+        {% for form in formset|slice:":1" %}
+            <li id="li{{ forloop.counter0 }}"{% if forloop.first and not form.instance.pk %} class="main"{% endif %}{% if form.instance.main %} class="main"{% endif %}>
+                {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                <div class="picture">
+                    {{ form.picture }}
+                    {% if form.instance.pk %}
+                        <div class="action-block">
+                        <span class="main-image">
+                            <a class="noLink main-link" href="" rev="{{ forloop.counter0 }}"><img alt="" src="{% static 'tourism/img/action-apply.png' %}" align="absmiddle"> <span class="g-jsLink jsLink">главная</span></a>
+                        </span>
+                        <span class="delete-image">
+                            <a class="noLink delete-link" href="" rev="{{ forloop.counter0 }}"><img alt="" src="{% static 'tourism/img/action-delete.png' %}" align="absmiddle"> <span class="g-jsLink jsLink">удалить</span></a>
+                        </span>
+                        <span class="restore-image">
+                            <a class="noLink restore-link" href="" rev="{{ forloop.counter0 }}"><img alt="" src="{% static 'tourism/img/action-restore.png' %}" align="absmiddle"> <span class="g-jsLink jsLink">востановить</span></a>
+                        </span>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if form.errors %}
+                    <div class="pic-error"><span class="g-color-red">{% if form.errors.picture %}{{ form.errors.picture }}{% else %}Вы забыли загрузить фотографию{% endif %}</span></div>
+                {% endif %}
+                <div class="clear"></div>
+            </li>
+        {% endfor %}
+    </ul>
+    {% if formset|length > 1 %}
+        <ul id="pic-block2" class="pic-block b-list-v">
+            {% for form in formset|slice:"1:" %}
+                <li id="li{{ forloop.counter0|add:"1" }}" class="{% if not form.instance.pk %}hideLi{% endif %}{% if form.instance.main %} main{% endif %}">
+                    {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                    <div class="picture">
+                        {{ form.picture }}
+                        {% if form.instance.pk %}
+                            <div class="action-block">
+                        <span class="main-image">
+                            <a class="noLink main-link" href="" rev="{{ forloop.counter0|add:"1" }}"><img alt="" src="{% static 'tourism/img/action-apply.png' %}" align="absmiddle"> <span class="g-jsLink jsLink">главная</span></a>
+                        </span>
+                        <span class="delete-image">
+                            <a class="noLink delete-link" href="" rev="{{ forloop.counter0|add:"1" }}"><img alt="" src="{% static 'tourism/img/action-delete.png' %}" align="absmiddle"> <span class="g-jsLink jsLink">удалить</span></a>
+                        </span>
+                        <span class="restore-image">
+                            <a class="noLink restore-link" href="" rev="{{ forloop.counter0|add:"1" }}"><img alt="" src="{% static 'tourism/img/action-restore.png' %}" align="absmiddle"> <span class="g-jsLink jsLink">востановить</span></a>
+                        </span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if form.errors %}
+                        <div class="pic-error"><span class="g-color-red">{% if form.errors.picture %}{{ form.errors.picture }}{% else %}Вы забыли загрузить фотографию{% endif %}</span></div>
+                    {% endif %}
+                    <div class="clear"></div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="clear"></div>
+</div>
+
+
+{# if not formset.4.instance.pk #} {# TODO: Хз зачем, но если ставить not то работает если не загружена ни одна картинка, если not убрать, то нельзя загрузить больше 1 картинки #}
+    <div style="clear: both">
+        <div class="add-fields">
+            <a id="add-fields" class="noLink" href="" rev="{{ forloop.counter0 }}"><span class="g-jsLink jsLink">Добавить ещё одну</span></a>
+        </div>
+    </div>
+{# endif #}
+<script type="text/javascript">
+    $('ul.pic-block li')
+            .mouseover(function() {
+                $(this).addClass('selected');
+            })
+            .mouseout(function() {
+                $(this).removeClass('selected');
+            });
+    $('a.main-link').click(function() {
+        var id = parseInt(this.rev);
+        $('input.main_input').removeAttr('value');
+        $('#id_gallerypicture_set-'+id+'-main').val(1);
+        $('#edit-gallery li').removeClass('main');
+        $('#li'+id).addClass('main');
+        return false;
+    });
+    $('a.delete-link').click(function() {
+        var id = parseInt(this.rev);
+        $('#id_gallerypicture_set-'+id+'-DELETE').val(1);
+        $('#li'+id).addClass('deleted');
+        return false;
+    });
+    $('a.restore-link').click(function() {
+        var id = parseInt(this.rev);
+        $('#id_gallerypicture_set-'+id+'-DELETE').removeAttr('value');
+        $('#li'+id).removeClass('deleted');
+        return false;
+    });
+    $('#add-fields').click(function() {
+        $('#pic-block2').show();
+        $('#pic-block2').find('.hideLi').first().removeClass('hideLi');
+
+        //$(this).hide();
+        return false;
+    });
+</script>

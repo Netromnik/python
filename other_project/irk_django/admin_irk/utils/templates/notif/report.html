@@ -1,0 +1,13 @@
+{% extends "to_moder.html" %}
+
+{% load site_utils str_utils %}
+
+{% block body_letter %}
+
+	<p>Адрес: <a href="{{ url }}">{{ url }}</a></p>
+	<p>Текст: «{{ text }}»</p>
+	{% if description %}<p>Дополнительное описание: {{ description }}</p>{% endif %}
+
+	<p>Браузер отправителя: {{ browser }}</p>
+	<p>IP адрес: {{ ip }}</p>
+{% endblock %}
