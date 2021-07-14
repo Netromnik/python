@@ -1,0 +1,27 @@
+{% load math_utils thumbnail static %}
+
+<td class="label{% if class_label %} {{ class_label }}{% endif %}" nowrap="nowrap">
+{% if required %}<span class="red"><b>*</b></span>&nbsp;{% endif %}{{ field.label }}
+</td>
+<td nowrap="nowrap" {% if field.field.widget.levels %}colspan="3"{% endif %}>
+	<div class="field">
+		{% if value.is_image %}
+			{% thumbnail value 100x75 as thumb %}
+			<img class="border" alt="" src="{{ thumb }}" width="{{ thumb.width }}" height="{{ thumb.height }}" align="left" />
+		{%endif%}
+		{% if value.is_file %}
+			<p><a href="{{ value.url }}"><img src="{% get_static_prefix %}img/file_icons/{{ value.icon }}" alt="" align="absmiddle" style="margin-right: 0.3em;" />{{ value.fname }}</a></p>
+		{%endif%}		
+		
+		{% if required %}
+			<span id="{{ field.name }}" type="{{ field.field.widget.input_type }}" class="required form{% if class_field %} {{ class_field }}{% endif %}{% if field.errors %} error{% endif %}">{{ field }}</span>
+		{% else %}
+			<span id="{{ field.name }}" class="form{% if class_field %} {{ class_field }}{% endif %}{% if field.errors %} error{% endif %}">{{ field }}</span>
+		{% endif %}
+		
+		{% if error_show %}{{ field.errors }}{% endif %}
+	</div>
+	{% if field.help_text %}
+	<div class="helpText">{{ field.help_text }}</div>
+	{% endif %}					
+</td>

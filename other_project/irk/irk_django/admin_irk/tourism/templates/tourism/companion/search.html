@@ -1,0 +1,93 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils form_tags thumbnail str_utils paginator_utils %}
+
+{% block title %} Поиск попутчика | Туризм в Иркутске на IRK.ru {% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.color.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="b-content-block b-tourism-companion-index-block">
+        <div class="b-content-block b-breadcrumbs">
+            <ul class="b-list-h">
+                <li><a href="{% url 'tourism:index' %}">Туризм</a></li>
+                <li>{% if is_search %}<a href="{% url 'tourism:companion:search' %}">Поиск попутчика</a>{% else %}Поиск попутчика{% endif %}</li>
+            </ul>
+        </div>
+        <header class="b-content-block index">
+            <div class="b-companion-topfield ">
+                <h1>Объявления</h1>
+                <a href="{% url 'tourism:companion:create' %}">Добавить объявление</a>
+                {% if request.user.is_authenticated %}<a class="companion-my" href="{% url 'tourism:companion:my' %}">Мои объявления</a>{% endif %}
+            </div>
+
+        </header>
+
+        <section class="b-companion-search-block">
+            <div class="b-tape">
+                <form name="" action="" method="GET">
+                    <ul class="b-list-h">
+                        <li>
+                            <label for="id_my_composition">мой состав</label>
+                            {{form.my_composition}}
+                        </li>
+
+                        <li>
+                            <label for="id_find_composition">ищу состав</label>
+                            {{form.find_composition}}
+                        </li>
+
+                        <li>
+                            <label for="id_place">для отдыха в</label>
+							{# TODO: reverse #}
+                            <input id="id_place" class="autocomplete_input ac_input" url="/utils/objects/107/" type="text" name="place" autocomplete="off" callback="PlaceAutocompleteCallback" placeholder="Введите место отдыха" value="{% if place %}{{ place }}{% endif %}">
+{#                            <input id="id_place" name="place" type="text" placeholder="Введите место отдыха" value="{% if place %}{{ place }}{% endif %}">#}
+                        </li>
+                        <li>
+                            <button class="b-button" type="submit">найти</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </section>
+
+        <article class="b-companion-search-result-block">
+            {% if companions %}
+            <ul class="b-list-v">
+                {% for companion in companions %}
+                <li>
+                    {% if companion.name %}<span class="b-companion-author">{{ companion.name|typograf:'title'|safe }}</span>{% endif %}
+                    <div class="b-info-grayblock">
+                        <a href="{% url 'tourism:companion:read' companion.pk %}" title="{{ companion.name|typograf:'title'|safe }}">
+                            <header>
+                                <span class="b-companion-author-gender-info"><strong>{{ companion.get_my_composition_display|capfirst }}</strong></span> ищет <span class="b-companion-team-info"><strong>{{ companion.get_find_composition_display }}</strong></span>, место отдыха
+                                {% if companion.place %}<span class="b-companion-place-info"><strong>{{ companion.place }}</strong></span>{% endif %}
+                            </header>
+                            {% if companion.description %}<p>{{ companion.description }}</p>{% endif %}
+                        </a>
+                    {% if user.is_authenticated %}
+                        <footer><a href="mailto:{{ companion.email }}">{{ companion.email }}</a> <span class="phone">Телефон: {{ companion.phone }}</span></footer>
+                    {% endif %}
+                    {% if forloop.first and not user.is_authenticated %}
+                        <footer><small class="g-color-gray">Контакты доступны только зарегестрированным пользователям</small></footer>
+                    {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <h3>Извините, по Вашему запросу ничего не найдено.</h3>
+            {% endif %}
+        </article>
+        {% paginator companions place my_composition find_composition %}
+    </div>
+
+    {% if companions %}
+        <!-- Пагинатор -->
+        {# paginator companions q template='paginator/layout.html' name='организаций' #}
+        <!-- /Пагинатор -->
+    {% endif %}
+{% endblock %}

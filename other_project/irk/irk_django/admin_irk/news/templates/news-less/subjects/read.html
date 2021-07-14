@@ -1,0 +1,91 @@
+{% extends 'news-less/layout_cr.html' %}
+
+{% load staticfiles media_utils thumbnail str_utils share_utils news_tags comments_tags cache_tags date_tags site_utils utils_tags adv_tags %}
+
+{% block title %}{{ subject.title|typograf }} | Сюжеты | {{block.super}}{% endblock %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'subject.instance.meta' vary='subject.id' tags='subject' %}{% spaceless %}
+        {% include 'share_meta.html' with object=subject url=subject.get_absolute_url title=subject.title description=subject.caption image=subject.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block layout-base-class %}layout-fixed black header-flow-lock{% endblock layout-base-class %}
+
+{% block promo_A %}
+    <div class="subject-header {% if subject.background_image %}image{% else %}no-image{% endif %}">
+
+        <div class="subject-header__inner">
+            <div class="subject-header__info">
+
+                <article class="subject-header__article">
+                    <h1 class="subject-header__title">
+                        {{ subject.title|typograf }}
+                    </h1>
+                    <div class="subject-header__text">
+                        {{ subject.caption_small|typograf:'admin' }}
+                    </div>
+                </article>
+
+                <div class="subject-header__share">
+                    <h6 class="subject-header__share__title">
+                        Поделиться с друзьями
+                    </h6>
+                    {% share_custom obj_pk=subject.pk url=subject.get_absolute_url description=subject.title stamp=subject.stamp additional_class='black' %}
+                </div>
+            </div>
+
+            {% if subject.background_image %}
+                <div class="subject-header__image">
+                    {% thumbnail subject.background_image 1920x250 as thumb %}
+                    <img src="{{ thumb }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px">
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block text_widget %}{% endblock %}
+{% block top_banner %}{% endblock %}
+{% block b-adword-header %}{% endblock b-adword-header %}
+{% block adblock-message %}{% endblock %}
+{% block b-content-header %}{% endblock %}
+
+{% block b-content %}
+    {% cache 86400 'news.subjects.instance' vary='subject.id,show_hidden' tags='material,subjects' %}
+        <div class="b-widget-article-list g-content-block">
+            <ul>
+                {% for article in main_materials %}
+                    <li>{% material_card article is_big_image=True %}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="b-content-cr">
+            <ul class="g-indent j-subject-materials-showmore-article-list" data-url="{{ request.path }}" id="subject-materials" data-page="1" data-url="{{ request.path }}" data-page="1" data-start="{{ page_info.next_start_index }}" data-limit="{{ page_info.next_limit }}" data-content="true">
+                {% include 'news-less/subjects/snippets/ribbon_materials_list.html' %}
+            </ul>
+            {% if page_info.has_next %}
+                <div class="g-show-more padding cursor-default j-subject-materials g-indent j-showmore" data-type="json" data-target="subject-materials">
+                    <span class="centered"><a href="#" class="g-jlink">Показать еще</a></span>
+                </div>
+            {% endif %}
+        </div>
+
+        <aside class="b-aside-r">
+
+            {% ibanner ID=494 as banner %}
+            {% if banner %}<div class="g-indent">{{ banner }}</div>{% endif %}
+
+
+            {% include 'news-less/snippets/important_materials.html' %}
+        </aside>
+
+        <div class="g-clear"></div>
+    {% endcache %}
+
+    {% news_extra_materials wide=True %}
+
+{% endblock %}

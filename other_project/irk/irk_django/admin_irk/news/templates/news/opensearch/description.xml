@@ -1,0 +1,7 @@
+<?xml version="1.0"?>{% load site_utils %}
+	<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+	<ShortName>Новости Ирк.ру</ShortName>
+	<Description>Новости на Ирк.ру</Description>
+	<Image height="16" width="16" type="image/x-icon">http://www.irk.ru/img/favicon.ico</Image>
+	<Url type="text/html" method="get" template="http://{% get_site_url 'news' %}{% url 'news:search' %}?q={searchTerms}"/>
+-</OpenSearchDescription>

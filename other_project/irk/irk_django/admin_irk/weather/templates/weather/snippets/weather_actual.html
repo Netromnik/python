@@ -1,0 +1,53 @@
+{% load staticfiles str_utils weather_tags media_utils pytils_dt cache_tags %}
+
+<div class="b-weather-main-content">
+        <div class="b-weather-main-substrate{% if banner_503 %} with-through-banner{% endif %}">
+            {% cache 3600 'weather.index.forecast_current' vary='forecast.city.id' tags='forecast_current,wish_model' %}
+                <div class="b-weather-main-lead">{{ wish.text|typograf:'admin' }}</div>
+                {% if forecast.temp != None %}
+                    <div class="b-weather-main-current-info">
+                        <div class="b-weather-main-current">
+                            <span class="b-weather-main-current-degree">
+                                {{ forecast.temp|sign }}&deg;
+                            </span>
+                            {% if forecast.sky.icon_class %}
+                                <span class="g-icon-weather-big white j-weather-actual-icon-toggle {{ forecast.sky.icon_class }}"
+                                      title="{{ forecast.sky|default_if_none:"—" }}"></span>
+                            {% endif %}
+                            <div class="b-weather-main-current-wind">
+                                {% if forecast.wind %}
+                                    {% if forecast.wind.is_calm %}штиль{% else %}{{ forecast.wind.long }} ветер, {{ forecast.wind.speed }} м/с{% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <ul class="b-weather-main-current-properties">
+                            <li>
+                                {% if forecast.humidity %}<p>влажность {{ forecast.humidity }}%</p>{% endif %}
+                                {% if forecast.pressure %}<p>давление <nobr>{{ forecast.pressure }} мм рт. ст.</nobr></p>{% endif %}
+                            </li>
+                            <li>
+                                <p>восход {{ forecast.sunrise|time:"H:i" }}</p>
+                                <p>заход {{ forecast.sunset|time:"H:i" }}</p>
+                                {% if forecast.visibility %}<p>видимость {{ forecast.visibility }}</p>{% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endcache %}
+        </div>
+
+    {% cache 86400 'weather.index.sign' vary='sign.id' tags='sign_model' %}
+        {% if sign %}
+            <div class="b-weather-main-sign g-desktop g-mobile_768"><p>{{ sign.text|typograf }}</p></div>
+        {% endif %}
+    {% endcache %}
+
+    {% cache 86400 'weather.index.meteocentre' vary='meteocentre.id' tags='meteocentre_model' %}
+        {% if meteocentre.storm_content %}
+            <div class="b-weather-main-storm g-desktop">
+                <b>{{ meteocentre.storm_caption|default:'штормовое'|capfirst }}:</b>
+                {{ meteocentre.storm_content|typograf|safe }}
+            </div>
+        {% endif %}
+    {% endcache %}
+</div>

@@ -1,0 +1,231 @@
+{% extends 'obed/layout.html' %}
+
+{% load staticfiles obedtags pytils_numeral media_utils %}
+
+{% block title %}Доставки | {{ block.super }}{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    {% less '/less/compile/landings/deliveries.less' %}
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/lib/nouislider.js' %}"></script>
+    {{ block.super }}
+{% endblock %}
+
+{% block js_adaptive %}
+    <!-- тут был js adaptive -->
+{% endblock %}
+
+{% block adblock-message %}{% endblock %}
+{% block obed-search-filter %}{% endblock %}
+{% block b-container-first %}
+
+    <!-- JS-фильтр -->
+    <div class="deliveries-filter" style="margin-top: 50px">
+
+        <div class="deliveries-filter__first">
+            <div class="inner">
+                <h2 class="g-font-bold g-font-size-21">#ЛучшеКушайДома</h2>
+            </div>
+        </div>
+
+        <div class="deliveries-filter__second">
+
+            <div class="deliveries-filter__range">
+                <div class="deliveries-filter__range-label">
+                    Бесплатная доставка от
+                </div>
+                <div class="price-slider">
+                    <div id="price_range"></div>
+                </div>
+            </div>
+            <div class="deliveries-filter__okrug">
+                <div class="g-text-align-center">
+                    <span class="g-margin-right-15">Округ</span>
+                    <select id="filter_okrug">
+                        <option value="0">Любой</option>
+                        {% for d in filter_districts %}
+                        <option value="{{ d.id }}">{{ d.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        var state = {};
+        var FilterComponent = function(sliderElement) {
+            this.state = state;
+
+            state.element = sliderElement;
+            state.instance = sliderElement.noUiSlider;
+            state.filter = {'okrug': '0', 'price': 0};
+
+            // вставить в хендлер див для вывода текущего значения
+            var textDiv = $('<span class="handle-text"></span>');
+            state.textDiv = textDiv;
+            $('.noUi-handle', sliderElement).append(textDiv);
+
+            this.bindOkrugChange('filter_okrug');
+            this.initCards('delivery_cards');
+            this.initSlider();
+
+            // запустим
+            this.filter();
+            this.repaint();
+        };
+
+
+        FilterComponent.prototype.initSlider = function() {
+            var self = this;
+            // обрабочик движений слайдера
+            state.instance.on('update', function(values, handle) {
+                self.onSliderMove(values, handle);
+            });
+        }
+
+        FilterComponent.prototype.bindOkrugChange = function(okrugSelectId) {
+            var select = $(document.getElementById(okrugSelectId));
+            var self = this;
+            // обрабочик переключения округа
+            select.on('click change', function(){
+                self.onOkrugChange(this);
+            });
+        };
+
+        FilterComponent.prototype.initCards = function(cardListId) {
+            // проиндексируем карточки
+            var cards = [];
+            $('> li', document.getElementById(cardListId)).each(function(key, element){
+                var card = {
+                    'element': element,
+                    'okrugs': $(element).data('okrugs'),
+                    'price': $(element).data('price'),
+                    'visible': true
+                };
+                if (card.okrugs == '') card.okrugs = [];
+                if (card.price == '') card.price = 0;
+                if (typeof(card.okrugs) == "string") {
+                    card.okrugs = card.okrugs.split(','); // "3,4" -> ["3", "4"]
+                }
+                cards.push(card);
+            });
+
+            this.state.cards = cards;
+        }
+
+        FilterComponent.prototype.updateFilter = function(key, value) {
+            var changed = false;
+
+            var oldval = this.state.filter[key];
+            if (oldval != value) {
+                this.state.filter[key] = value;
+                changed = true;
+            }
+
+            if (changed) {
+                this.filter();
+                this.repaint();
+            }
+        };
+
+        /**
+         * Обновляет значение visible у карточек, в соответствии с текущими фильтрами
+         */
+        FilterComponent.prototype.filter = function() {
+            //
+            var self = this;
+            $.each(this.state.cards, function(idx, card){
+                console.log('card', card);
+                card.visible = self.filterPrice(card) && self.filterDistrict(card);
+                console.log('visible:', card.visible)
+            });
+        }
+
+        FilterComponent.prototype.filterPrice = function(card) {
+            if (!card.price) return true;  // карточка не заполнена
+
+            // true, если карточку можно показать, false - если надо скрыть
+            return card.price <= this.state.filter.price;
+        };
+
+        FilterComponent.prototype.filterDistrict = function(card) {
+            if (this.state.filter.okrug == '0' || !card.okrugs.length)
+                return true;  // карточка не заполнена или фильтр не активирован
+
+            return $.inArray(this.state.filter.okrug, card.okrugs) !== -1;
+        };
+
+        /**
+         * Показывает/скрывает html-элементы карточек в соответствии с данными в state.cards
+         */
+        FilterComponent.prototype.repaint = function() {
+            $.each(this.state.cards, function(idx, card){
+                if (card.visible) {
+                    $(card.element).removeClass('g-hide');
+                } else {
+                    $(card.element).addClass('g-hide');
+                }
+            });
+        };
+
+        FilterComponent.prototype.updateHandleText = function(value) {
+            var intValue = parseInt(value);
+            state.textDiv.text(intValue + ' \u20BD');  // знак рубля
+        };
+
+        FilterComponent.prototype.onSliderMove = function(values, handle) {
+            this.updateHandleText(values[handle]);
+            this.updateFilter('price', values[handle]);
+        };
+
+        FilterComponent.prototype.onOkrugChange = function(select) {
+            this.updateFilter('okrug', $(select).val());
+        };
+
+
+        $(function(){
+            var sliderElement = document.getElementById('price_range');
+            // создаем слайдер
+            noUiSlider.create(sliderElement, {
+                start: 1000,
+                connect: [true, false],
+                step: 100,
+                range: {
+                    'min': 0,
+                    'max': 1000
+                }
+            });
+
+            new FilterComponent(sliderElement);
+        });
+
+    </script>
+
+{% endblock b-container-first %}
+
+{% block b-container-second %}
+    {% if establishments %}
+        <section class="b-obed-corporatives-container type-delivery g-indent{% if not see_also_establishments %} no-also-establishments{% endif %}">
+            <div class="b-obed-corporatives">
+                <ul class="b-obed-corporatives-inlist" id="delivery_cards">
+                    {% for establishment in establishments %}
+                        <li class="b-obed-corporatives-inlist-item"
+                            data-okrugs="{{ establishment.get_delivery_districts|join:"," }}"
+                            data-price="{{ establishment.delivery_price_free|default:0 }}">
+                            {% include 'obed/establishment/list_item.html' with tab='delivery' %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}
+
+{% block b-container-third %}{% endblock %}

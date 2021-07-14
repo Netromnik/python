@@ -1,0 +1,10 @@
+{% load adv_tags %}
+
+{% if object.root_comments_cnt >= 2 %}
+    {% ibanner ID=569 as banner_569 %}
+    {% if banner_569 %}
+        <section class="b-aside-block g-desktop">
+            {{ banner_569 }}
+        </section>
+    {% endif %}
+{% endif %}

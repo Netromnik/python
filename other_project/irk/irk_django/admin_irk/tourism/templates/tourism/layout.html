@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% load adv_tags staticfiles media_utils %}
+
+{% block text_widget %}{% ibanner id=315 template='adv/banners/text_widget_layout.html' %}{% endblock %}
+
+{% block top_banner %}{% include 'tourism/base/top_banner.html' %}{% endblock %}
+
+{% block style %}
+    {% include 'tourism/base/style.html' %}
+{% endblock style %}
+
+{% block meta_adaptive %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+{% endblock %}
+
+{% block style_adaptive %}
+    {% less '/less/compile/adaptive/apps/tourism.less' media='all' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% include 'tourism/base/js.html' %}
+{% endblock js %}
+
+{% block b-adword-header %}
+    {{ block.super }}
+{% endblock b-adword-header %}
+
+{% block b-content %}
+    <!-- Меню раздела Туризм -->
+    <div class="b-content-block">
+        {% include 'tourism/base/tourism-menu.html' %}
+    </div>
+    <!-- /Меню раздела Туризм -->
+{% endblock b-content %}
+
+{% block b-footer-layout-banner %}
+    {% ibanner id=471 as branding_footer %}
+    {% ibanner ID=245 template='adv/banners/banner_layout.html' as banner %}
+    {% if banner and not branding_footer %}
+        <div class="b-footer-layout-banner ">
+            {{ banner }}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block promo_A %}
+    {% ibanner id=481 as branding_top %}
+    {% include 'snippets/branding_top.html' %}
+{% endblock %}
+
+{% block promo_B %}
+    {% ibanner id=471 as branding_footer %}
+    {% if branding_footer %}
+        <div class="b-branding-bottom g-desktop">
+            {{ branding_footer }}
+        </div>
+    {% endif %}
+{% endblock %}

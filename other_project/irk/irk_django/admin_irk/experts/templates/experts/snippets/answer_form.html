@@ -1,0 +1,24 @@
+{% load gallery_tags staticfiles %}
+{% spaceless %}{# Потому что посылаем через AJAX #}
+<form action="{% url 'news:experts:question_reply' expert.category.slug expert.pk %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+	{{ reply_form.question }}
+	{{ reply_form.action }}
+	<div class="b-expert-answer-field">{{ reply_form.answer }}</div>
+    <div class="add-photos-link"><a class="icon-inline icon-left icon-clip" href="javascript:void(0);">Прикрепить фотографии</a></div>
+    <div class="add-photos-form b-expert-answer-add-photos-form j-expert-answer-add-photos-form g-stroke g-bg-white">
+        <small class="g-color-gray">Формат фотографий JPEG и GIF. Файл должен быть не более 900х1200 пикс., размером до 2 Мб.</small>
+        {{ gallery_form.management_form }}
+        {% for form in gallery_form.forms %}
+            <div class="file-upload-section" rev="{{ forloop.counter }}" {% if not forloop.first and not form.instance.pk %}style="display:none;"{% endif %}>
+                {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+                {{ form.picture }}
+                <div class="controls">
+                    <a href="javascript:void(0)" class="control rem-file-upload-fieldset"><img src="{% static 'experts/img/icons/rem-file-upload-fieldset.png' %}"/></a>
+                    {% if not forloop.last %}<a href="javascript:void(0)" class="control add-file-upload-fieldset"><img src="{% static 'experts/img/icons/add-file-upload-fieldset.png' %}"/></a>{% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <button class="g-button_white" type="submit">Сохранить</button>
+</form>
+{% endspaceless %}

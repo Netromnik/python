@@ -1,0 +1,20 @@
+{% if announce_list %}
+    <section class="b-announces-carousel-container">
+        {% if request.user_agent.is_gadget %}
+            <header class="b-afisha-announce-header">
+                <h2>
+                    Самое интересное
+                </h2>
+            </header>
+        {% endif %}
+        <div class="b-announces-carousel{% if announce_list|length > 1 %} j-announces{% endif %}">
+            {% for announce in announce_list %}
+                {% if announce.announce_type == 'event' %}
+                    {% include 'afisha/tags/announce_slider/event.html' with event=announce %}
+                {% elif announce.announce_type == 'material' %}
+                    {% include 'afisha/tags/announce_slider/material.html' with material=announce %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}

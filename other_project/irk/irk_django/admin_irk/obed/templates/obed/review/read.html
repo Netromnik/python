@@ -1,0 +1,370 @@
+{% extends "layout_article.html" %}
+
+{% load site_utils comments_tags contests_tags str_utils share_utils staticfiles media_utils str_utils thumbnail pytils_dt pytils_numeral cache_tags obedtags news_tags admin_utils adv_tags %}
+
+{% block title %}{{ object.title|typograf }} | {{ block.super }}{% endblock title %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'article.instance.meta' vary='object.id' tags='article,object' %}{% spaceless %}
+        {% include 'share_meta.html' with card='summary_large_image' url=object.get_absolute_url title=object.title description=object.caption image=object.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="//maps.api.2gis.ru/2.0/loader.js?pkg=full&skin=dark&lazy=true"></script>
+    <script type="text/javascript" src="{% static 'js/lib/ifvisible.js' %}"></script>
+{% endblock %}
+
+{% block style %}
+    {% less '/less/compile/apps/obed.less' %}
+    {% less '/less/compile/fonts/rubl_sign.less' %}
+    {{ block.super }}
+{% endblock %}
+
+{# брендирование вверху #}
+{% block promo_A %}
+    {% ibanner id=482 as branding_top %}
+    {% include 'snippets/branding_top.html' %}
+{% endblock %}
+
+{% block b-adword-header %}{% endblock b-adword-header %}
+{% block b-content-header %}{# убираем верхнее меню #}{% endblock %}
+
+{% comment %}
+{% block b-content %}
+    {# Адаптивный баннер #}
+    {% if not object.is_advertising %}
+        {% include 'news-less/base/banner/b-adaptive_banner-320x320.html' %}
+        {% include 'news-less/base/banner/b-adaptive_banner-300x400.html' %}
+    {% endif %}
+    <article class="b-content-article type_2 b-obed-article g-content-block">
+        <header class="b-content-article-header">
+            <h1 class="g-left g-grid-column-9">
+                {{ object|typograf }}
+                {% get_object_admin_link object %}
+            </h1>
+            <div class="g-subtitle g-color-gray g-left g-grid-column-9">
+                <time class="g-margin-right-10" datetime="{{ object.stamp|date:'Y-m-d' }}">{{ object.stamp|ru_strftime:'%d %B %Y г.' }}</time>
+                {% if object.comments_cnt %}<a href="#comments" class="g-margin-right-10 g-hover">{{ object.comments_cnt|get_plural:'комментарий,комментария,комментариев' }}</a>{% endif %}
+                <span class="g-color-black icon-inline icon-left icon-time">около {{ object.content|time_to_read|get_plural:"минуты,минут,минут" }} на чтение</span>
+            </div>
+            <div class="b-obed-article-editor {% if object.columnist %}{{ object.columnist }}{% endif %} g-font-base">
+                <a href="{% url 'obed:index' %}?tab=critic#article-list" class="link"></a>
+                {% if object.columnist %}<h4>{{ object.get_columnist_display }}</h4>{% endif %}
+                ресторанный обозреватель
+            </div>
+            {% if object.caption %}<p class="g-left g-grid-column-9">{{ object.caption|typograf }}</p>{% endif %}
+            {% if object.image %}
+                <figure class="g-clear">
+                    {% thumbnail object.image 940x1000 quality=92 stretch=1 as thumb %}
+                    <img src="{{ thumb }}" alt="{% if object.image_label %}{{ object.image_label|typograf }}{% else %}{{ object.title|typograf }}{% endif %}" width="{{ thumb.width }}px" height="{{ thumb.height }}px">
+                    {% if object.image_label %}<figcaption class="g-color-gray g-font-base">{{ object.image_label|typograf }}</figcaption>{% endif %}
+                </figure>
+            {% endif %}
+        </header>
+
+        <div class="b-content-cr j-article-aside-float-target j-article-aside-float-target-content {% if not request.user.is_staff %}j-article-scrollDepth-init j-article-scrollDepth-point_1 js-mediator-article{% endif %}" data-scrolldepth-url="/hydra/material/scroll_depth/" data-material-id="{{ object.pk }}">
+            <div class="g-mobile_480 g-mobile_320 j-transform-container j-transform-container-establishment-mobile_480 j-transform-container-establishment-mobile_320"></div>
+
+            <div id="description" class="b-content-article-text g-relative j-banners-article-text j-copyright-insert j-article-scrollDepth-start_read j-article-scrollDepth-read_time" data-url="http://{% get_site_url 'www' %}{{ object.get_absolute_url }}">
+                <div class="j-article-scrollDepth-point_2"></div>
+                {{ object.content|typograf:"admin,image=620x1000"|safe }}
+                {% if object.content|has_bb_code:'diff' %}
+                    <script type="text/javascript" src="{% static 'js/lib/juxtapose.js' %}"></script>
+                {% endif %}
+
+                {% for dish in object.review_dishes.all %}
+                    <article class="b-obed-article-dish b-content-article-text" id="dish-{{ forloop.counter }}">
+                        <h2>{{ dish.name|typograf }}</h2>
+                        <div class="b-obed-article-dish-sum">{% if dish.price %}<span class="g-ruble">{{ dish.price }}</span>{% endif %}{% if dish.mark %} {{ dish.get_mark_display }}{% endif %}</div>
+
+                        {{ dish.description|typograf:"admin,image=620x1000"|safe }}
+                        {% if dish.gallery.main_gallery %}
+                            {% with dish.gallery.main_gallery as pictures %}
+                                {% include 'bb_codes/images.html' with size='620x460' %}
+                            {% endwith %}
+                        {% endif %}
+                    </article>
+                {% endfor %}
+
+                {% if object.conclusion %}
+                    {{ object.conclusion|typograf:"admin"|safe }}
+                {% endif %}
+
+                <div class="b-obed-article-aside-block{% if not object.resume %} bottom{% endif %} j-obed-aside-float-stop">
+                    {# этот блок был изначально закоменчен #}
+                    {% if object.columnist == "siropova" %}
+                        <div class="b-obed-article-instagram j-obed-aside-float-stop">
+                            <a href="http://instagram.com/lizasiropova" target="_blank" class="g-left"><img src="{% static 'obed/img/icon-instagram-x31.png' %}" width="31px" height="31px"></a>
+                            <div class="b-obed-article-instagram-message"><a href="http://instagram.com/lizasiropova" target="_blank" class="g-link">@lizasiropova</a> в Instagram! Подписывайтесь и читайте анонсы обзоров и критику, которая не вошла в статьи.</div>
+                        </div>
+                    {% endif %}
+                    {# этот блок был изначально закоменчен #}
+                </div>
+
+                {% if object.resume %}
+                    <article class="b-obed-article-resume b-content-article-text" id="resume">
+                        <header>
+                            <h3>Резюме: {{ object.establishment.name|typograf }}</h3>
+                            {% if object.total %}
+                                {% include 'obed/establishment/ratings/ratings.html' with type='editor' rating=object %}
+                            {% endif %}
+                        </header>
+
+                        {{ object.resume|typograf:"admin"|safe }}
+
+                        {% if not object.is_hidden %}
+                            {% share_custom obj_pk=object.pk url=object.get_absolute_url description=object.title stamp=object.stamp object=object %}
+                        {% endif %}
+                    </article>
+                {% endif %}
+                <div class="b-content-article-text-scrollDepth-middle j-article-scrollDepth-point_3"></div>
+            </div>
+            {% if not request.user.is_staff %}{% include 'mediator.html' %}{% endif %}
+            <footer class="b-content-article-footer j-article-scrollDepth-point_4 g-color-lightgray_2">
+                <p>Мнение ресторанного обозревателя субъективно и не претендует на профессиональную оценку. Оплата информации заведениями не допускается.</p>
+                <p class="b-obed-article-url">URL: http://{% get_site_url www %}{{ object.get_absolute_url }}</p>
+                <p class="MisprintSnippet">
+                    Чтобы сообщить об опечатке, выделите текст и нажмите <kbd>Ctrl</kbd>+<kbd>Enter</kbd>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            window.irk.misprintEngine.init();
+                        });
+                    </script>
+                </p>
+            </footer>
+        </div>
+        <aside class="b-aside-r g-desktop g-mobile_768 j-article-aside-float" data-float-target="content">
+            {% with object.establishment as establishment %}
+                <div class="g-aside-block j-obed-aside-float-stop j-transform-container j-transform-container-establishment-desktop j-transform-container-establishment-mobile_768">
+                    <div class="j-transform" data-transform-target="establishment">{% include 'obed/establishment/list_item.html' with review=True %}</div>
+                </div>
+            {% endwith %}
+
+            {# этот блок был изначально закоменчен #}
+            {% if object.review_dishes.all|length %}
+                <article class="b-widget-obed-menu g-aside-block j-obed-aside-float-block">
+                    <header><h3>Меню обзора</h3></header>
+
+                    <ul>
+                        {% for dish in object.review_dishes.all %}
+                            <li><a href="#dish-{{ forloop.counter }}" class="g-jlink j-scroll-link">{{ dish.name|typograf }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </article>
+            {% endif %}
+
+            {% contest_latest template="obed/tags/obed_contest_aside.html" %}
+            {# этот блок был изначально закоменчен #}
+            {% include "obed/article/b-aside-r.html" %}
+        </aside>
+    </article>
+
+    {% if see_also %}
+        <section class="b-obed-article-related-list g-content-block j-obed-article-related-list">
+            <h3>Читайте также:</h3>
+            <ul class="b-obed-widget-list" id="obed-article-see_also" data-url="{% url 'obed:article:see_also_list' category_id=object.section_category_id %}" data-start="7" data-limit="6" data-page="2" data-content="true">
+                {% include "obed/article/see_also_list.html" with object_list=see_also %}
+            </ul>
+
+            {% if has_next %}
+                <div class="b-obed-more">
+                    <a class="g-right g-color-lightgray_2" href="{% url 'obed:article:index' %}">Архив статей</a>
+                    <span class="centered">
+                        <a href="#" class="b-obed-more-show g-jlink j-showmore" data-type="json" data-target="obed-article-see_also">
+                            <span class="g-not-mobile_320">Хочу еще интересных статей!</span>
+                            <span class="g-mobile_320">Хочу еще!</span>
+                        </a>
+                    </span>
+                </div>
+            {% endif %}
+        </section>
+
+        <div class="b-obed-more g-indent g-mobile_480 g-mobile_320 j-obed-article-related-list-button">
+            <span class="centered">
+                <a href="#" class="b-obed-more-show g-jlink">
+                    <span class="g-not-mobile_320">Хочу еще интересных статей!</span>
+                    <span class="g-mobile_320">Хочу еще!</span>
+                </a>
+            </span>
+        </div>
+    {% endif %}
+
+    <div class="b-content-cr g-content-resp  j-article-aside-float-target j-article-aside-float-target-comments">
+        {% comments object %}
+        {% if object.comments_cnt > 5 %}
+            <div class="j-article-scrollDepth-point_5"></div>
+        {% endif %}
+        <div class="b-obed-article-aside-block j-obed-aside-float-stop"></div>
+    </div>
+
+    <aside class="b-aside-r j-article-aside-float" data-float-target="comments">
+        {% if object.comments_cnt > 5 %}
+            <div class="sticky j-article-aside-float-block g-accelerate">
+                {% hot_discussion current_object=object %}
+                {# Баннер под горячими обсуждениями, если комментов первго уровня >= 2 #}
+                {% include 'news-less/base/banner/under-hot-discussion.html' %}
+            </div>
+        {% endif %}
+        {# этот блок был изначально закоменчен #}
+        <section class="g-aside-block b-widget-comments">
+            <h3><a href="#">Последние отзывы</a></h3>
+
+            <ul>
+                <li>
+                    <header>
+                        <a class="b-widget-comments-avatar" href="#">
+                            <img width="30px" height="30px" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAyADIDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAUEBgj/xAAkEAACAQQCAQQDAAAAAAAAAAABAgMABAURQWEGFlOS0TVzsv/EABcBAAMBAAAAAAAAAAAAAAAAAAADBAX/xAAgEQACAgEEAwEAAAAAAAAAAAABAgADIQQSEyIUMVIR/9oADAMBAAIRAxEAPwD1Flb+HHW6zzrIys4QBACd6J5PVZ8VmrXI3DQQRzKyoXJcADWwOD3TyKwmyNkkEDRqyyByXJA1ojgd1j8dwt1jr1555IWVoygCEk72DyOqoVauIkntJma3lAA6y/SsmVv4cdbrPOsjKzhAEAJ3onk9VnxWatcjcNBBHMrKhclwANbA4PdKFbFdwGI42IG2k5mjK38OOt1nnWRlZwgCAE70Tyeqz4rNWuRuGggjmVlQuS4AGtgcHunkVhNkbJIIGjVlkDkuSBrRHA7rH47hbrHXrzzyQsrRlAEJJ3sHkdU1Vq4iSe0SzW8oAHWX6UpU8pismVv4cdbrPOsjKzhAEAJ3onk9VrqD5v8Aiov3j+WplShnAMVcxSssJN8izVrkbJIII5lZZA5LgAa0Rwe6x+O38OOvXnnWRlaMoAgBO9g8nqplK1hSoTYPUxje5fefc7zFZq1yNw0EEcysqFyXAA1sDg91TrjvCPysv6D/AEtdjWZqKxW/4JraaxrK9zRSlKRKJkyt/DjrdZ51kZWcIAgBO9E8nqua8izVrkbJIII5lZZA5LgAa0Rwe6u+RWE2RskggaNWWQOS5IGtEcDuoPpbIe9a/JvqrNPxABmOZDqTcSVUYkGlXvS2Q961+TfVPS2Q961+TfVW+RV9SDxrfmZPHb+HHXrzzrIytGUAQAneweT1XU4rNWuRuGggjmVlQuS4AGtgcHuoPpbIe9a/JvqqXjuFusdevPPJCytGUAQkneweR1Ut5pcFgcyvTC9CFIxL9KUqCaUUpSiEUpSiEUpSiEUpSiE//9k=">
+                        </a>
+                        <h4>
+                            <a href="#">Mila</a>
+                            <time datetime="2014-06-29 15:31">29 июня</time>
+                        </h4>
+                    </header>
+                    <p><a href="#" class="g-nolink">
+                        Обслуживание действительно очень медленное. Порции шашлыка крошечные. Цена на пиво поменялась в
+                        устном порядке уже в середине вечера. В общем, заведение полный отстой. Единственное…
+                    </a></p>
+                    <a href="#link-1" class="b-widget-comments-link">Sushi-Studio на Карла Маркса</a>
+                </li>
+                <li>
+                    <header>
+                        <a class="b-widget-comments-avatar" href="#">
+                            <img width="30px" height="30px" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAyADIDASIAAhEBAxEB/8QAGgABAAMAAwAAAAAAAAAAAAAAAAQFBgMHCP/EACgQAAICAgEDAgYDAAAAAAAAAAECAwQABREGQVEHEhMWIjV0slSS0v/EABoBAAIDAQEAAAAAAAAAAAAAAAADAQIFBAb/xAAnEQABAwMDAwQDAAAAAAAAAAABAAIDBBEhEjFBBWGBIiNC8VFxsf/aAAwDAQACEQMRAD8A9W4xkDebWvqKi2bKSujSCMCMAnkgnuR4yQCTYKkkjY2lzjYBT8ZTaPqOjt7bVq0VhHWMyEyKoHAIHYnzkrebWvqKi2bKSujSCMCMAnkgnuR4ySxwNrZS21MLozKHDSOVPxlNo+o6O3ttWrRWEdYzITIqgcAgdifOXOQWlpsVeKaOZuqM3CYxjITFA3m1r6iotmykro0gjAjAJ5IJ7keMxnV/UdHb62OtWisI6zCQmRVA4CsOxPnLr1L+xQflL+rZi9HqrG3ttWrPEjrGZCZCQOAQOwPnOqFjdOsrzXVquoMxpY8hwGLZz9K59NPvs/4rfsuXfqX9ig/KX9Wyu1lGXpCdtlsmSWGVfgKtclm9xIbn6gBxwp75z7O9F1fAut1qvFNE3x2awAq+0Arx9JJ55YdsHZkDxsoh9uhdSuxIb2bzm1v4eVn+kNrX1Gyks2UldGhMYEYBPJZT3I8ZudH1HR29tq1aKwjrGZCZFUDgEDsT5zDbzpy9qKi2bMtd0aQRgRsxPJBPcDxk/wBNPvs/4rfsuWlaxzS8JHT6ipppmUrhYE7EZz9LsPGMZxr1qpur9VY2+tjrVniR1mEhMhIHAVh2B85n9ZRl6QnbZbJklhlX4CrXJZvcSG5+oAccKe+bnKbq/VWNvrY61Z4kdZhITISBwFYdgfONY/4nZZlZRgk1MYJkAx47eSst1f1HR2+tjrVorCOswkJkVQOArDsT5yv6Q2tfUbKSzZSV0aExgRgE8llPcjxk/wCR9t/Ipf3b/OPkfbfyKX92/wA50gxBum+Fgvi6i+cTmM6h2HHlWOzvRdXwLrdarxTRN8dmsAKvtAK8fSSeeWHbJHSHTl7UbKSzZlrujQmMCNmJ5LKe4HjHSHTl7UbKSzZlrujQmMCNmJ5LKe4HjNViHv0+luy2aSkMxFTUgiQH9bbYz+UxjGIWwmMYwQmMYwQmMYwQmMYwQv/Z">
+                        </a>
+                        <h4>
+                            <a href="#">Mila</a>
+                            <time datetime="2014-08-05 19:45">5 августа</time>
+                        </h4>
+                    </header>
+                    <p><a href="#" class="g-nolink">
+                        Обслуживание действительно очень медленное. Порции шашлыка крошечные. Цена на пиво поменялась в
+                        устном порядке уже в середине вечера. В общем, заведение полный отстой. Единственное…
+                    </a></p>
+                    <a href="#link-2" class="b-widget-comments-link">Sushi-Studio на Карла Маркса</a>
+                </li>
+            </ul>
+
+            <a href="#" class="b-widget-comments-more">
+                Посмотреть все
+                <small>впечатления читателей</small>
+            </a>
+        </section>
+        {# этот блок был изначально закоменчен #}
+    </aside>
+{% endblock %}
+{% endcomment %}
+
+{% block article-text %}
+    {{ block.super }}
+
+    {# список блюд #}
+    {% for dish in object.review_dishes.all %}
+        <h2>{{ dish.name|typograf }}</h2>
+        <p class="summ">{% if dish.price %}<span class="g-ruble">{{ dish.price }}</span>{% endif %}{% if dish.mark %} {{ dish.get_mark_display }}{% endif %}</p>
+
+        {{ dish.description|typograf:"admin,image=805x1000"|safe }}
+        {% if dish.gallery.main_gallery %}
+            {% with dish.gallery.main_gallery as pictures %}
+                {% include 'bb_codes/images.html' with size='805x1000' %}
+            {% endwith %}
+        {% endif %}
+    {% endfor %}
+
+    {% if object.conclusion %}
+        {{ object.conclusion|typograf:"admin"|safe }}
+    {% endif %}
+
+    {% if object.resume %}
+        <div class="article__inner article__inner_column">
+            <article class="b-obed-article-resume b-content-article-text j-banners-adaptive-exception" id="resume">
+                <header>
+                    <h3>Резюме: {{ object.establishment.name|typograf }}</h3>
+                    {% if object.total %}
+                        {% include 'obed/establishment/ratings/ratings.html' with type='editor' rating=object %}
+                    {% endif %}
+                </header>
+
+                {{ object.resume|typograf:"admin"|safe }}
+            </article>
+        </div>
+        <div class="article__inner">
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block article-under-content %}
+    {% comment %}
+    {% if see_also %}
+        <section class="b-obed-article-related-list g-content-block j-obed-article-related-list">
+            <h3>Читайте также:</h3>
+            <ul class="b-obed-widget-list" id="obed-article-see_also" data-url="{% url 'obed:article:see_also_list' category_id=object.section_category_id %}" data-start="7" data-limit="6" data-page="2" data-content="true">
+                {% include "obed/article/see_also_list.html" with object_list=see_also %}
+            </ul>
+
+            {% if has_next %}
+                <div class="b-obed-more">
+                    <a class="g-right g-color-lightgray_2" href="{% url 'obed:article:index' %}">Архив статей</a>
+                    <span class="centered">
+                        <a href="#" class="b-obed-more-show g-jlink j-showmore" data-type="json" data-target="obed-article-see_also">
+                            <span class="g-not-mobile_320">Хочу еще интересных статей!</span>
+                            <span class="g-mobile_320">Хочу еще!</span>
+                        </a>
+                    </span>
+                </div>
+            {% endif %}
+        </section>
+
+        <div class="b-obed-more g-indent g-mobile_480 g-mobile_320 j-obed-article-related-list-button">
+            <span class="centered">
+                <a href="#" class="b-obed-more-show g-jlink">
+                    <span class="g-not-mobile_320">Хочу еще интересных статей!</span>
+                    <span class="g-mobile_320">Хочу еще!</span>
+                </a>
+            </span>
+        </div>
+    {% endif %}
+    {% endcomment %}
+{% endblock %}
+
+
+{% block extra_news %}
+    {% if see_also %}
+
+        <div class="article__similar">
+            <ul class="grid-list{% if request.user_agent.is_gadget %} grid-list_mobile{% endif %}" id="obed-article-see_also" data-url="{% url 'obed:article:see_also_list' category_id=object.section_category_id %}" data-start="6" data-limit="5" data-page="2" data-content="true">
+                {% include "obed/article/see_also_list.html" with object_list=see_also %}
+            </ul>
+        </div>
+
+        {% if has_next %}
+            <div class="article-more">
+                <div class="g-loading-button g-margin-bottom-20">
+                    <span class="g-loading-button__more g-height-50 g-line-height-50 j-showmore" data-type="json" data-target="obed-article-see_also">
+                        <span class="g-not-mobile_320">Хочу еще интересных статей!</span>
+                        <span class="g-mobile_320">Хочу еще!</span>
+                    </span>
+                </div>
+            </div>
+        {% endif %}
+
+    {% endif %}
+{% endblock %}
+
+{% block b-aside-r %}
+    <div class="g-aside-block b-obed-article-editor {% if object.columnist %}{{ object.columnist }}{% endif %} g-font-base">
+        <a href="{% url 'obed:index' %}?tab=critic#article-list" class="link"></a>
+        {% if object.columnist %}<h4>{{ object.get_columnist_display }}</h4>{% endif %}
+        ресторанный обозреватель
+    </div>
+
+    {% with object.establishment as establishment %}
+        <div class="g-aside-block j-obed-aside-float-stop j-transform-container j-transform-container-establishment-desktop j-transform-container-establishment-mobile_768">
+            <div class="j-transform" data-transform-target="establishment">{% include 'obed/establishment/list_item.html' with review=True %}</div>
+        </div>
+    {% endwith %}
+
+    {% include "obed/article/b-aside-r.html" %}
+{% endblock %}

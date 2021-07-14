@@ -1,0 +1,14 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load str_utils staticfiles media_utils pytils_dt phones_tags tourism_tags adv_tags %}
+{% block title %}Купить авиабилет в Иркутске на IRK.ru{% endblock %}
+
+{% block content %}
+
+<section class="b-tourism-aviasales b-content-block">
+    <header>
+        <h1 id='aviasales_header'>Купить авиабилет</h1>
+    </header>
+    <iframe scrolling="no" width="700" height="200" frameborder="0" src="//www.travelpayouts.com/widgets/523c2e4737188e3ac0000017.html?v=1336"></iframe>
+</section>
+{% endblock %}

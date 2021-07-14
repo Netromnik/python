@@ -1,0 +1,53 @@
+{% load thumbnail str_utils %}
+<div class="share" id="social-buttons">
+    <div class="share-vkontakte"></div>
+    <div class="share-facebook">
+        <div class="fb-share-button" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-action="recommend" data-href="{{ url }}?utm_source=facebook&utm_medium=socialnetwork" data-type="button_count"></div>
+    </div>
+    <div id="ok_shareWidget" class="share-odnoklassniki"></div>
+    <div class="share-twitter">
+        <a href="{{ request_scheme }}://twitter.com/share?url={{ url|urlencode }}%3Futm_source%3Dtwitter%26utm_medium%3Dmicroblog%26utm_campaign%3Dtwitter1&amp;text={{ obj|typograf:"title"|safe|slice:":100"|urlencode }}&amp;related=tvoyirkutsk" class="twitter-share-button">Tweet</a>
+    </div>
+</div>
+<script type="text/javascript">
+    yepnope([
+        { load: '{{ request_scheme }}://platform.twitter.com/widgets.js' },
+        { load: '{{ request_scheme }}://connect.facebook.net/ru_RU/all.js#xfbml=1' },
+        { load: '{{ request_scheme }}://vkontakte.ru/js/api/share.js',
+            complete: function() {
+                try {
+                    if (typeof VK != "undefined") {
+                        $('#social-buttons').find('.share-vkontakte').append(
+                            VK.Share.button({
+                                type: 'round',
+                                text: 'Сохранить',
+                                url: '{{ url }}?utm_source=vk&utm_medium=socialnetwork&utm_campaign=vk1',
+                                title: {% autoescape on %}'{{ obj|typograf:"title" }}'{% endautoescape %},
+                                {% if object.caption %}description: '{{ object.caption|typograf:'title'|truncatewords:40|safe }}',{% endif %}
+                                noparse: true,
+                                {% if obj.gallery.main_image.image %}{% with obj.gallery.main_image.image as image %}{% if image %}{% thumbnail image 150x100000 as thumb %}image: '{{ thumb }}'{% endif %}{% endwith %}
+                                {% elif object.image %}{% with object.image as image %}{% if image %}{% thumbnail image 200x100000 as thumb %}image: '{{ thumb }}'{% endif %}{% endwith %}{% endif %}
+                            })
+                        );
+                    }
+                } catch (e) {}
+            }
+        }
+    ]);
+</script>
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script type="text/javascript">
+    yepnope([
+        { load: '{{ request_scheme }}://connect.ok.ru/connect.js',
+            complete: function() {
+                var id = "ok_shareWidget",
+                    did = "{{ url }}?utm_source=ok&utm_medium=socialnetwork&utm_campaign=ok1",
+                    st = "{width:145,height:30,st:'rounded',sz:20,ck:1}";
+                if (typeof OK != "undefined") {
+                    OK.CONNECT.insertShareWidget(id,did,st);
+                }
+            }
+        }
+    ]);
+</script>
+<!--<![endif]-->

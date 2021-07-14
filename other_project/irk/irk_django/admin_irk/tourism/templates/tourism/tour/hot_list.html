@@ -1,0 +1,65 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% comment %}
+    @name=Туризм список горящих туров
+{% endcomment %}
+
+{% load staticfiles media_utils str_utils site_utils pytils_dt thumbnail tourism_tags pytils_dt pytils_numeral %}
+
+{% block title %} Лучшие предложения | {{ block.super }}{% endblock %}
+
+{% block content %}
+<!-- Хлебные крошки -->
+<div class="b-content-block">
+    <nav class="b-breadcrumbs">
+        <ul class="b-list-h">
+            <li><a href="{% url 'tourism:index' %}">Туризм</a></li>
+            <li>Лучшие предложения</li>
+        </ul>
+    </nav>
+</div>
+<!-- /Хлебные крошки -->
+
+<section class="b-content-block b-tourism-company-tours-block">
+    <header class="g-title">
+        <h2>Лучшие предложения</h2>
+    </header>
+
+    <table class="b-tourism-tours-table">
+        <colgroup>
+            <col width="639px">
+            <col width="112px">
+            <col width="207px">
+        </colgroup>
+
+        <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Стоимость</th>
+            <th>Ближайшее отправление</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for tour in tours %}
+        <tr id="tr{{ tour.pk }}">
+            <td class="b-tour-title-block">
+                <a href="{{ tour.get_absolute_url }}" class="b-tour-title">
+                    {% thumbnail tour.image 89x1000 as thumb %}
+                    {% if thumb %}<img class="b-tour-title-pic" src="{{ thumb }}" style='width:{{ thumb.width }}; height:{{ thumb.height }}'>{% endif %}
+                    {{ tour.title|typograf|safe }}
+                </a>
+            </td>
+            <td class="b-tour-price-block">{% if tour.price %}<span class="price">{{ tour.price }}&nbsp;руб.</span>{% endif %}</td>
+            <td class="b-tour-date-block">
+                {% for date in tour.get_dates %}
+                {{ date.0|ru_strftime:"%d %B" }}{% if date.1 %} - {{ date.1|ru_strftime:"%d %B" }}{% endif %}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% endblock %}

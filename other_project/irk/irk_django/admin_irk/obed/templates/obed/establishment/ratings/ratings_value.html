@@ -1,0 +1,5 @@
+{% if type == 'editor' %}
+    <span class="g-rating-value type_{{ type }}{% if rating_form %} j-obed-vote-total{% endif %}{% if not rating_total %} zero{% endif %}" title="Рейтинг Сироповой">
+        {{ rating_total|floatformat }}
+    </span>
+{% endif %}

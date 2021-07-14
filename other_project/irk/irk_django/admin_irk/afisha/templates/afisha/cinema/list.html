@@ -1,0 +1,98 @@
+{% load staticfiles thumbnail str_utils comments_tags rating_tags afisha_tags adv_tags %}
+{#<rb:list key="3b8196bb-4f5d-4b23-9d4d-56d3639ce118" cityID="6" classType="movie" objectID="27496033" filter="" locale="" xmlns:rb="http://kassa.rambler.ru"></rb:list>#}
+{% for event in object_list %}
+
+<li class="cinema-list__item j-film-row{% if forloop.last %} g-last{% endif %}">
+
+    <div class="cinema-list__header">
+        {% if event.gallery.main_image.image %}
+        <div class="cinema-list__image">
+            <a class="cinema-list__image-link" href="{{ event.get_absolute_url }}">
+                {% thumbnail event.gallery.main_image.image 300x1000 as thumb %}
+                <img class="cinema-list__img" src="{{ thumb }}" title="{{ event.title|typograf }}" alt="{{ event.title|typograf }}" width="{{ thumb.width }}" />
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="cinema-list__info">
+            <h3 class="cinema-list__title">
+                <a href="{{ event.get_absolute_url }}" class="cinema-list__title-link">
+                    {{ event|typograf }}
+                </a>
+            </h3>
+            <div class="cinema-list__labels">
+                {% if event.review.exists or event.is_tickets_exist and settings.TICKETS_ENABLED %}
+                    {% include 'afisha/snippets/cinema_buy_button.html' with additional_class="cinema-list__orange" metrika='cinema_buy_click' %}
+                    {% if event.review.exists %}
+                        <a class="cinema-button g-margin-right-10 g-margin-bottom-10" href="{{ event.review.all.0.get_absolute_url }}">Читать рецензию</a>
+                    {% endif %}
+                {% endif %}
+                {% if event.imdb_rate %}
+                    <span class="cinema-list__gray g-margin-bottom-10 g-margin-right-10">
+                        <b>IMDB</b> event.imdb_rate
+                    </span>
+                {% endif %}
+                <span class="cinema-list__gray g-margin-bottom-10 g-margin-right-10">
+                    <b>{% if event.age_rating %}{{ event.age_rating }}{% else %}0{% endif %}+</b>
+                </span>
+                <div class="cinema-list__subinfo g-margin-bottom-10">
+                    <span class="cinema-list__genre g-margin-right-10">{{ event.genre|typograf }}</span>
+                    {% comments_cnt event extra_class='afisha-article__review afisha-article__review_big' new_layout=True %}
+                </div>
+            </div>
+            <div class="cinema-list__desc">
+                {{ event.content|typograf|truncatechars_until_sentence:250 }}
+            </div>
+        </div>
+    </div>
+
+    <table class="cinema-table j-table-filter">
+        {% for guide_sessions in event.schedule %}
+        <tr class="cinema-table__tr cinema-table__mobile-block">
+            <th class="cinema-table__th cinema-table__mobile-block">
+                {% if guide_sessions.guide.id %}
+                    <a href="{% url 'guide:read' guide_sessions.guide.id url_date.year|stringformat:'4d' url_date.month|stringformat:'02d' url_date.day|stringformat:'02d' %}">{{ guide_sessions.guide|typograf }}</a>
+                {% else %}
+                    {{ guide_sessions.guide|typograf }}
+                {% endif %}
+            </th>
+            <td class="cinema-table__td">
+                <ul class="time-list">
+                {% if  guide_sessions.sessions  %}
+                    {% for session in guide_sessions.sessions %}
+                        <li class="time-list__item {% if session.period.is_3d %}j-3d{% else %}j-2d{% endif %}">
+                            {% include 'afisha/snippets/schedule_item_time.html' %}
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="time-list__item {% if session.period.is_3d %}j-3d{% else %}j-2d{% endif %}">уточняется</li>
+                {% endif %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</li>
+
+{% if forloop.counter == 1 %}
+    {# мобильный баннер после 1го события #}
+    {% adaptive_banner mobile_id=586 template='adv/adaptive_banner_content.html' as cinema_mobile_banner %}
+    {% if cinema_mobile_banner %}
+        <li class="cinema-list__item b-banners-adaptive_320x320-container g-mobile_320">
+            <div class="b-banners-adaptive_320x320">{{ cinema_mobile_banner }}</div>
+        </li>
+    {% endif %}
+{% endif %}
+
+{% if forloop.counter == 2 %}
+    {# мобильный баннер после 2го события #}
+    {% adaptive_banner mobile_id=587 template='adv/adaptive_banner_content.html' as cinema_mobile_banner_2 %}
+    {% if cinema_mobile_banner_2 %}
+        <li class="cinema-list__item b-banners-adaptive_320x320-container g-mobile_320">
+            <div class="b-banners-adaptive_320x320">{{ cinema_mobile_banner_2 }}</div>
+        </li>
+    {% endif %}
+{% endif %}
+
+{% endfor %}

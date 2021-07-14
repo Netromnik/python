@@ -1,0 +1,93 @@
+{% extends "auth/layout.html" %}
+
+{% load profile_utils staticfiles %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#id_auth-form').validate({
+                rules: {
+                    phone_email: {
+                        required: true,
+                    },
+                    password: {
+                        required: true,
+                        maxlength: 40
+                    }
+                },
+                messages: {
+                    phone_email: {
+                        required: "Это обязательное поле"
+                    },
+                    password: {
+                        required: "Это обязательное поле"
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block title %}Вход на IRK.ru{% endblock %}
+
+{% block b-content %}
+<section class="b-auth b-content-block">
+    <div class="b-auth-register">
+        <header>
+            <h1>Вход на сайт</h1>
+        </header>
+        <form method="post" action="." class="register-form" id="id_auth-form">{% csrf_token %}
+            {% if form.non_field_errors.0 or form.password.errors.0 %}
+                <div class="b-auth-form-error">{{ form.non_field_errors.0 }}{{ form.password.errors.0 }}</div>
+            {% endif %}
+            <input type="hidden" name="next" value="{{ next }}"/>
+            <div class="register-form__row">
+                <label for="user-phone_email">Телефон или E-mail:</label>
+                <input type="text" class="register-form__input" name="phone_email" id="user-phone_email" />
+            </div>
+            <div class="register-form__row">
+                <label for="user-pass">Пароль:</label>
+                <input type="password" class="register-form__input" name="password" autocomplete="off" id="user-pass" />
+            </div>
+            <div class="register-form__row">
+                <button class="register-form__submit" type="submit">Войти</button>
+                <span class="register-form__orregister g-color-gray">
+                    или &nbsp; <a href="{% url 'authentication:register:index' %}" title="Если у вас нет логина на сайте" rel="nofollow">зарегистрироваться</a>
+                </span>
+            </div>
+            <div class="register-form__row">
+                <label for="user-rem" title="Не нужно будет вводить логин и пароль повторно. В вашем браузере должны быть включены cookies.">
+                    <input type="checkbox" name="remember" class="check" checked="checked" id="user-rem" />&nbsp;запомнить меня
+                </label>
+            </div>
+            <div class="register-social j-social-auth">
+                <div class="register-social__text g-color-gray">
+                    или вы можете авторизироваться с помощью соц. сетей:
+                </div>
+                <ul class="b-list-h b-auth-register-social">
+                    <li>
+                        <a class="vk" data-width="624" data-height="324" href="{% url 'social:begin' 'vk-oauth2' %}?next={{ request.get_full_path|urlencode }}" rel="nofollow">
+                            <span class="vk"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fb" data-width="524" data-height="300" href="{% url 'social:begin' 'facebook' %}?next={{ request.get_full_path|urlencode }}" rel="nofollow">
+                            <span class="fb"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="ok" data-width="800" data-height="800" href="{% url 'social:begin' 'odnoklassniki-oauth2' %}?next={{ request.get_full_path|urlencode }}" rel="nofollow">
+                            <span class="ok"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="b-auth-summary g-color-gray">
+        Регистрация на сайте позволяет оставлять отзывы к <a href="{% url 'news:index' %}">новостям</a>, задавать вопросы <a href="{% url 'news:experts:index' %}">экспертам</a>, размещать организации в наших каталогах, писать <a href="{% url 'news:flash:index' %}">собственные новости</a>, оформлять подписку на рассылку <a href="{% url 'news:index' %}">новостей</a>, сохранять индивидуальные настройки сайта, голосовать в <a href="{% url 'contests:contests:list' %}">конкурсах</a>, <a href="{% url 'polls:index' %}">опросах</a> и многое другое.
+    </div>
+</section>
+{% endblock b-content %}

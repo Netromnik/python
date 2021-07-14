@@ -1,0 +1,57 @@
+{% load staticfiles str_utils obedtags thumbnail map_tags phones_tags %}
+
+{# блок доставок, вставляется аяксом на главную #}
+
+<section class="nycorp nycorp_delivery">
+    <div class="nycorp__inner">
+        <div class="nycorp__columns">
+            <div class="nycorp__info">
+                <h3 class="nycorp__title">
+                    Доставки Иркутска:
+                </h3>
+                <div class="nycorp__desc">
+                    Где заказать вкусной еды?
+                    <img src="{% static 'img/deliverys.png' %}" class="nycorp__img" />
+                </div>
+                <div class="nycorp__buttons">
+                    <a href="{% url 'obed:deliveries' %}" class="nycorp__buttons__more">
+                        Больше заведений
+                    </a>
+                    <span class="nycorp__buttons__arrows">
+                        <span class="nycorp__arrow nycorp__arrow_left j-nyslider-prev"></span>
+                        <span class="nycorp__arrow nycorp__arrow_right j-nyslider-next"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="nyslider-wrapper">
+                <div class="j-nycorp-slider">
+                    <div class="nyslider swiper-wrapper">
+
+                        {% for establishment in deliveries %}
+                        <div class="nyslider__item swiper-slide">
+                            <a href="{{ establishment.url }}" class="nyslider__item__image">
+                                {% thumbnail establishment.card_image 280x140 crop as thumb %}
+                                <img src="{{ thumb }}" class="nyslider__item__img" alt="image" />
+                            </a>
+                            <div class="nyslider__item__info">
+                                <h4 class="nyslider__item__title g-text-overflow">
+                                    <a href="{{ establishment.url }}">
+                                        {{ establishment.name|typograf }}
+                                    </a>
+                                </h4>
+                                <span class="nyslider__item__address g-text-overflow">
+                                    <span class="j-map-address-link" data-map-address="{{ establishment.main_address.city_id }}, {{ establishment.main_address.name }}">{{ establishment.main_address.address_with_city|typograf }}</span>
+                                </span>
+                                <span class="nyslider__item__tel g-text-overflow">
+                                    {{ establishment.main_address.phones|typograf }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

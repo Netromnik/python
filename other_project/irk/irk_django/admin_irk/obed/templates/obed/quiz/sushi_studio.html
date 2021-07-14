@@ -1,0 +1,25 @@
+{% extends 'obed/layout_cr.html' %}
+
+{% load polls_tags comments_tags str_utils %}
+
+{% block title %}{{ quiz.title|typograf }} | {{ block.super }}{% endblock title %}
+
+{% block b-content-cr %}
+    <article class="b-poll-quiz j-poll-quiz">
+        <h1>{{ quiz.title|typograf }}</h1>
+		{% if user_messages %}
+		    {% for message in user_messages %}
+                <div class="b-poll-quiz-message">Спасибо, за участие в нашем опросе!</div>
+		    {% endfor %}
+		{% endif %}
+
+        {% if not voted %}
+            {{ quiz.content|typograf:"admin" }}
+        {% else %}
+            <div class="b-poll-quiz-votes">Всего проголосовало: <b>{{ quiz.votes_cnt }}</b></div>
+        {% endif %}
+
+        {% quiz quiz %}
+    </article>
+    {% comments quiz %}
+{% endblock %}

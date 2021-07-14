@@ -1,0 +1,17 @@
+{% load thumbnail str_utils %}
+{% if contest %}
+<section class="b-aside-block">
+    <header><h3><a href="{% url 'afisha:contests:list' %}">Конкурсы</a></h3></header>
+	<article>
+        <ul class="b-list-v">
+            <li>
+                <header class="g-title">
+                    {% thumbnail contest.image 140x10000 as thumb %}
+                    <h5><a href="{% url 'afisha:contests:read' contest.slug %}"><img src="{{ thumb }}" alt="{{ contest.title|typograf:"title"|safe }}" style="width: {{ thumb.width }}px; height: {{ thumb.height }}px;">{{ contest.title|typograf:"title"|safe }}</a></h5>
+                </header>
+                <article>{{ contest.caption|typograf:'admin'|safe }}</article>
+            </li>
+        </ul>
+	</article>
+</section>
+{% endif %}

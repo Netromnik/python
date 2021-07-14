@@ -1,0 +1,22 @@
+{% extends "to_moder.html" %}
+
+{% load site_utils str_utils %}
+
+{% block body_letter %}
+    <p>Имя:</p>
+    <p>{{ resume.name }}</p>
+    <br>
+    <p>Контакт:</p>
+    <p>{{ resume.contact }}</p>
+    <br>
+    {% if resume.link %}
+        <p>Резюме:</p>
+        <p><a href="{{ resume.link }}">{{ resume.link }}</a></p>
+        <br>
+    {% endif %}
+    {% if resume.content %}
+        <p>Сообщение:</p>
+        <p>{{ resume.content }}</p>
+        <br>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'special/layout.html' %}
+
+{% load game_tags staticfiles str_utils thumbnail comments_tags %}
+
+{% block title %}Спецпроекты | {{ block.super }}{% endblock %}
+
+{# удалить этот блок после игры #}
+{% block game2020 %}
+    {% treasure 'special' %}
+{% endblock %}
+
+{% block b-content %}
+    <h1 class="b-special-index-title">Спецпроекты</h1>
+    <ul class="b-special-index-list">
+        {% for project in projects %}
+            {% with material=project.material %}
+                {% if material %}
+                    <li class="b-special-index-list-item">
+                        <a class="b-special-index-material-link" href="{{ project.get_absolute_url }}">
+                            {% if project.material.wide_image %}
+                                {% thumbnail project.material.wide_image 455x240 quality=100 as wide_image %}
+                                <img class="b-special-index-material-image" src="{{ wide_image }}" alt="{{ material.title|typograf }}">
+                            {% else %}
+                                <img class="b-special-index-material-image" src="{% static 'special/img/special_gag.png' %}" alt="{{ material.title|typograf }}">
+                            {% endif %}
+                            <h3 class="b-special-index-material-title">{{ project.title|typograf }}</h3>
+                        </a>
+                        <a class="b-special-index-material-project-link" href="{{ material.get_absolute_url }}">
+                            <h4 class="b-special-index-material-project">{{ material.title|typograf }}</h4>
+                        </a>
+                        {% comments_cnt material new_layout=True %}
+                    </li>
+                    {% endif %}
+            {% endwith %}
+        {% endfor %}
+
+        {% for meta in metamaterials %}
+            <li class="b-special-index-list-item">
+                <a class="b-special-index-material-link" href="{{ meta.get_absolute_url }}">
+                    {% thumbnail meta.wide_image.url 455x240 quality=100 as wide_image %}
+                    <img src="{{ wide_image }}" alt="{{ meta.title|typograf }}">
+                    <h3 class="b-special-index-material-title g-block g-margin-bottom-5">{{ meta.title|typograf }}</h3>
+                    <div class="b-special-index-material-project">{{ meta.caption|typograf }}</div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

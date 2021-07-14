@@ -1,0 +1,74 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils str_utils thumbnail comments_tags %}
+
+{% block title %}Стоимость проезда на электрички | {{ block.super }}{% endblock %}
+
+{% block content %}
+    <section class="b-content-block b-tourism-schedule-block">
+
+        <header class="g-title">
+            <h1>Стоимость проезда на электричке</h1>
+            <div class="b-schedule-switcher">
+                {% spaceless %}
+                <a href="{% url 'tourism:transport_etrains' %}">онлайн табло</a>
+                <a href="{% url 'tourism:transport_etrains' %}?direction=east">на восток</a>
+                <a href="{% url 'tourism:transport_etrains' %}?direction=west">на запад</a>
+                <span class="g-selected g-stroke g-bg-creamy">цена проезда</span>
+                {% endspaceless %}
+            </div>
+        </header>
+
+        <p class="g-color-gray">Движение электропоездов от станции «Иркутск-Пассажирский». Детский билет на возраст от 5 до 10 лет. Льготный билет действует в период с 1 сентября по 15 мая. Провоз велосипеда и животных на расстояние до 100 км. — 12 руб. Провоз багажа до 100 км. — 32 руб., свыше 100 км. — 63 руб.</p>
+
+        <article>
+            <table class="b-table b-tourism-schedule b-tourism-schedule-darkblue ">
+                <thead>
+                    <tr class="g-odd"><th colspan="5"><h2>На Восток</h2></th></tr>
+                </thead>
+                <tbody>
+                <tr class="thead">
+                    <th>Зона</th>
+                    <th>До станции</th>
+                    <th>Полный, руб.</th>
+                    <th>Льготный, руб.</th>
+                    <th>Детский, руб.</th>
+                </tr>
+                {% for ticket in east %}
+                    <tr class="{% cycle 'g-odd' 'g-even' %}">
+                        <td>{{ ticket.zone }}</td>
+                        <td>{{ ticket.station|typograf|safe }}</td>
+                        <td>{{ ticket.full }}</td>
+                        <td>{{ ticket.free }}</td>
+                        <td>{{ ticket.kids }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <table class="b-table b-tourism-schedule b-tourism-schedule-lightblue">
+                <thead>
+                    <tr class="g-odd"><th colspan="5"><h2>На запад</h2></th></tr>
+                </thead>
+                <tbody>
+                <tr class="thead">
+                    <th>Зона</th>
+                    <th>До станции</th>
+                    <th>Полный, руб.</th>
+                    <th>Льготный, руб.</th>
+                    <th>Детский, руб.</th>
+                </tr>
+                {% for ticket in west %}
+                <tr class="{% cycle 'g-odd' 'g-even' %}">
+                    <td>{{ ticket.zone }}</td>
+                    <td>{{ ticket.station|typograf|safe }}</td>
+                    <td>{{ ticket.full }}</td>
+                    <td>{{ ticket.free }}</td>
+                    <td>{{ ticket.kids }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </article>
+    </section>
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% load thumbnail str_utils comments_tags %}
+
+<article class="b-widget-article">
+    <header>
+        <a href="{{ article.get_absolute_url }}"{% if metrika_goal %} class="j-metrika-goal" data-metrika-goal="{{ metrika_goal }}"{% endif %}>
+            {% if article.image %}
+                {% thumbnail article.image 300x200 as thumb %}
+            {% else %}
+                {% thumbnail article.gallery.main_image.image 300x142 crop as thumb %}
+            {% endif %}
+
+            {% if thumb %}<img src="{{ thumb }}" alt="{{ article|typograf }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px">{% endif %}
+            <h4>{{ article|typograf }}</h4>
+        </a>
+    </header>
+    {% if metrika_goal %}
+        <span class="j-metrika-goal" data-metrika-goal="{{ metrika_goal }}">{% comments_cnt article new_layout=True %}</span>
+    {% else %}
+        {% comments_cnt article new_layout=True %}
+    {% endif %}
+</article>

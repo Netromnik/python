@@ -1,0 +1,30 @@
+{% extends "polls/layout_lc.html" %}
+{% load comments_tags %}
+
+{% comment %}
+    @name=Голосования результаты
+{% endcomment %}
+
+{% load str_utils adv_tags staticfiles media_utils pytils_dt polls_tags %}
+{% block title %}{{ poll.title|typograf|safe }} | {{ block.super }}{% endblock %}
+
+{% block b-content %}
+    <nav class="b-breadcrumbs">
+        <ul class="b-list-h">
+            <li><a href="{% url 'polls:index' %}">Голосования</a></li>
+            <li><a href="{% url 'polls:year' year %}">Архив за {{ year }} год</a></li>
+            <li>{{ poll.title|typograf|safe }}</li>
+        </ul>
+    </nav>
+    {{ block.super }}
+{% endblock b-content %}
+
+{% block content %}
+    <section class="b-polls">
+        {% include "polls/snippets/poll.html" %}
+    </section>
+
+    <section class="b-polls-comment">
+        {% comments poll %}
+    </section>
+{% endblock %}

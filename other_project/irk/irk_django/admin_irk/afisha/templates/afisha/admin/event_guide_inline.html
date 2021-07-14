@@ -1,0 +1,257 @@
+{% load i18n admin_static admin_modify str_utils %}
+<style>
+.type-switch{
+  font-size: 111%;
+  padding-left: 10px;
+  color: #999;
+  font-size: 125%; margin-top: 0.3em;
+}
+.type-switch a {color: #ff6600;}
+
+
+.nav-page-new {
+    font-size: 111%;
+    padding-left: 10px;
+}
+.nav-page-new span {color: #999;}
+.nav-page-new a {color: #ff6600;}
+.nav-page-new div.page {font-size: 125%; margin-top: 0.3em;}
+.nav-page-new div.page a {margin-right: 0.3em;}
+.nav-page-new div.page span {padding-right: 0.3em;}
+.nav-page-flat {font-size: 111%; margin-top: 2.5em;}
+.nav-page-flat span {color: #999;}
+.nav-page-flat a {color: #ff6600;}
+.nav-page-flat div.page {font-size: 125%; margin-top: 0.3em;}
+.nav-page-flat div.page a {margin-right: 0.3em;}
+.nav-page-flat div.page span {padding-right: 0.3em;}
+.nav-page-flat select { float:right; font-size:100%; margin-top:-2.9em; }
+
+</style>
+{%  if inline_admin_formset.formset.is_all_bindings or inline_admin_formset.formset.is_all_bindings == 0 %}
+<div class="type-switch">
+<p>Показывать: {% if inline_admin_formset.formset.is_all_bindings %}<a href="?all=0">{% endif %}текущие{% if inline_admin_formset.formset.is_all_bindings %}</a>{% endif %}&nbsp;/&nbsp;{% if not inline_admin_formset.formset.is_all_bindings %}<a href="?all=1">{% endif %}все{% if not inline_admin_formset.formset.is_all_bindings %}</a>{% endif %}</p>
+</div>
+{% endif %}
+<div class="inline-group" id="{{ inline_admin_formset.formset.prefix }}-group">
+  <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
+{{ inline_admin_formset.formset.management_form }}
+<fieldset class="module">
+   <h2>{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>
+
+   {{ inline_admin_formset.formset.non_form_errors }}
+   <table>
+     <thead><tr>
+         {% for field in inline_admin_formset.fields %}
+                 <th{% if forloop.first %} colspan="2"{% endif %}{% if field.required %}
+                                           class="required"{% endif %}>{{ field.label|capfirst }}
+                     {% if field.help_text %}&nbsp;
+                         <img src="{% static "admin/img/icon-unknown.svg" %}" class="help help-tooltip" width="10"
+                              height="10" alt="({{ field.help_text|striptags }})"
+                              title="{{ field.help_text|striptags }}"/>{% endif %}
+                 </th>
+         {% endfor %}
+     <th>Расписание</th>
+     {% if inline_admin_formset.formset.can_delete %}<th>{% trans "Delete?" %}</th>{% endif %}
+     </tr></thead>
+
+     <tbody>
+     {% for inline_admin_form in inline_admin_formset %}
+        {% if inline_admin_form.form.non_field_errors %}
+        <tr><td colspan="{{ inline_admin_form|cell_count }}">{{ inline_admin_form.form.non_field_errors }}</td></tr>
+        {% endif %}
+        <tr class="form-row {% cycle "row1" "row2" %} {% if inline_admin_form.original or inline_admin_form.show_url %}has_original{% endif %}{% if forloop.last %} empty-form{% endif %}"
+             id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
+            <td class="original">
+                {% if inline_admin_form.needs_explicit_pk_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
+                {{ inline_admin_form.fk_field.field }}
+                {% spaceless %}
+                    {% for fieldset in inline_admin_form %}
+                        {% for line in fieldset %}
+                            {% for field in line %}
+                                {% if field.is_hidden %} {{ field.field }} {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endspaceless %}
+            </td>
+        {% for fieldset in inline_admin_form %}
+          {% for line in fieldset %}
+            {% for field in line %}
+              <td{% if field.field.name %} class="field-{{ field.field.name }}"{% endif %}>
+              {% if field.is_readonly %}
+                  <p>{{ field.contents|linebreaksbr }}</p>
+              {% else %}
+                  {{ field.field.errors.as_ul }}
+                  {{ field.field }}
+              {% endif %}
+              </td>
+            {% endfor %}
+          {% endfor %}
+        {% endfor %}
+        <td class='sessions-td'>
+
+          {% if inline_admin_form.original %}
+            {% for period in inline_admin_form.original.period_set.all %}
+              <div style="display:none">
+                <input class='period-pk' type="hidden" name="period-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}-id" value="{{ period.id }}" />
+                <input class='period-date' type="hidden" name="period-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}-date" value="{{ period.start_date|date:" d.m.Y " }}{% if period.end_date %}-{{ period.end_date|date:" d.m.Y " }}{% endif %}" />
+                <input class='period-sessions' type="hidden" name="period-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}-sessions" value="{% for session in period.sessions_set.all %}{{ session.time|time:"H:i" }} {% endfor %}" />
+                <input class='period-duration' type="hidden" name="period-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}-duration" value="{% if period.duration %}{{ period.duration|time:"H:i" }}{% endif %}" />
+                <input class='period-price' type="hidden" name="period-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}-price" value="{{ period.price }}" />
+                <input class='period-is_3d' type="hidden" name="period-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}-is_3d" value="{% if period.is_3d %}1{% else %}0{% endif %}" />
+              </div>
+            {% endfor %}
+          {% endif %}
+          <a class='edit-sessions' href="#">{% if  inline_admin_form.original.period_set.all.count %}редактировать{% else %}добавить{% endif %}</a>
+        </td>
+        {% if inline_admin_formset.formset.can_delete %}
+          <td class="delete">{% if inline_admin_form.original %}{{ inline_admin_form.deletion_field.field }}{% endif %}</td>
+        {% endif %}
+        </tr>
+     {% endfor %}
+     </tbody>
+   </table>
+</fieldset>
+  </div>
+  </div>
+</div>
+
+{% if inline_admin_formset.formset.paginator %}
+  {% load paginator_utils %}
+  {% with 1 as all %}
+    {% paginator inline_admin_formset.formset.paginator all %}
+  {% endwith %}
+{% endif %}
+
+<div class='sessions-mask'></div>
+<div class='sessions'>
+  <div class='sessions-table'>
+    <table>
+      <thead>
+        <tr>
+          <th>Период</th>
+          <th>Сеансы</th>
+          <th>Длительность</th>
+          <th>Цена</th>
+          <th>3D</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+            <td class='period-new-date'></td>
+            <td class='period-new-sessions'></td>
+            <td class='period-new-duration'></td>
+            <td class='period-new-price'></td>
+            <td class='period-new-is_3d not_editable'></td>
+            <td class='not_editable'></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class='actions'>
+    <div class='help'>
+      <dl><dt>Tab</dt><dd>Следуюшее поле в строке</dd></dl>
+      <dl><dt>SHIFT+n</dt><dd>Новая запись</dd></dl>
+      <dl><dt>SHIFT+e</dt><dd>Редактировать первую запись</dd></dl>
+    </div>
+    <input type='button' class='btn primary save' value="Сохранить"/>
+    <input type='button' class='btn danger reset' value="Отмена"/>
+  </div>
+</div>
+<script type="text/javascript">
+var HALL_SET = {{ inline_admin_formset.opts.hall_set|json }};
+(function($) {
+    $(document).ready(function($) {
+        var rows = "#{{ inline_admin_formset.formset.prefix }}-group .tabular.inline-related tbody tr";
+
+        var newFieldSelect2Init = function (selector, fieldID) {
+            var hashedSelector = "#" + selector;
+            $(hashedSelector).data("field_id", fieldID);
+            $(hashedSelector).on('change', window.django_select2.onValChange).data("userGetValText", null);
+            $(hashedSelector).select2({
+                "allowClear": false,
+                "initSelection": window.django_select2.onInit,
+                "createSearchChoice": createSearchChoice,
+                "multiple": false,
+                "minimumInputLength": 2,
+                "minimumResultsForSearch": 6,
+                "closeOnSelect": false,
+                "ajax": {
+                    "dataType": "json",
+                    "quietMillis": 100,
+                    "url": "/utils/autocomplete/fields/auto.json",
+                    "data": window.django_select2.runInContextHelper(window.django_select2.get_url_params, selector),
+                    "results": window.django_select2.runInContextHelper(window.django_select2.process_results, selector)
+                },
+                "placeholder": ""
+            });
+        };
+
+        var alternatingRows = function(row) {
+            $(rows).not(".add-row").removeClass("row1 row2")
+                .filter(":even").addClass("row1").end()
+                .filter(rows + ":odd").addClass("row2");
+        };
+
+        var reinitDateTimeShortCuts = function() {
+            // Reinitialize the calendar and clock widgets by force
+            if (typeof DateTimeShortcuts != "undefined") {
+                $(".datetimeshortcuts").remove();
+                DateTimeShortcuts.init();
+            }
+        };
+        var updateSelectFilter = function() {
+            // If any SelectFilter widgets are a part of the new form,
+            // instantiate a new SelectFilter instance for it.
+            if (typeof SelectFilter != "undefined"){
+                $(".selectfilter").each(function(index, value){
+                  var namearr = value.name.split('-');
+                  SelectFilter.init(value.id, namearr[namearr.length-1], false, "{% static "admin/" %}");
+                });
+                $(".selectfilterstacked").each(function(index, value){
+                  var namearr = value.name.split('-');
+                  SelectFilter.init(value.id, namearr[namearr.length-1], true, "{% static "admin/" %}");
+                });
+            }
+        };
+        var initPrepopulatedFields = function(row) {
+            row.find('.prepopulated_field').each(function() {
+                var field = $(this);
+                var input = field.find('input, select, textarea');
+                var dependency_list = input.data('dependency_list') || [];
+                var dependencies = [];
+                $.each(dependency_list, function(i, field_name) {
+                  dependencies.push('#' + row.find('.field-' + field_name).find('input, select, textarea').attr('id'));
+                });
+                if (dependencies.length) {
+                    input.prepopulate(dependencies, input.attr('maxlength'));
+                }
+            });
+        };
+
+        $(rows).formset({
+            prefix: "{{ inline_admin_formset.formset.prefix }}",
+            addText: "{% block add_title %}Добавить еще одно заведение{% endblock %}",
+            formCssClass: "dynamic-{{ inline_admin_formset.formset.prefix }}",
+            deleteCssClass: "inline-deletelink",
+            deleteText: "{% trans "Remove" %}",
+            emptyCssClass: "empty-form",
+            removed: alternatingRows,
+            added: (function(row) {
+                initPrepopulatedFields(row);
+                reinitDateTimeShortCuts();
+                updateSelectFilter();
+                alternatingRows(row);
+                row.trigger('added');
+
+                var $selector = $(row).find('input[data-select2-id]');
+                newFieldSelect2Init($selector.attr('id'), $selector.data('select2Id'));
+            })
+        });
+        // afisha new_admin.js отлавливает это событие, чтобы навешать свои обработчики
+        window.irk.vars.$body.trigger('formset-done');
+    });
+})(django.jQuery);
+</script>

@@ -1,0 +1,66 @@
+{% extends 'newyear2014/layout.html' %}
+
+{% load adv_tags media_utils str_utils thumbnail paginator_utils date_tags rating_tags gallery_tags comments_tags %}
+
+{% block title %}Статьи | {{ block.super }}{% endblock title %}
+
+{% block b-content-class %} b-ny2014-articles-index{% endblock %}
+
+{% block b-content %}
+    <header class="g-intend g-hide">
+        <h1>Статьи</h1>
+    </header>
+    <article>
+        <ul class="b-ny2014-articles-list b-list-v">
+            {% for article in objects %}
+                <li {% if forloop.last %}class="g-last"{% endif %}>
+                    {% if article.model == "article" %}
+                    {% with article.image as thumb_img %}
+                        {% thumbnail thumb_img 800x1000 as thumb %}
+                        <header class="g-intend_s">
+                            <h3><a href="{{ article.get_absolute_url }}" title="{{ article.title|typograf:'title'|safe }}">{{ article.title|typograf:'title'|safe }}</a></h3>
+                            <small class="g-color-gray">&nbsp;<time>{{ article.stamp|dates:'%d.%m|%d.%m.%Y' }}</time></small> <small class="g-color-gray">{% comments_cnt article new_layout=True %}</small>
+                        </header>
+                        <article>
+                            <figure>
+                                <a href="{{ article.get_absolute_url }}" title="{{ article.title|typograf:'title'|safe }}">
+                                    <img src="{{ thumb }}" alt="{{ article.caption|typograf:'title'|safe }}" style="width:{{ thumb.width }}px;height:{{ thumb.height }}px;">
+                                    {% if article.caption %}<figcaption>{{ article.caption|typograf:'title'|safe }}</figcaption>{% endif %}
+                                </a>
+                            </figure>
+                        </article>
+                    {% endwith %}
+                    {% else %}
+                        <header class="g-intend_s">
+                            <span class="b-ny2014-articles-photoicon"></span>
+                            <h3><a href="{{ article.get_absolute_url }}" title="{{ article.title|typograf:'title'|safe }}">{{ article.title|typograf:'title'|safe }}</a></h3>
+                            <small class="g-color-gray">{{ article.stamp|dates:'%d.%m|%d.%m.%Y' }}&nbsp;&nbsp;{% comments_cnt article new_layout=True %}</small>
+                        </header>
+
+                        <article>
+                            <ul class="b-list-h">
+                                {% spaceless %}
+                                    {% if article.image %}
+                                        <li>
+                                            {% with article.image as thumb_img %}
+                                                {% thumbnail thumb_img 800x1000 as thumb %}
+                                                <figure class="b-photo-big g-bigger">
+                                                    <a href="{{ article.get_absolute_url }}" title="{{ article.title|typograf:'title'|safe }}">
+                                                        <img src="{{ thumb }}" alt="{{ article.caption|typograf|safe }}" style="width:{{ thumb.width }}px;height:{{ thumb.height }}px;">
+                                                        {% if article.caption %}<figcaption>{{ article.caption|typograf|safe }}</figcaption>{% endif %}
+                                                    </a>
+                                                </figure>
+                                            {% endwith %}
+                                        </li>
+                                    {% endif %}
+                                    <li>{% gallery article.gallery.main_gallery|slice:"1:6" "90x70" max=true crop="90x70" class="b-list-v" url=article.get_absolute_url %}</li>
+                                {% endspaceless %}
+                            </ul>
+                        </article>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% paginator objects template='paginator/layout.html' %}
+    </article>
+{% endblock b-content %}

@@ -1,0 +1,35 @@
+{% extends "news-less/layout.html" %}
+
+{% load game_tags str_utils pytils_dt news_tags pages staticfiles media_utils site_utils %}
+
+{% block title %}Отписаться от рассылки новостей | {{ block.super }}{% endblock %}
+
+{% block b-content-class %} subscription{% endblock %}
+
+{# удалить этот блок после игры #}
+{% block game2020 %}
+    {% treasure 'subscription' %}
+{% endblock %}
+
+{% block b-content %}
+<div class="b-content-block b-title-search">
+    <ul class="b-list-h">
+        {% spaceless %}
+        <li><h1>Рассылка новостей от IRK.ru</h1></li>
+        {% endspaceless %}
+    </ul>
+</div>
+
+<section class="b-subscription arrow-top w-300">
+    <h3>Рассылка оформлена</h3>
+    <form method="get" action="http://{% get_site_url www domain %}{% url 'news:subscription:unsubscribe' %}">
+        <input type="hidden" name="mail" value="{{ subscriber.email }}">
+        <input type="hidden" name="hash" value="{{ subscriber.hash }}">
+        <input type="hidden" name="remove" value="1">
+        <input class="b-submit" type="submit" value="Отписаться" />
+    </form>
+</section>
+{% endblock %}
+
+
+<p>Адрес {{ subscriber.email }}</p>

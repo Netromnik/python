@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% comment %}
+        @template
+        @name=Простая страница
+{% endcomment %}
+
+{% load pages str_utils adv_tags %}
+
+{% block text_widget %}{% ibanner id=413 template='adv/banners/text_widget_layout.html' %}{% endblock %}
+
+{% block title %}
+	{% if flatpage.title %}{{ flatpage.title|typograf:"title" }} | {% endif %}{{ block.super }}
+{% endblock %}
+
+{% block layout-base-class %}layout-fixed flatpage{% endblock layout-base-class %}
+
+{% block b-content %}
+	{% autoescape off %}
+		<div style="padding: 1.2em 1em 0;" class="b-content-block">
+			<h1 class="b-content-block">{{ flatpage.title|typograf }}</h1>
+			{{ flatpage.content|typograf:"admin,nolinebreaks"|safe }}
+		</div>
+	{% endautoescape %}
+{% endblock %}

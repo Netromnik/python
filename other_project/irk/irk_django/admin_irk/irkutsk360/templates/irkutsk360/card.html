@@ -1,0 +1,31 @@
+{% load str_utils comments_tags thumbnail utils_tags cache_tags staticfiles pytils_dt pytils_numeral %}
+
+<!--item-->
+{% spaceless %}
+<a href="{{ material.get_absolute_url }}" class="card">
+    <div class="card__info">
+        <div class="card__info__top">
+            <span class="card__label">
+                {{ material|verbose_name }}
+            </span>
+        </div>
+        <div class="card__info__bottom">
+            <h4 class="card__title">
+                {{ material.title|typograf }}
+            </h4>
+            <div class="card__desc">
+                {{ material.caption|truncatechars:70|typograf }}
+            </div>
+        </div>
+    </div>
+    <div class="card__bg">
+        {% if material.wide_image %}
+            {% thumbnail material.wide_image 770x360 crop as thumb %}
+        {% else %}
+            {% thumbnail material.standard_image 770x360 crop as thumb %}
+        {% endif%}
+        <img src="{{ thumb }}" />
+    </div>
+</a>
+{% endspaceless %}
+<!--item close-->

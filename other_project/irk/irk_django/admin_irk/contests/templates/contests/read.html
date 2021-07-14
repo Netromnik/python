@@ -1,0 +1,94 @@
+{% extends 'contests/layout_cr.html' %}
+
+{% load paginator_utils str_utils thumbnail share_utils comments_tags staticfiles media_utils cache_tags pytils_numeral date_tags admin_utils %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'contests.instance.meta' vary='object.id' tags='contest' %}{% spaceless %}
+        {% include 'share_meta.html' with url=contest.get_absolute_url title=contest.title description=contest.caption image=contest.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block title %}{{ contest.title|typograf }} | {{ block.super }}{% endblock %}
+
+{% block header-class %}{{ block.super }} not-fixed{% endblock %}
+
+{% block b-content %}
+    {% if contest.project %}
+        <div class="special__link-container special__link-container_left g-margin-bottom-20">
+            {% include 'special/snippets/link.html' with name=contest.project.title|typograf url=contest.project.get_absolute_url %}
+        </div>
+    {% endif %}
+    <h1 class="b-contests-title-h1">
+        {{ contest.title|typograf }}
+        {% get_object_admin_link contest %}
+    </h1>
+    {% if not contest.is_closed and contest.user_can_add %}
+        <div class="g-margin-bottom-20 g-font-base g-font-size-16">
+            <span class="b-contests-label">Приём работ</span>
+            <span>с {{ contest.date_start|dates:'%d %B|%d %B' }} по {{ contest.date_end|dates:'%d %B %Y г.|%d %B %Y г.' }}</span>
+        </div>
+    {% endif %}
+
+    {% if contest.wide_image %}
+        {% thumbnail contest.wide_image 940x1000 as thumb %}
+    {% else %}
+        {% thumbnail contest.image 460x350 as thumb %}
+    {% endif %}
+
+    <img class="b-contests-read-image" src="{{ thumb }}" alt="{{ contest.title|typograf }}" width="{{ thumb.width }}" height="{{ thumb.height }}">
+
+    {# Текст для изображения #}
+    {% if contest.image_caption %}
+        <div id="picture-caption" class="g-margin-bottom-25">
+            <small class="g-color-gray">{{ contest.image_caption|typograf }}</small>
+        </div>
+    {% endif %}
+
+    <div class="b-contests-menu-container g-relative g-margin-bottom-25">
+        <a class="g-anchor j-contests-menu-anchor" name="contest"></a>
+        <div class="b-content-header j-contests-menu b-contests-menu g-font-base j-float-block" data-id="contests-menu" data-top="0">
+            <div class="b-contests-scroll-top g-desktop j-contests-scroll-top">наверх</div>
+            <ul class="b-content-header-menu menu-left b-contests-menu-list">
+                <li class="j-contests-menu-item g-active"><a href="#contest">О конкурсе</a></li>
+                {% if contest.type != 'quiz' and participants|length > 0 %}
+                <li class="j-contests-menu-item">
+                    <a href="#members">Участники <span class="g-color-gray">{{ participants|length }}</span></a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    {{ block.super }}
+
+    {# Не выводить участников для викорин #}
+    {% if contest.type != 'quiz' %}
+        {% if participants|length > 0 %}
+            <h2 class="b-contests-title-h1 g-relative g-clear">Все {{ participants|length }} {{ participants|length|choose_plural:"участник,участника,участников" }}<a class="g-anchor j-contests-menu-anchor" name="members"></a></h2>
+            <div class="b-contests-members">
+                {% for participant in participants %}
+                    {% include 'contests/snippets/participant_small.html' %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block b-content-cr %}
+    <article class="b-content-article-text g-relative">
+        <p class="g-color-darkgray g-margin-bottom-20">
+            {{ contest.caption|typograf }}
+        </p>
+        <div class="b-contests-share-container g-margin-bottom-30 g-clearfix j-float-start-contests-menu">
+            {% if not contest.is_closed and contest.user_can_add %}
+                <a class="b-contests-button-orange b-contests-share-participate j-float-block" data-id="contests-menu" data-top="0" href="{% url 'contests:contests:participant_create' contest.slug %}">Принять участие</a>
+            {% endif %}
+            <div class="b-contests-share-buttons {% if contest.is_closed or not contest.user_can_add %}is_closed{% endif %} j-float-block" data-id="contests-menu" data-top="0">
+                {% share_custom obj_pk=contest.pk url=contest.get_absolute_url description=contest.introduction social_statistic=social_statistic object=contest %}
+            </div>
+        </div>
+
+        {{ contest.content|typograf:"admin,image=620x1000"|safe }}
+
+    </article>
+{% endblock %}

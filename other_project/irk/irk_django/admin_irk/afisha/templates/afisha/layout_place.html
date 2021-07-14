@@ -1,0 +1,21 @@
+{% extends 'afisha/layout.html' %}
+
+{% load staticfiles media_utils adv_tags site_utils afisha_tags %}
+
+{% block b-content-parent %}
+    <div class="grid-wrapper">
+        <div class="grid-inner">
+            <div class="grid-list grid-list_nowrap grid-list_wrap-900">
+                <div class="grid-list__item grid-list__item_x3 grid-list__item_100">
+                    {% block content %}{% endblock content %}
+                </div>
+                <aside class="grid-list__item">
+                    {% block b-aside-r %}
+                        {% include 'afisha/base/b-aside-r.html' with type='inner' %}
+                    {% endblock b-aside-r %}
+                </aside>
+            </div>
+        </div>
+        {% afisha_extra_announcements %}
+    </div>
+{% endblock %}

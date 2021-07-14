@@ -1,0 +1,10 @@
+{% load str_utils %}
+<ul class="{% if css_class %}{{ css_class }} {% endif %}photoList{% if not url %} overlayPhoto{% endif %}" data-cinema-frames="{{ images|length }}">
+    {% for item in images %}
+    <li{% if mark_first and forloop.first %} style="display: none"{% endif %}{% if forloop.last %} class="g-last"{% endif %}>
+        <a href="{% if url %}{{ url }}#event={{ item.id }}{% else %}{{ item.image_watermark }}{% endif %}" data-id="{{ item.id }}" title="{{ item.title|typograf:"title"|safe }}" rev="{{ item.thumb }}">
+            <img src="{{ item.preview }}" alt="{% if item.title %}{{ item.title|typograf:"title"|safe }}{% endif %}" style="width: {{ item.preview.width }}px;height: {{ item.preview.height }}px;">
+        </a>
+    </li>
+    {% endfor %}
+</ul>

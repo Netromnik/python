@@ -1,0 +1,17 @@
+<div class="anniversary__inner">
+    <div class="anniversary__grid-wrapper">
+        <div class="grid">
+            {% for card in object_list %}
+                {% if forloop.counter == 5  or forloop.counter == 10 %}
+                    <div class="grid__item grid__item_x2">
+                        {% include 'irkutsk360/choice_cards.html' %}
+                    </div>
+                {% else %}
+                    <div class="grid__item">
+                        {% include 'irkutsk360/choice_cards.html' %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

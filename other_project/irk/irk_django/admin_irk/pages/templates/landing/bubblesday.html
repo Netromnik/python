@@ -1,0 +1,605 @@
+{% load staticfiles media_utils site_utils options adv_tags cache metric_tags pages str_utils %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=1050, maximum-scale=1.2">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+    <title>День мыльных пузырей | Твой Иркутск</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-touch-icon-57x57.png' %}"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-touch-icon-72x72.png' %}"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/icons/apple-touch-icon-114x114.png' %}"/>
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="День мыльных пузырей 2016">
+    <meta property="og:description"
+          content="5 июня вся площадь у памятника Александру III покроется мыльными пузырями - время для большого праздника">
+    <meta name="description"
+          content="5 июня вся площадь у памятника Александру III покроется мыльными пузырями - время для большого праздника">
+
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" type="text/css" href="{% static 'font/apps/bubblesday-ie.css' %}" />
+    <![endif]-->
+    <!--[if (IE 9)|!(IE)]><!-->
+    <link rel="stylesheet" type="text/css" href="{% static 'font/apps/bubblesday.css' %}"/>
+    <!--<![endif]-->
+
+    {% block style %}
+        {% less '/less/compile/landings/bubblesday.less' %}
+    {% endblock style %}
+    {% if settings.DEBUG %}
+        <script type="text/javascript">var less = {env: "development"};</script>
+        <script type="text/javascript" src="{% static 'js/lib/less/less-1.7.5.js' %}"></script>
+    {% endif %}
+
+    {% block js %}
+        <script type="text/javascript">
+            var DOMAIN_MEDIA = "{{ MEDIA_URL }}";
+            var auth_no_redir = {};
+            var auth_callback = {};
+            var irk = {};
+
+        </script>
+        <script type="text/javascript" src="{% static 'js/lib/jquery-1.7.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lib/modernizr-2.6.2-bro-fix.js' %}"></script>
+        {% if settings.DEBUG %}
+            <script type="text/javascript" src="{% static 'js/apps-js/debug.js' %}"></script>{% endif %}
+        <script type="text/javascript" src="{% static 'js/apps-js/irk.new.js' %}"></script>
+
+    {% endblock js %}
+    {% include 'google_analytics.html' %}
+
+</head>
+<body class="">
+{% include 'yandex_metrika.html' %}
+
+{# Топ меню #}
+<section class="b-nav b-nav-main">{% simple_header_menu %}</section>
+
+{# Зона с контентом #}
+<article class="b-container no-scroll">
+    <div class="b-bubbles-screen b-bg-cyan" id="screen-1">
+        <article>
+            <div class="b-bubbles-main-logo">
+                <figure class="b-logo"><img src="{% static 'img/landing_pages/bubbles/logo.png' %}"
+                                            alt="День Мыльных пузырей 2016" title="День Мыльных пузырей 2016"></figure>
+                <h1 class="b-slogan">День мыльных пузырей</h1>
+                <div class="b-date">5 июня 13:00 площадь у памятника Александру III</div>
+            </div>
+            <div class="b-bubbles-video">
+                <ul class="b-bubbles-video-list">
+                    <li class="b-bubbles-video-list-item">
+                        <object width="470" height="264">
+                            <param name="movie"
+                                   value="https://www.youtube.com/v/C_TC3XUxg9I?version=3&amp;hl=ru_RU&amp;rel=0"></param>
+                            <param name="allowFullScreen" value="true"></param>
+                            <param name="allowscriptaccess" value="always"></param>
+                            <embed src="https://www.youtube.com/v/C_TC3XUxg9I?version=3&amp;hl=ru_RU&amp;rel=0"
+                                   type="application/x-shockwave-flash" width="470" height="264"
+                                   allowscriptaccess="always" allowfullscreen="true"></embed>
+                        </object>
+                    </li>
+                    <li class="b-bubbles-video-list-item">
+                        <object width="470" height="264">
+                            <param name="movie"
+                                   value="https://www.youtube.com/v/Jw0yQJtZKPM?version=3&amp;hl=ru_RU&amp;rel=0"></param>
+                            <param name="allowFullScreen" value="true"></param>
+                            <param name="allowscriptaccess" value="always"></param>
+                            <embed src="https://www.youtube.com/v/Jw0yQJtZKPM?version=3&amp;hl=ru_RU&amp;rel=0"
+                                   type="application/x-shockwave-flash" width="470" height="264"
+                                   allowscriptaccess="always" allowfullscreen="true"></embed>
+                        </object>
+                    </li>
+                    <li class="b-bubbles-video-list-item">
+                        <object width="470" height="264">
+                            <param name="movie"
+                                   value="https://www.youtube.com/v/QxDfZnu-0d4?version=3&amp;hl=ru_RU&amp;rel=0"></param>
+                            <param name="allowFullScreen" value="true"></param>
+                            <param name="allowscriptaccess" value="always"></param>
+                            <embed src="https://www.youtube.com/v/QxDfZnu-0d4?version=3&amp;hl=ru_RU&amp;rel=0"
+                                   type="application/x-shockwave-flash" width="470" height="264"
+                                   allowscriptaccess="always" allowfullscreen="true"></embed>
+                        </object>
+                    </li>
+                    <li class="b-bubbles-video-list-item">
+                        <object width="470" height="264">
+                            <param name="movie"
+                                   value="https://www.youtube.com/v/TLQhC4bIc0U?version=3&amp;hl=ru_RU&amp;rel=0"></param>
+                            <param name="allowFullScreen" value="true"></param>
+                            <param name="allowscriptaccess" value="always"></param>
+                            <embed src="https://www.youtube.com/v/TLQhC4bIc0U?version=3&amp;hl=ru_RU&amp;rel=0"
+                                   type="application/x-shockwave-flash" width="470" height="264"
+                                   allowscriptaccess="always" allowfullscreen="true"></embed>
+                        </object>
+                    </li>
+                </ul>
+            </div>
+            <h2 class="h-lobster">5 июня вся площадь у памятника Александру третьему покроется мыльными пузырями - время для
+                большого праздника.</h2>
+            <div class="b-bubbles-social">
+                <p class="h-lobster">Присоединяйтесь!</p>
+                <ul class="b-list-h">
+                    <li><a href="https://vk.com/dmp05062016" title="Vkontakte" class="b-vk"></a></li>
+                </ul>
+            </div>
+        </article>
+    </div>
+    <div class="b-bubbles-screen b-bg-lavanda not-radial" id="screen-2">
+        <header>
+            <h3 class="h-lobster">Слушать</h3>
+        </header>
+        <article class="b-bubbles-music">
+            <ul class="b-list-h">
+                <li>
+                    <figure class="b-music-band band-type04">
+                        <div></div>
+                    </figure>
+                    <div class="b-track">BURRN</div>
+                </li>
+                <li>
+                    <figure class="b-music-band band-type08">
+                        <div></div>
+                    </figure>
+                    <div class="b-track">New Day</div>
+                </li>
+                <li>
+                    <div class="b-paginator">
+                        <ul class="b-list-v">
+                            <li><a href="#screen-1" title="В начало"></a></li>
+                            <li><span class="g-selected" title="Слушать"></span></li>
+                            <li><a href="#screen-3" title="Играть"></a></li>
+                            <li><a href="#screen-9" title="Карта активности"></a></li>
+                            <li><a href="#screen-4" title="Почему мы это делаем?"></a></li>
+                            <li><a href="#screen-5" title="Что о нас говорят?"></a></li>
+                            <li><a href="#screen-6" title="История"></a></li>
+                            <li><a href="#screen-7" title="День мыльных пузырей в цифрах"></a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <figure class="b-music-band band-type02">
+                        <div></div>
+                    </figure>
+                    <div class="b-track">Nеизвестный Исполнитель</div>
+                </li>
+                <li>
+                    <figure class="b-music-band band-type01">
+                        <div></div>
+                    </figure>
+                    <div class="b-track">Pepper band</div>
+                </li>
+                <li></li>
+                <li>
+                    <figure class="b-music-band band-type07">
+                        <div></div>
+                    </figure>
+                    <div class="b-track">Zammer</div>
+                </li>
+                <li>
+                    <figure class="b-music-band band-type06">
+                        <div></div>
+                    </figure>
+                    <div class="b-track">LIVИЯ</div>
+                </li>
+                <li style="height: 160px;">
+                    <figure class="b-music-band band-type03">
+                        <div></div>
+                    </figure>
+                    <div class="b-track">Stempline</div>
+                </li>
+                {#                <li><figure class="b-music-band band-type10"><div></div></figure><div class="b-track">YELLOW SOCKS</div></li>#}
+            </ul>
+            <div class="b-bubbles-next-screen">
+                <a href="#screen-2"><span>Что же там делать?</span></a>
+            </div>
+        </article>
+    </div>
+
+    <div class="b-bubbles-screen b-bg-cyan" id="screen-3">
+        <header><h3 class="h-lobster">Играть</h3></header>
+        <article class="b-bubbles-play">
+            <ul class="b-list-h">
+                <li>
+                    <h5>Радужный дартс</h5>
+                    <p>Конкурс на меткость! Задача участников специальными шариками с краской стрелять из
+                        рогатки по большой мишени. Тот, кто наберёт большее количество очков по итогам
+                        конкурса и побеждает!</p>
+                </li>
+                <li>
+                    <h5>Мыльное многоборье</h5>
+                    <p>Только для продвинутых спортсменов! В многоборье входят дисциплины: надуй больше
+                        всех; надуй самый долгий пузырь; надуй самый длинный пузырь; надуй больше всех
+                        пузырей и ― для особо отчаянных ― мыльная дуэль!</p>
+                </li>
+                <li>
+                    <h5>Большой твистер</h5>
+                    <p>Любимая игра всех возрастов. Веселимся, одновременно тренируя гибкость и
+                        выносливость.</p>
+                </li>
+
+                <li>
+                    <h5>Огромный светодиодный экран с прямой трансляцией от Мегафон</h5>
+                    <p>Посты гостей, отмеченные определенными хэштегами, попадают на огромный светодиодный
+                        экран и их видят все участники праздника. Также в прямом эфире будут транслироваться
+                        интервью с гостями Дня мыльных пузырей. У каждого есть шанс увидеть себя на большом экране!</p>
+                </li>
+                <li>
+                    <h5>«Ну, погоди!» от Ирмаг</h5>
+                    <p>Игра прямиком из детства, в которой участникам предстоит набирать очки, ловя шарики,
+                        падающие со всех сторон, в корзину. А приглашать гостей поучаствовать в игре будет
+                        Проморобот, который не просто умеет говорить, но и обладает чувством юмора, танцует и
+                        покоряет женские сердца.</p>
+                </li>
+                <li>
+                    <h5>Раскрась мир с AvivA</h5>
+                    <p>На пяти пресс-воллах будут представлены пять городов мира, которые участникам предлагается
+                        раскрасить. Параллельно всех гостей будет встречать огромный шар, внутри которого можно
+                        сфотографироваться. А на специальных промостойках всех желающих будет ждать бесплатная
+                        дегустация напитков AvivA.</p>
+                </li>
+            </ul>
+
+            <div class="b-paginator">
+                <ul class="b-list-v">
+                    <li><a href="#screen-1" title="В начало"></a></li>
+                    <li><a href="#screen-2" title="Слушать"></a></li>
+                    <li><span class="g-selected" title="Играть"></span></li>
+                    <li><a href="#screen-9" title="Карта активности"></a></li>
+                    <li><a href="#screen-4" title="Почему мы это делаем?"></a></li>
+                    <li><a href="#screen-5" title="Что о нас говорят?"></a></li>
+                    <li><a href="#screen-6" title="История"></a></li>
+                    <li><a href="#screen-7" title="День мыльных пузырей в цифрах"></a></li>
+                </ul>
+            </div>
+
+            <div class="b-bubbles-next-screen">
+                <a href="#screen-3"><span>А еще?</span></a>
+            </div>
+        </article>
+    </div>
+
+    <div class="b-bubbles-screen b-bg-lavanda" id="screen-9">
+        <header><h3 class="h-lobster">Карта активности</h3></header>
+        <article class="b-bubbles-prize">
+            <div class="b-paginator">
+                <ul class="b-list-v">
+                    <li><a href="#screen-1" title="В начало"></a></li>
+                    <li><a href="#screen-2" title="Слушать"></a></li>
+                    <li><a href="#screen-3" title="Играть"></a></li>
+                    <li><span class="g-selected" title="Карта активности"></span></li>
+                    <li><a href="#screen-4" title="Почему мы это делаем?"></a></li>
+                    <li><a href="#screen-5" title="Что о нас говорят?"></a></li>
+                    <li><a href="#screen-6" title="История"></a></li>
+                    <li><a href="#screen-7" title="День мыльных пузырей в цифрах"></a></li>
+                </ul>
+            </div>
+
+            <div class="b-bubbles-next-screen">
+                <a href="#screen-9"><span>Карта активности</span></a>
+            </div>
+        </article>
+    </div>
+
+    <div class="b-bubbles-screen" id="screen-4">
+        <header><h3 class="h-lobster">Почему мы это делаем?</h3></header>
+        <article class="b-bubbles-why">
+            <ul class="b-list-v">
+                <li>
+                    <figure class="b-photo-portraits type01">
+                        <div></div>
+                    </figure>
+                    <article>
+                        <h5>Александр Создаев</h5>
+                        <p>Я познакомился с праздником в 2010 году. Тогда он проходил не то в марте, не то в апреле.
+                            Было жутко холодно, дул ледяной ветер и пробрасывал снег. Еще тогда меня поразило то, с
+                            какой отдачей кучка сумасшедших бегает по площади, проводит конкурсы и заряжает позитивом
+                            всех вокруг. Уже через год я вошел в число организаторов и проводил эстафеты. Это был мой
+                            первый проект в СКИ «Постскриптум». И во многом благодаря Дню Мыльных Пузырей я загорелся
+                            общественной деятельностью! Этот праздник – яркий пример того, что нет ничего невозможного,
+                            ведь в рамках одного лишь проекта объединяются и работают вместе и администрация города, и
+                            коммерческие компании, и десятки, если не сотни инициативных креативщиков. Это день чудес:
+                            кто-то находит и открывает в себе таланты, кто-то встречает свою любовь, а для кого-то это
+                            возможность встретиться со старыми друзьями, взять по баночке мыльных пузырей и вспомнить
+                            детство! И именно радость, огонь в глазах и звонкий смех всех вокруг – вот то, что придаёт
+                            силы развиваться и делать праздник всё лучше, ярче и насыщенней! За прошедшие годы я
+                            закончил университет, устроился на отличную работу (в том числе благодаря опыту, полученному
+                            в общественной деятельности), но продолжаю и буду продолжать делать этот праздник вместе со
+                            старыми друзьями! Так что увидимся вновь на Дне мыльных пузырей 2016!</p>
+                    </article>
+                </li>
+                <li>
+                    <figure class="b-photo-portraits type07">
+                        <div></div>
+                    </figure>
+                    <article>
+                        <h5>Алина Альтудова</h5>
+                        <p>Впервые с этим праздником я познакомилась в 2011 году, было очень тепло, по всей набережной
+                            бегали люди в цветных шапочках, заражая окружающих позитивом. Но тогда я не задумывалась,
+                            кто всё это делает, просто наслаждалась и получала удовольствие от того, что в городе
+                            существуют такие проекты. Следующие два года я тоже приходила на праздник, но только в
+                            качестве участника, а вот в 2014 году уже оказалась в самой гуще событий среди
+                            организаторов. Не описать словами, что ты чувствуешь, когда люди вокруг тебя улыбаются, хотя
+                            бы на денёк забывают обо всех своих проблемах и просто радуются! Эти искренние улыбки стоят
+                            всех тех сил и того времени, которые уходят на подготовку к празднику. В этот день город
+                            наполняется смехом, солнцем, счастьем в глазах многих и многих людей и мыльными пузырями. И
+                            совершенно неважно, сколько тебе лет – в этот день внутри каждого из нас просыпается
+                            маленький ребёнок!</p>
+                    </article>
+                </li>
+                <li>
+                    <figure class="b-photo-portraits type08">
+                        <div></div>
+                    </figure>
+                    <article>
+                        <h5>Акилина Сорокина</h5>
+                        <p>Впервые на День Мыльных Пузырей я попала как гость в 2011 г. Крутые выступления неизвестных
+                            мне ранее групп, веселые конкурсы и невероятное количество пузырей, солнца и счастливых
+                            улыбающихся людей - до сих пор этот день остается в памяти ярким воспоминанием! Тогда я еще
+                            не задумывалась, сколько людей участвует в организации праздника, сколько сил и времени они
+                            отдают этому. Теперь я сама организатор Дня Мыльных пузырей и могу сказать точно: это того
+                            стоит! Да, бывает очень сложно выделить время на подготовку к празднику, особенно в
+                            преддверии сессии. Да, на самом празднике ты упускаешь многое из программы, занимаясь тем
+                            делом, за которое ответственен. Да, всё так. Но этот сумасшедший эмоциональный взрыв, когда
+                            ты на день как будто попадаешь в волшебную пузырчатую страну, где плохих людей нет по
+                            определению и не может случиться ничего плохого! Когда видишь тысячи радостных людей и
+                            читаешь уже после праздника сотни отзывов, смотришь фотографии и понимаешь, что в этом есть
+                            и твоя заслуга. Это невероятно, друзья, понимаете? :) Иркутск - волшебный город, и в нем
+                            живут совершенно потрясающие люди, которые заслуживают не менее удивительный праздник - День
+                            Мыльных Пузырей!</p>
+                    </article>
+                </li>
+            </ul>
+
+            <div class="b-paginator">
+                <ul class="b-list-v">
+                    <li><a href="#screen-1" title="В начало"></a></li>
+                    <li><a href="#screen-2" title="Слушать"></a></li>
+                    <li><a href="#screen-3" title="Играть"></a></li>
+                    <li><a href="#screen-9" title="Карта активности"></a></li>
+                    <li><span class="g-selected" title="Почему мы это делаем?"></span></li>
+                    <li><a href="#screen-5" title="Что о нас говорят?"></a></li>
+                    <li><a href="#screen-6" title="История"></a></li>
+                    <li><a href="#screen-7" title="День мыльных пузырей в цифрах"></a></li>
+                </ul>
+            </div>
+
+            <div class="b-bubbles-next-screen">
+                <a href="#screen-4"><span>Почему мы это делаем?</span></a>
+            </div>
+        </article>
+    </div>
+
+    <div class="b-bubbles-screen b-bg-lavanda" id="screen-5">
+        <header><h3 class="h-lobster">Что о нас говорят?</h3></header>
+        <article class="b-bubbles-why">
+            <ul class="b-list-v">
+                <li>
+                    <figure class="b-photo-portraits type04">
+                        <div></div>
+                    </figure>
+                    <article>
+                        <h5>Анастасия Емельянова</h5> <i>— редактор журнала «Краткий Справочник Предпринимателя»</i>
+                        <p>Сначала это было работой, потом это стало местом встречи друзей, а сегодня - это одно из тех
+                            событий в городе, которые просто нельзя пропустить. Потрясающие эмоции, невероятные люди и
+                            всегда что-то новое. День мыльных пузырей - это время, когда ты забываешь о том, что у тебя
+                            есть работа и срочные дела, и просто отдаешься тому детскому порыву эмоций, о котором ты уже
+                            боялся и не вспомнить. Вот почему я хожу на этот праздник.</p>
+                    </article>
+                </li>
+                <li>
+                    <figure class="b-photo-portraits type05">
+                        <div></div>
+                    </figure>
+                    <article>
+                        <h5>Николай Тавельский</h5> <i>— фотограф «Студия ФРЕНДЫ»</i>
+                        <p>Это именно то мероприятие, которое собирает сотни улыбок! И поэтому мы нашей студией с
+                            удовольствием участвуем и ловим эти улыбки в свои объективы. Прекрасно, что многие гуляют
+                            семьями с детишками. Очень много всевозможных коллективов, которые нацелены только на одно -
+                            радовать и дарить хорошее настроение всем пришедшим на праздник. Нам нравится делать
+                            хорошие, счастливые семейные портреты. Ведь так редко есть возможность собраться семьей в
+                            одном месте, а "День Мыльных Пузырей" позволяет сделать это. Есть, что-то очень доброе в
+                            этом мероприятии!</p>
+                    </article>
+                </li>
+                <li>
+                    <figure class="b-photo-portraits type06">
+                        <div></div>
+                    </figure>
+                    <article>
+                        <h5>Леонид Захаревич</h5> <i>— организатор танцевальных флешмобов</i>
+                        <p>Для меня День Мыльных Пузырей - это когда люди объединяются чем-то общим, чем-то родным -
+                            Иркутским. Они знакомятся, веселятся, пускают мыльные пузыри и участвуют в конкурсах,
+                            которые им подготовили организаторы. Все это создает хорошее настроения. Организовывая
+                            флешмоб, мы видим, как люди объединяются, как они горят общим делом. Они чувствуют себя
+                            напрямую причастными к празднику и хотят своими действиями привнести в праздник позитив и
+                            улыбки. Это достойно внимания и мне это нравится, так же как и людям, которые приходят на
+                            праздник.</p>
+                    </article>
+                </li>
+            </ul>
+
+            <div class="b-paginator">
+                <ul class="b-list-v">
+                    <li><a href="#screen-1" title="В начало"></a></li>
+                    <li><a href="#screen-2" title="Слушать"></a></li>
+                    <li><a href="#screen-3" title="Играть"></a></li>
+                    <li><a href="#screen-9" title="Карта активности"></a></li>
+                    <li><a href="#screen-4" title="Почему мы это делаем?"></a></li>
+                    <li><span class="g-selected" title="Что о нас говорят?"></span></li>
+                    <li><a href="#screen-6" title="История"></a></li>
+                    <li><a href="#screen-7" title="День мыльных пузырей в цифрах"></a></li>
+                </ul>
+            </div>
+
+            <div class="b-bubbles-next-screen">
+                <a href="#screen-5"><span>Что о нас говорят?</span></a>
+            </div>
+        </article>
+    </div>
+
+    <div class="b-bubbles-screen b-bg-lavanda-dark" id="screen-6">
+        <header><h3 class="h-lobster">История</h3></header>
+        <article class="b-bubbles-history">
+            <ul class="b-list-h">
+                <li>
+                    <figure><img src="{% static 'img/landing_pages/bubbles/history.png' %}"
+                                 alt="История мыльных пузерей"></figure>
+                    <p>День мыльных пузырей зародился зимой 2008 года на рядовом собрании Студии Креативных Идей
+                        «Постскриптум». Идея заключалась в пузырях и весне.<br/><br/>
+                        Первый праздник состоялся в марте, и в нем приняло участие около 50 человек. Ребята прошли от
+                        корпуса ИГУ на Чкалова до набережной, играя на гитаре и пуская пузыри, преимущественно с помощью
+                        тазов и ракеток от бадминтона. Каждый год организаторы учитывали ошибки и начинали готовиться
+                        все раньше. И это дало свои плоды.<br/><br/>
+                        С тех пор праздник вырос из скромной акции в крупнейший городской праздник, организовываемый
+                        инициативной молодежью при поддержке администрации города, мэра города и десятков коммерческий
+                        компаний. К примеру, в 2012 году в дождь праздник посетило порядка 8 тысяч человек. В 2013 же
+                        году на площади у памятника Александра 3 побывало 10 тысяч горожан и миллионы мыльных
+                        пузырей.<br/><br/>
+                        В 2015 году кризис оторвал от праздника часть спонсоров, в том числе и генерального. Поэтому
+                        решено было запустить проект, который позволил собрать деньги на праздник общими силами. 360
+                        иркутян приняли в нём участие и стали частичкой Дня мыльных пузырей, за что организаторы говорят
+                        им огромное спасибо!</p></li>
+                <li>
+                    <p><b>Текст гимна</b><br/><br/>Ты, посмотри - я твое отражение, и нам по пути<br/>Мы на родном
+                        берегу Ангары, как мыльные пузыри.<br/>Я твоя радуга, ты мечта самых радостных дней,<br/>Жду и
+                        узнаю в Иркутске тебя на празднике мыльных пузырей!<br/><br/>Припев:<br/><br/>Как солнечный
+                        зайчик коснется тебя<br/>Как обнимает подруга, как любят друзья<br/>И настоящее чудо, ты есть у
+                        меня<br/>Мой город, моя весна.<br/><br/>Метр за метром мы следуем к свету,<br/>мы замечаем
+                        планеты, кометы,<br/>мы следуем точно от альфа до бета,<br/>а то что прям рядом — и дела нам
+                        нету.<br/><br/>Не будь депрессивен, разменной монетой —<br/>ведь это Иркутск, весною и
+                        летом,<br/>Особо прекрасен, так что не надо<br/>Ездить в Америку и Эмираты.<br/><br/>Просторы
+                        Байкала и берег ангарский<br/>нас приютил и обилие красок —<br/>все вместе смешалось, и через
+                        призму<br/>вот так и рождаются лучшие мысли.<br/><br/>Улыбнись людям, ведь от тебя не
+                        убудет,<br/>Улыбнись пузырям, тем что ветер крутит,<br/>Ну а теперь вместе с нами покричи:<br/>«Мыльные
+                        пузыри, мыльные пузыри»</p></li>
+            </ul>
+
+            <div class="b-paginator">
+                <ul class="b-list-v">
+                    <li><a href="#screen-1" title="В начало"></a></li>
+                    <li><a href="#screen-2" title="Слушать"></a></li>
+                    <li><a href="#screen-3" title="Играть"></a></li>
+                    <li><a href="#screen-9" title="Карта активности"></a></li>
+                    <li><a href="#screen-4" title="Почему мы это делаем?"></a></li>
+                    <li><a href="#screen-5" title="Что о нас говорят?"></a></li>
+                    <li><span class="g-selected" title="История"></span></li>
+                    <li><a href="#screen-7" title="День мыльных пузырей в цифрах"></a></li>
+                </ul>
+            </div>
+
+            <div class="b-bubbles-next-screen">
+                <a href="#screen-6"><span>История</span></a>
+            </div>
+        </article>
+    </div>
+
+    <div class="b-bubbles-screen" id="screen-7">
+        <header><h3 class="h-lobster">День мыльных пузырей в цифрах</h3></header>
+        <article class="b-bubbles-figures">
+            <ul class="b-list-h">
+                <li>
+                    <h4 class="h-lobster"><span>Посетители</span></h4>
+                    <ul class="b-list-v g-first">
+                        <li><p><span class="b-figures-year">2008</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="b-figures-humans">60</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2009</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="b-figures-humans">300</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2010</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="b-figures-humans">2000</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2011</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="b-figures-humans">8000</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2012</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="b-figures-humans">8000</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2013</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="b-figures-humans">10 000</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2014</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="b-figures-humans">13 000</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2015</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="b-figures-humans">15 000</span>&nbsp;человек
+                        </p></li>
+                        <li>&nbsp;</li>
+                    </ul>
+                </li>
+                <li class="g-last">
+                    <h4 class="h-lobster"><span>Организаторы</span></h4>
+                    <ul class="b-list-v g-last">
+                        <li><p><span class="b-figures-year">2008</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="g-color-orange b-figures-humans">12</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2009</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="g-color-orange b-figures-humans">18</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2010</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="g-color-orange b-figures-humans">24</span>&nbsp;человека
+                        </p></li>
+                        <li><p><span class="b-figures-year">2011</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="g-color-orange b-figures-humans">32</span>&nbsp;человека
+                        </p></li>
+                        <li><p><span class="b-figures-year">2012</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="g-color-orange b-figures-humans">78</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2013</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="g-color-orange b-figures-humans">94</span>&nbsp;человека
+                        </p></li>
+                        <li><p><span class="b-figures-year">2014</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="g-color-orange b-figures-humans">120</span>&nbsp;человек
+                        </p></li>
+                        <li><p><span class="b-figures-year">2015</span>&nbsp;<span class="g-color-gray">год</span><span
+                                class="g-ndash">&nbsp;&ndash;&nbsp;</span><span class="g-color-orange b-figures-humans">130</span>&nbsp;человек
+                        </p></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="b-paginator">
+                <ul class="b-list-v">
+                    <li><a href="#screen-1" title="В начало"></a></li>
+                    <li><a href="#screen-2" title="Слушать"></a></li>
+                    <li><a href="#screen-3" title="Играть"></a></li>
+                    <li><a href="#screen-9" title="Карта активности"></a></li>
+                    <li><a href="#screen-4" title="Почему мы это делаем?"></a></li>
+                    <li><a href="#screen-5" title="Что о нас говорят?"></a></li>
+                    <li><a href="#screen-6" title="История"></a></li>
+                    <li><span class="g-selected" title="День мыльных пузырей в цифрах"></span></li>
+                </ul>
+            </div>
+
+            <div class="b-bubbles-next-screen">
+                <a href="#screen-7"><span>ДМП в цифрах</span></a>
+            </div>
+        </article>
+        <h3 class="h-lobster">Организаторы</h3>
+        <article class="text">
+            <p>Организаторы праздника — Студия креативных идей «Постскриптум» — одна из
+                крупнейших молодежных организаций Иркутска. За 8 лет существования Студии было
+                реализовано свыше 150 проектов самой различной направленности: от спектаклей до
+                образовательных семинаров, от флешмобов до городских праздников. Численность
+                участников при этом составляла от 20 до 15 000 человек. Наши самые любимые проекты:
+                «День Снежка и Пряника», «День ветра», «Эко-тусовка», «Кино-кросс», «День пиджака и
+                галстука», «День поцелуев» и, конечно же — «День мыльных пузырей».</p>
+        </article>
+    </div>
+
+    <div class="b-bubbles-screen" id="screen-8">
+        <article>
+            <div class="b-bubbles-next-screen">
+                <a href="#screen-1"><span>В начало</span></a>
+            </div>
+        </article>
+    </div>
+</article>
+
+
+{# Нижнее меню #}
+<section class="b-nav">{% simple_header_menu %}</section>
+<script type="text/javascript" src="{% static 'js/apps-js/landing/bubblesday.js' %}"></script>
+{% include 'liveinternet_counter.html' %}
+</body>
+</html>

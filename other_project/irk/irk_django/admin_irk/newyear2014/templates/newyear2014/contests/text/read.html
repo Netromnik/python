@@ -1,0 +1,51 @@
+{% extends 'newyear2014/layout_cr.html' %}
+
+{% load adv_tags staticfiles share_utils media_utils str_utils comments_tags thumbnail paginator_utils date_tags rating_tags gallery_tags %}
+
+{% block title %}{{ object|typograf:'title'|safe }} | Конкурсы | {{ block.super }}{% endblock title %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'newyear2014/js/newyear2014_contests.js' %}"></script>
+{% endblock %}
+
+{% block b-content-cr %}
+    <div class="b-content-block b-breadcrumbs">
+        <ul class="b-list-h">
+            <li><a href="{% url 'newyear2014.views.index' %}">2015</a></li>
+            <li><a href="{% url 'newyear2014.views.contests.index' %}">Новогодние конкурсы</a></li>
+            <li>{{ object|typograf:'title'|safe }}</li>
+        </ul>
+    </div>
+    <header class="g-intend">
+        <h1>{{ object|typograf:'title'|safe }}</h1>
+    </header>
+    <article class="b-ny2014-contest">
+        {% if object.image %}
+        {% thumbnail object.image 738x700 as thumb %}
+        <div class="b-ny2014-contest-image"><img src="{{ thumb }}" alt="{{ object.caption|typograf:'title'|safe }}" title="{{ object.caption|typograf:'title'|safe }}"></div>
+        {% endif %}
+        {{ object.content|typograf:'admin'|safe }}
+
+        <div class="b-social">
+            {% share object %}
+        </div>
+    </article>
+    <ul class="b-list-v b-ny2014-contest-participant-list">
+        {% if object.can_rate and object.user_can_add %}
+        <li>
+            <a class="participate g-small" href="{% url 'newyear2014.views.contests.text.create' object.id %}">
+                Участвовать
+            </a>
+        </li>
+        {% endif %}
+        {% for participant in participants %}
+            <li>
+                <h4><a href="{{ participant.get_absolute_url }}">{{ participant.title|typograf:'title'|safe }}</a></h4>
+{#                {% rating participant 'newyear2014/contests/widgets/vote_small.html' %}#}
+                {{ participant.content|truncate_words_to_str_length:"600"|typograf:'user'|safe }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock b-content-cr %}
+

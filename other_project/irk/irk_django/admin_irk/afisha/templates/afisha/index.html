@@ -1,0 +1,131 @@
+{% extends "afisha/layout.html" %}
+
+{% comment %}
+    @name=Афиша главная
+{% endcomment %}
+
+{% load staticfiles media_utils event_admin profile_utils thumbnail site_utils str_utils pytils_dt adv_tags comments_tags cache_tags news_tags afisha_tags %}
+
+{% block title %}{{ block.super }}{% endblock %}
+
+{% block layout-base-class %}{{ block.super }} afisha-940{% endblock %}
+{% block container %}<div class="b-container-padding"><div class="g-overflow">{{ block.super }}</div></div>{% endblock %}
+
+
+{% block b-content-parent %}
+    {% announce_slider %}
+    <div class="grid-wrapper">
+
+    {% comment %}
+    material_block.material_list
+    material_block.url
+    material_block.has_next
+    material_block.next_start_index
+    material_block.next_limit
+    -->
+
+    <!-- <aside class="b-aside-r g-desktop g-mobile_768 j-transform-container j-transform-container-aside-mobile_768 j-transform-container-aside-desktop">
+        <div class="j-transform" data-transform-target="aside">{% include 'afisha/base/b-aside-r-type2.html' %}</div>
+    </aside> -->
+    {% endcomment %}
+
+    <section class="afisha-section">
+        <div class="grid-inner">
+            {% include 'afisha/base/banner/through_banner.html' %}
+
+            {% if prisms %}
+                <div class="b-prism-container g-margin-bottom-30">
+                    <ul class="b-prism-list j-prism-list j-tab-switcher" data-tab-class="j-prism-tab">
+                        {% for prism in prisms %}
+                            <li class="b-prism-list-item">
+                                <a class="b-prism-link j-prism-link{% if forloop.first %} g-active{% endif %}" data-prism-id="{{ prism.id }}" data-tab="j-prism-tab-{{ prism.id }}">
+                                    <span class="icon-inline-svg g-margin-right-5">{{ prism.svg|safe }}</span>
+                                    <span class="b-prism-text j-prism-text">{{ prism.title }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li class="b-prism-list-item">
+                            <a class="b-prism-link j-prism-link" data-tab="j-prism-tab-all">
+                                <span class="icon-inline-svg all g-margin-right-5"></span>
+                                <span class="b-prism-text j-prism-text">Все события</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <h3 class="prism-title-mobile j-prism-title">Актуальное</h3>
+            {% endif %}
+
+        <div class="b-afisha-events-container g-relative g-after-clear">
+            {% if prisms %}
+                {% for prism in prisms %}
+                    <section class="afisha-section afisha-section_nopt j-prism-tab {% if not forloop.first %}g-hide{% endif %}" id="j-prism-tab-{{ prism.id }}">
+                        <div class="g-afisha-preloader">
+
+                            <ul class="grid-list grid-list_white j-prism-tab-list" {% if forloop.first %}data-content="true"{% endif %}>
+                                {% if forloop.first %}{% include "afisha/event/list.html" with banner_insert=True %}{% endif %}
+                            </ul>
+
+                            {% if show_prism_paginator %}
+                                <div class="afisha-more {% if forloop.first and not page_obj.has_next %}g-hide{% endif %} j-prism-more">
+                                    <span class="afisha-more__link">
+                                        Показать еще
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </section>
+                {% endfor %}
+            {% endif %}
+
+            <section class="afisha-section afisha-section_nopt {% if prisms %}g-hide j-prism-tab{% endif %}" id="j-prism-tab-all">
+                {% block b-content-cr %}
+                    <header class="b-afisha-events-header j-events-filter-container">
+                        {% filter_choices view filters.date 'choices' %}
+                        <ul class="g-button-group g-left g-margin-right-20 afisha-filter-group j-event-filter j-event-filter-date j-calendar-url" data-url="/afisha/events/">
+                            <li><span class="g-active">Все</span></li>
+                            {% if choices.today %}<li class="j-filter-date"><span data-date="{{ choices.today|date:"Ymd" }}">Сегодня</span></li>{% endif %}
+                            {% if choices.tomorrow %}<li class="j-filter-date"><span data-date="{{ choices.tomorrow|date:"Ymd" }}">Завтра</span></li>{% endif %}
+                            {% if choices.week %}<li class="g-not-mobile_320 j-filter-date"><span data-date="week">Неделя</span></li>{% endif %}
+                            <li class="b-calendar-open j-calendar-open">
+                                <span><span class="icon-calendar-new"></span></span>
+                                <div class="b-calendar">
+                                    <a href="#" class="b-calendar-close"></a>
+                                    <article></article>
+                                </div>
+                            </li>
+                        </ul>
+                        {% filter_choices view filters.time 'choices' %}
+                        {% if choices|length > 1 %}
+                            <ul class="b-afisha-guide-filter-dropmenu afisha-filter-group g-button-group g-left g-margin-right-20 j-event-filter">
+                                <li><span class="g-active">Весь день</span></li>
+                                {% for time_choice, time_name in choices %}
+                                    <li class="j-filter-time"><span data-time="{{ time_name }}">{{ time_choice }}</span></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </header>
+                    <div class="g-afisha-preloader">
+                        <ul class="grid-list grid-list_white j-prism-tab-list j-afisha-events">
+                            {% if not prisms %}
+                                {% include "afisha/event/list.html" %}
+                            {% endif %}
+                        </ul>
+
+                        <div class="afisha-more j-afisha-events-show {% if prisms %}g-hide{% endif %}">
+                            <span class="afisha-more__link">
+                                Больше интересного
+                            </span>
+                        </div>
+
+                    </div>
+                {% endblock %}
+            </section>
+        </div>
+    </div>
+</section>
+    {% include 'afisha/base/banner/banner_507.html' %}
+    <aside class="b-aside-r g-clear-left g-not-desktop g-not-mobile_768 j-transform-container j-transform-container-aside-mobile_320 j-transform-container-aside-mobile_480 "></aside>
+    {% afisha_extra_announcements event_type %}
+</div>
+{% endblock %}

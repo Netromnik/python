@@ -1,0 +1,30 @@
+{% load adv_tags staticfiles media_utils polls_tags news_tags experts_tags contests_tags %}
+
+{% if type != 'index_bottom' %}
+    {% comment %}
+    {% include 'afisha/base/search.html' %}
+    {% endcomment %}
+    {# Баннер 200х300 #}
+    {% include 'afisha/base/banner/b-banner-200x300.html' %}
+{% endif %}
+
+{% if type != 'index_top' %}
+    {% comment %}
+    {% news_sidebar_block 'article' limit=2 exclude=object %}
+    {% endcomment %}
+
+    {# Баннер 200х100 #}
+    {% include 'afisha/base/banner/b-banner-200x100-r.html' %}
+
+    {% news_sidebar_block 'photo' limit=2 %}
+
+    {% contest_latest template='contests/tags/afisha_latest.html' %}
+
+    {% if type != 'guide' %}
+        {% experts_sidebar_block '140x200' %}
+    {% endif %}
+
+    {% if type == 'cinema_index' %}
+        {% include 'afisha/base/banner/b-banner-aside-r.html' %}
+    {% endif %}
+{% endif %}

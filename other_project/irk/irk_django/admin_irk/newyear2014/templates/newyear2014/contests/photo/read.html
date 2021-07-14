@@ -1,0 +1,61 @@
+{% extends 'newyear2014/layout_cr.html' %}
+
+{% load adv_tags staticfiles media_utils share_utils str_utils thumbnail paginator_utils date_tags rating_tags gallery_tags comments_tags %}
+
+{% block title %}{{ object|typograf:'title'|safe }} | Конкурсы | {{ block.super }}{% endblock title %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'newyear2014/js/newyear2014_contests.js' %}"></script>
+{% endblock %}
+
+{% block b-content-cr %}
+    <div class="b-content-block b-breadcrumbs">
+        <ul class="b-list-h">
+            <li><a href="{% url 'newyear2014.views.index' %}">2015</a></li>
+            <li><a href="{% url 'newyear2014.views.contests.index' %}">Новогодние конкурсы</a></li>
+            <li>{{ object|typograf:'title'|safe }}</li>
+        </ul>
+    </div>
+    <header class="g-intend">
+        <h1>{{ object|typograf:'title'|safe }}</h1>
+    </header>
+    <article class="b-ny2014-contest">
+        {% thumbnail object.image 738x700 as thumb %}
+        <div class="b-ny2014-contest-image"><img src="{{ thumb }}" alt="{{ object.caption|typograf:'title'|safe }}" title="{{ object.caption|typograf:'title'|safe }}"></div>
+        {{ object.content|typograf:'user'|safe }}
+
+        <div class="b-social">
+            {% share object %}
+        </div>
+    </article>
+    <ul class="b-list-h b-ny2014-contest-participant-list">
+        {% if object.can_rate and object.user_can_add %}
+        <li>
+            <a class="image g-join" href="{% url 'newyear2014.views.contests.photo.create' object.id %}">
+                <img src="{% static 'img/contests/g-nophoto.png' %}" alt="">
+            </a>
+            <a class="participate" href="{% url 'newyear2014.views.contests.photo.create' object.id %}">
+                Участвовать
+            </a>
+        </li>
+        {% endif %}
+        {% for participant in participants %}
+            <li>
+                <a class="image" href="{{ participant.get_absolute_url }}">
+                    {% thumbnail participant.image 144x300 as thumb %}
+                    <img src="{{ thumb }}" alt="{% if participant.user %}{{ participant.user|typograf:'title'|safe }}{% else %}{{ participant.name|typograf:'title'|safe }}{% endif %}">
+                </a>
+                {% if object.can_rate %}
+                    {% rating participant 'newyear2014/contests/widgets/vote_small.html' %}
+                {% else %}
+                    {% rating participant 'newyear2014/contests/widgets/vote_small.html' closed %}
+                {% endif %}
+
+                {#                    {% if participant.user %}{{ participant.user|typograf:'title'|safe }}{% else %}{{ participant.name|typograf:'title'|safe }}{% endif %}#}
+                {{ participant.content|typograf:"title"|truncate_words_to_str_length:"100" }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock b-content-cr %}
+

@@ -1,0 +1,32 @@
+{% load staticfiles media_utils %}
+
+<nav>
+    <ul class="b-list-h b-list-tourism-places">
+        {% spaceless %}
+        {% if selected == 'baikal' %}
+            <li class="g-active">
+                <h1>Байкал</h1>
+                <!--[if lte IE 8]><div class="b-tourism-places-resorts-shadows-active-ie"></div><![endif]-->
+            </li>
+        {% else %}
+            <li><h2><a href="{% url 'tourism:places' 'baikal' %}">Байкал</a></h2></li>
+        {% endif %}
+        {% if selected == 'russia' %}
+            <li class="g-active">
+                <h1>Россия</h1>
+                <!--[if lte IE 8]><div class="b-tourism-places-resorts-shadows-active-ie"></div><![endif]-->
+            </li>
+        {% else %}
+            <li><h2><a href="{% url 'tourism:places' 'russia' %}">Россия</a></h2></li>
+        {% endif %}
+        {% if selected == 'abroad' %}
+            <li class="g-active">
+                <h1>Зарубеж</h1>
+                <!--[if lte IE 8]><div class="b-tourism-places-resorts-shadows-active-ie"></div><![endif]-->
+            </li>
+        {% else %}
+            <li><h2><a href="{% url 'tourism:places' 'abroad' %}">Зарубеж</a></h2></li>
+        {% endif %}
+        {% endspaceless %}
+    </ul>
+</nav>

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% comment %}
+        @template
+        @name=Баннеры
+{% endcomment %}
+
+{% load pages str_utils adv_tags %}
+
+{% block title %}
+    {% if flatpage.title %}{{ flatpage.title|typograf:"title" }} | {% endif %}{{ block.super }}
+{% endblock %}
+
+{% block b-content %}
+    {% autoescape off %}
+        <section class="b-content-block">
+            <h1>{{ flatpage.title|typograf }}</h1>
+            {{ flatpage.content|typograf:"admin" }}
+        <section>
+    {% endautoescape %}
+    {% ibanner ID=25  template='adv/div_vert.html' %}
+{% endblock %}

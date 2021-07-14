@@ -1,0 +1,19 @@
+{% load news_tags str_utils comments_tags date_tags utils_tags %}
+
+<li class="b-home-news-list-item {% if forloop.last %} g-last{% endif %}">
+    <h4 class="g-indent-small g-font-size-18 g-font-serif">
+        <a class="{% if entry.is_hidden %}g-hidden-material{% else %}g-color-black visited{% endif %}"
+           href="{{ entry.get_absolute_url }}">{{ entry|typograf }}</a>
+    </h4>
+    {% if entry.has_video %}
+        <span class="icon-inline-svg video"></span>
+    {% endif %}
+    {% if entry.has_audio %}
+        <span class="icon-inline-svg icon-inline-svg-audio g-margin-right-5"></span>
+    {% endif %}
+    <time class="g-color-gray g-font-size-14" datetime="{{ entry.stamp|date:'Y-m-d' }} {{ entry.published_time|date:'H:i' }}">
+        {% if entry.stamp != today %}{{ entry.stamp|dates:'%d %B|%d %B %Y' }}&nbsp;{% endif %}{{ entry.published_time|date:'H:i' }}
+    </time>&nbsp;
+    <span class="g-font-size-14">{% comments_cnt entry new_layout=True %}</span>
+    <a href="{{ entry.get_absolute_url }}" class="g-all-block-link"></a>
+</li>

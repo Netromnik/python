@@ -1,0 +1,73 @@
+{% extends 'contests/layout.html' %}
+
+{% load paginator_utils str_utils thumbnail date_tags news_tags adv_tags %}
+
+{% block container-class %}padding-top-20{% endblock %}
+
+{% block container-header %}
+    <div class="b-container-gray g-clearfix">
+        <div class="b-container">
+            <div class="b-content">
+                <h1 class="b-contests-title-h1">Конкурсы</h1>
+                <h3 class="b-contests-title-h3">Открытые</h3>
+                {% ibanner ID=511 as banner_511 %}
+                <div class="b-contests-opened-container {% if banner_511 %}with-banner{% endif %}">
+                    {% if opened|length > 0 %}
+                        <div class="b-contests-opened">
+                            <ul class="b-contests-opened-list">
+                                {% if banner_511 %}
+                                    <li class="b-contests-opened-banner g-desktop g-right">{{ banner_511 }}</li>
+                                {% endif %}
+                                {% for contest in opened %}
+                                    {% if opened|length > 1 %}
+                                        <li class="b-contests-opened-item">
+                                            {% include 'contests/snippets/material_card/simple.html' with material=contest material_url=contest.get_absolute_url material_image=contest.wide_image image_size='300x142' image_size_gadget='340x200' material_class_modifier='contest' label_text=contest.date_end|dates:'%d %B %Y г.|%d %B %Y г.' label_class='label-contest' %}
+                                        </li>
+                                    {% else %}
+                                        <li class="b-contests-opened-item">
+                                            {% include 'contests/snippets/material_card/double.html' with material=contest label_text=contest.date_end|dates:'%d %B %Y г.|%d %B %Y г.' label_class='label-contest-double' %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <div class="g-clear"></div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block b-content %}
+    <div class="b-content-cr">
+        {% if closed %}
+            <section class="b-contests-closed">
+                <h3 class="b-contests-title-h3">Закрытые</h3>
+
+            <ul class="b-contests-closed-list">
+                {% for contest in closed %}
+                <li class="b-contests-closed-item">
+                    <a href="{{ contest.get_absolute_url }}">
+                        {% if contest.image %}
+                            {% thumbnail contest.image 140x100000 as thumb %}
+                            <div class="b-contests-closed-item-image-container">
+                                <img class="b-contests-closed-item-image" src="{{ thumb }}" alt="{{ contest.title|typograf }}">
+                            </div>
+                        {% endif %}
+                        <h4 class="g-font-size-17 g-font-bold g-margin-bottom-10">{{ contest.title|typograf }}</h4>
+                    </a>
+                    <p class="b-contests-opened-item-caption">{{ contest.caption|typograf }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+            </section>
+        {% endif %}
+
+        {% paginator page_obj limit template='paginator/paginator_2.html' name='конкурсов' %}
+    </div>
+    <aside class="b-aside-r">
+        {% block b-aside-r %}{% include 'contests/base/b-aside-r.html' with opened=opened %}{% endblock b-aside-r %}
+    </aside>
+
+{% endblock %}

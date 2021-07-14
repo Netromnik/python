@@ -1,0 +1,13 @@
+{% load comments_tags date_tags %}
+
+<article class="article-card">
+    <a class="article-card__title" href="{{ material.get_absolute_url }}" target="_blank">{{ material.title }}</a>
+    <footer class="article-card__footer">
+        {% comments_cnt material blank_label='1' %}
+        {% if material.published_time %}
+            <time datetime="{{ material.stamp|date:"Y-m-d" }} {{ material.published_time|date:"H:i" }}">{% if material.stamp != today %}<span class="g-margin-right-5">{{ material.stamp|dates:"%d %B|%d %B %Y" }}</span> {% endif %}{% if material.stamp == today %}{{ material.published_time|date:"H:i" }}{% endif %}</time>
+        {% else %}
+            <time>{{ material.stamp|dates:"%d %B|%d %B %Y" }}</time>
+        {% endif %}
+    </footer>
+</article>

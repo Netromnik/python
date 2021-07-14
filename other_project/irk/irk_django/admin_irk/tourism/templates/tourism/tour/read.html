@@ -1,0 +1,102 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils str_utils thumbnail comments_tags tourism_tags pytils_dt gallery_tags hittags pytils_numeral %}
+
+{% block title %}{{ tour.title|typograf:"title"|safe }} | {{ block.super }}{% endblock %}
+
+{% block b-content %}
+
+<!-- Хлебные крошки -->
+<div class="b-content-block b-breadcrumbs">
+    <nav>
+        <ul class="b-list-h">
+            <li><a href="{% url 'tourism:index' %}">Туризм</a></li>
+            <li><a href="{% url 'tourism:firm:section_firm_list' section_slug=section.slug %}">{{ section|typograf:'title'|safe }}</a></li>
+            <li><a href="{% url 'tourism:firm:read' section_slug=section.slug firm_id=tour.firm.pk %}">{{ tour.firm.name|typograf:'title'|safe }}</a></li>
+        </ul>
+    </nav>
+</div>
+<!-- /Хлебные крошки -->
+
+
+<div class="b-content-block b-tourism-schedule-block">
+    <header class="g-title">
+        <h1>{{ tour.title|typograf:'title'|safe }}</h1>
+        {% hitcounter tour as hit_counter %}
+        {% if hit_counter %}<span class="b-tourism-tour-visits">{{ hit_counter }} {{ hit_counter|choose_plural:'просмотр, просмотра, просмотров' }}</span>{% endif %}
+        {% if can_edit %}
+        <div class="b-tourism-company-edit-block">
+            <a href="{% url 'tourism:tour:edit' tour.pk %}?section={{ section.slug }}" class="g-color-green"><img src="{% static 'tourism/img/action-edit.png' %}">редактировать информацию</a>
+        </div>
+        {% endif %}
+    </header>
+
+    <article class="b-tourism-tour-info-block">
+
+        <section class="b-tourism-tours-info-block">
+            <table class="b-table">
+                <tbody>
+                <tr class="thead">
+                    <th>Отправление</th>
+                    <th>Продолжительность</th>
+                    <th>Цена от (руб)</th>
+                </tr>
+                    <tr>
+                        <td>
+                            {% for date in tour.get_dates %}
+                            <span style="white-space: nowrap;">{{ date.0|ru_strftime:"%d %B" }}{% if date.1 %} - {{ date.1|ru_strftime:"%d %B" }}{% endif %}{% if not forloop.last %},{% endif %}</span>
+                            {% endfor %}
+                        </td>
+                        <td>{{ tour.nights }}</td>
+                        <td><span class="g-color-orange"><b>{{ tour.price }}</b></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="b-tourism-firm-info-block">
+            {% if tour.firm.address_set.count %}
+                {% for address in tour.firm.address_set.all|slice:"1" %}
+                    <p>
+                        <span>{{ address }}</span>
+                        {% if address.phones %}
+                            <span class="phones"><span>{{ address.phones|typograf }}</span></span>
+                        {% endif %}
+                    </p>
+                    {% if address.worktime %}
+                        <p><span class="g-color-gray">Часы работы:</span><time>{{ address.worktime|typograf }}</time></p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if tour.firm.url or tour.firm.mail %}
+            <p>
+                {% if tour.firm.url %}
+                <span class="web g-color-green">{{ tour.firm.url|urlize|lower }}</span>
+                {% endif %}
+                {% if tour.firm.mail %}
+                <span class="email g-color-green"><script type="text/javascript">{{ tour.firm.get_email|safe }}</script></span>
+                {% endif %}
+            </p>
+            {% endif %}
+        </section>
+
+        <section class="b-tour-description">
+            {{ tour.description|typograf:"user"|safe }}
+
+            {% if tour.file %}
+            <div class="download-doc-file-border">
+                <p><a href="{{ tour.file.url }}">Скачать описание, {{ tour.file.size|filesizeformat }}</a></p>
+                <span>Клик правой кнопкой мыши — Сохранить как...</span>
+            </div>
+            {% endif %}
+
+            <div class="b-gallery-block">
+                {% gallery tour.gallery.main_gallery "1000x75" %}
+            </div>
+        </section>
+
+
+    </article>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'special/layout.html' %}
+
+{% load cache_tags staticfiles media_utils str_utils thumbnail comments_tags share_utils site_utils news_tags polls_tags comments_tags special_tags %}
+
+{% block title %}{{ object.title|typograf }} | Подкасты | {{ block.super }}{% endblock title %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'podcast.instance.meta' vary='object.id' tags='article,object' %}{% spaceless %}
+        {% include 'share_meta.html' with card='summary_large_image' url=object.get_absolute_url title=object.title description=object.caption image=object.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/ifvisible.js' %}"></script>
+{% endblock %}
+
+{% block b-content-parent %}
+    <div class="b-content">
+        {% block b-content-header %}
+            <div class="b-news-content-header g-margin-bottom-25">
+                {% include 'news-less/base/search.html' %}
+
+                {% news_rubricator obj=object %}
+            </div>
+        {% endblock %}
+        {% if object.project %}
+            <div class="special__link-container special__link-container_left g-margin-bottom-20">
+                {% include 'special/snippets/link.html' with name=object.project.title|typograf url=object.project.get_absolute_url %}
+            </div>
+        {% endif %}
+
+        {% include 'news-less/podcast/snippets/read_base.html' %}
+    </div>
+{% endblock %}

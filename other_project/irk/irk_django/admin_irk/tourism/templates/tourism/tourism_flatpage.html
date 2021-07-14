@@ -1,0 +1,23 @@
+{% extends "tourism/layout_lc.html" %}
+{% comment %} 
+        @template
+        @name=Туризм
+{% endcomment %}
+
+{% load pages str_utils site_utils %}
+
+{% block title %}
+	{% if flatpage.title %}{{ flatpage.title|typograf }} | {% endif %}{{ block.super }}
+{% endblock %}
+
+{% block content %}
+	<section class="b-content-block b-tourism-flatpage-block">
+        <article class="b-tourism-flatpage-info b-tourism-schedule-block b-content-article">
+            <header class="g-title">
+                <h1>{{ flatpage.title|typograf }}</h1>
+            </header>
+
+            <div class="b-content-article-text j-copyright-insert" data-url="http://{% get_site_url 'www' %}{{ flatpage.get_absolute_url }}">{{ flatpage.content|typograf:"admin,false" }}</div>
+        </article>
+	</section>
+{% endblock %}

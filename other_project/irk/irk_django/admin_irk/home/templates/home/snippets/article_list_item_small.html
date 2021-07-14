@@ -1,0 +1,18 @@
+{% load news_tags str_utils comments_tags date_tags utils_tags %}
+
+<li class="b-widget-text{% if article.is_hidden %} g-hidden-material{% endif %}">
+    <h4>
+        <a href="{{ article.get_absolute_url }}" class="{% if article.is_hidden %}g-hidden-material{% else %}g-color-black visited{% endif %}{% if metrika_goal %} j-metrika-goal{% endif %}"{% if metrika_goal %} data-metrika-goal="{{ metrika_goal }}"{% endif %}>
+            {{ article|typograf }}
+        </a>
+    </h4>
+    {% if article.caption and article.title|length < 60 %}<p>{{ article.caption|typograf|truncatechars:'70' }}</p>{% endif %}
+{#    <time class="g-color-gray g-font-size-12" datetime="{{ article.stamp|date:'Y-m-d' }} {{ article.published_time|date:'H:i' }}">{{ article.stamp|dates:'%d.%m|%d.%m.%Y' }}&nbsp;{{ article.published_time|date:'H:i' }}</time>&nbsp;#}
+    {% if metrika_goal %}
+        <span class="g-font-size-12 j-metrika-goal" data-metrika-goal="{{ metrika_goal }}">{% comments_cnt article new_layout=True %}</span>
+        <a href="{{ article.get_absolute_url }}" class="g-all-block-link j-metrika-goal" data-metrika-goal="{{ metrika_goal }}"></a>
+    {% else %}
+        <span class="g-font-size-12">{% comments_cnt article new_layout=True %}</span>
+        <a href="{{ article.get_absolute_url }}" class="g-all-block-link"></a>
+    {% endif %}
+</li>

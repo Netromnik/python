@@ -1,0 +1,93 @@
+{# Шаблон старого пагинатора, без ссылок на предыдущую/следующую страницу. Только список номеров страниц и количество объектов на страницу #}
+
+{% load math_utils pytils_numeral%}
+
+{% if legacy.ppp and paginator.paginator.num_pages > 1 %}
+    <nav class="b-topic-forum-pagenator">
+
+        {% with legacy.ppp|slice:"1:"|first|first as min_limit %}
+            {% if paginator.paginator.count > min_limit %}
+                <span>Страница:</span>
+                {% if first %}
+                    <a href="./{% if legacy.order %}?order={{ legacy.order }}{% endif %}{% if legacy.direction %}&amp;dir={{ legacy.direction }}{% endif %}{% if legacy.state %}&amp;state={{ legacy.state }}{% endif %}{% if legacy.s %}{{ legacy.s }}{% endif %}">первая</a>
+                {% endif %}
+
+                {% if paginator.has_previous %}
+                    <a id="prevPage" href="./?page={{ paginator.previous_page_number }}{% if legacy.order %}&amp;order={{ legacy.order }}{% endif %}{% if legacy.direction %}&amp;dir={{ legacy.direction }}{% endif %}{% if legacy.state %}&amp;state={{ legacy.state }}{% endif %}{% if legacy.s %}{{ legacy.s }}{% endif %}">&laquo;</a>
+                {% endif %}
+
+                {% for page in paginator.page_range %}
+                    {% if page == paginator.number %}
+                        <span class="curr-page">{{ page }}</span>
+                    {% else %}
+                        {% if page == 1 %}
+                            <a href="./{% if legacy.order %}?order={{ legacy.order }}{% endif %}{% if legacy.direction %}&amp;dir={{ legacy.direction }}{% endif %}{% if legacy.state %}&amp;state={{ legacy.state }}{% endif %}{% if legacy.s %}{{ legacy.s }}{% endif %}">{{ page }}</a>
+                        {% else %}
+                            <a href="./?page={{page}}{% if legacy.order %}&amp;order={{ legacy.order }}{% endif %}{% if legacy.direction %}&amp;dir={{ legacy.direction }}{% endif %}{% if legacy.state %}&amp;state={{ legacy.state }}{% endif %}{% if legacy.s %}{{ legacy.s }}{% endif %}">{{ page }}</a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if paginator.has_next %}
+                    <a id="nextPage" href="./?page={{ paginator.next_page_number }}{% if legacy.order %}&amp;order={{ legacy.order }}{% endif %}{% if legacy.direction %}&amp;dir={{ legacy.direction }}{% endif %}{% if legacy.state %}&amp;state={{ legacy.state }}{% endif %}{% if legacy.s %}{{ legacy.s }}{% endif %}">&raquo;</a>
+                {% endif %}
+
+                {% if last %}
+                    <a href="./?page={{ paginator.paginator.num_pages }}{% if legacy.order %}&amp;order={{ legacy.order }}{% endif %}{% if legacy.direction %}&amp;dir={{ legacy.direction }}{% endif %}{% if legacy.state %}&amp;state={{ legacy.state }}{% endif %}{% if legacy.s %}{{ legacy.s }}{% endif %}">последняя</a>
+                {% endif %}
+
+            {% endif %}
+
+        {% endwith %}
+
+        {% if legacy.ppp|slice:"1:"|first|first < paginator.paginator.count %}
+            <nobr>
+                <span>Выводить по:</span>
+                <select class="b-page-limit" name="limit">
+                    {% for choice in legacy.ppp|slice:'1:'|first %}
+                    <option value="{{ choice }}"
+                    {% if legacy.ppp|slice:"0:"|first == choice %}
+                        selected="selected"
+                    {% endif %}>{{ choice }}</option>
+                    {% endfor %}
+                </select> <span>{{ plural_name }}</span>
+            </nobr>
+        {% endif %}
+
+    </nav>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function moveWithCtrlKey(e) {
+                var link = null;
+                if (e.ctrlKey && e.keyCode == 37) {
+                    link = $('#prevPage').attr("href");
+                }
+                if (e.ctrlKey && e.keyCode == 39) {
+                    link = $('#nextPage').attr("href");
+                }
+                if (link) document.location = link;
+            }
+            function bindMovingWithCtrlKey() {
+                $(document).bind('keydown', moveWithCtrlKey);
+            }
+            function unbindMovingWithCtrlKey() {
+                $(document).unbind('keydown', moveWithCtrlKey);
+            }
+
+            window.irk.shadowLayer.onOpen = unbindMovingWithCtrlKey;
+            window.irk.shadowLayer.onClose = function(){
+                bindMovingWithCtrlKey();
+                try{
+                    $(document).unbind('keydown', $.imgView.moveWithCtrlKey);
+                } catch(e) {}
+            };
+
+            bindMovingWithCtrlKey();
+            $('.b-page-limit').change(function () {
+                var link = '{{ legacy.set_option_url }}?next={{ legacy.next }}&page={{ legacy.page }}&value=' + $(this).val() + '&param=forum.topicmessagesonpage';
+                if (link) document.location = link;
+            });
+        });
+    </script>
+{% endif %}

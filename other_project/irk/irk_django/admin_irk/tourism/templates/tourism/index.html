@@ -1,0 +1,51 @@
+{% extends 'tourism/layout.html' %}
+
+{% load staticfiles media_utils tourism_tags str_utils adv_tags cache_tags thumbnail %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block container %}
+<div class="b-container b-container_wide">
+    {% block b-notification %}{% endblock %}
+
+    {% block b-adword-header %}
+        {{ block.super }}
+    {% endblock b-adword-header %}
+
+    {% block b-content-parent %}
+        <div class="grid-wrapper">
+            <div class="grid-inner">
+                <article class="b-content{% block b-content-class %}{% endblock %}">
+                    {% block b-content-header %}{% endblock b-content-header %}
+
+                    {% block b-content %}
+                        {{ block.super }}
+
+                        <div class="grid-list grid-list_nowrap grid-list_wrap-900">
+                            <div class="grid-list__item grid-list__item_x3 grid-list__item_100">
+                                <div class="grid-list__content">
+                                    <!-- Колонка статей -->
+                                    {% include 'tourism/base/reports.html' %}
+                                    <!-- /Колонка статей -->
+                                </div>
+                            </div>
+                            <aside class="grid-list__item grid-list__item_aside">
+                                {% include 'tourism/base/b-aside-r.html' with type='index' %}
+                            </aside>
+                        </div>
+                    {% endblock b-content %}
+
+                    {% block b-content-footer %}{% endblock b-content-footer %}
+                </article>
+            </div>
+        </div>
+    {% endblock b-content-parent %}
+
+    {% block b-footer-layout-banner %}
+        {{ block.super }}
+    {% endblock %}
+</div>
+{% endblock %}
+

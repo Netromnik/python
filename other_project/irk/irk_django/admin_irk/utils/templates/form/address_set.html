@@ -1,0 +1,174 @@
+{% load staticfiles media_utils %}
+
+<div class="address-set">
+	{{ address_form.management_form }}
+    <div id="AddressFormSet">
+        {% for form_address in address_form.forms %}
+            {% include 'form/address_set-entry.html' %}
+    	{% endfor %}
+
+    </div>
+    <div id="empty-adress-set-form" style="display:none;">
+        {% with address_form.empty_form as form_address %}
+            {% include 'form/address_set-entry.html' %}
+        {% endwith %}
+    </div>
+    {% if address_form.max_num == 0 or address_form.max_num > address_form.forms|length %}
+	<div id="add-address">
+		<a class="noLink g-color-green" href="" rev="{{ forloop.counter }}"><img alt="" src="{% static 'tourism/img/action-add.png' %}" align="absmiddle" /> <span class="jsLink">Добавить ещё один адрес</span></a>
+	</div>	
+	{% endif %}
+	<script type="text/javascript">
+		var address = {
+	    	show : function () {
+                var FORM_NUMBER_ATTR = 'data-form-number';
+                
+                var mainSet = $('#AddressFormSet');
+	    		var emptyForm = $('.address-item', '#empty-adress-set-form').clone();
+                var id = $('.address-item:last', mainSet).attr(FORM_NUMBER_ATTR) * 1 + 1;
+                
+                var counter = $('#id_address_set-TOTAL_FORMS');
+                counter.val(
+                    counter.val() * 1 + 1
+                )
+                
+                emptyForm
+                    .html(
+                        emptyForm.html()
+                            .replace(/__prefix__/g, id - 1)
+                            .replace(/__jsprefix__/g, id)
+                    )
+                    .attr(FORM_NUMBER_ATTR, id)
+                    .attr('id', emptyForm.attr('id') + id)
+                    .find(".autocomplete_input").each(function() {
+                        StartAutocomplete(this);
+                    }).end()
+                    .appendTo(mainSet);
+	    	},
+	    	hide : function (ref) {
+                function isNew(form){
+                    return !!+form.attr('data-is-new');
+                }
+                
+                var form = $('#' + ref);
+	    		if(isNew(form)) {
+                    form.fadeOut('fast', function(){
+                        form.remove();
+                    });
+                } else {
+                    form
+                        .fadeTo('slow', 0, function() {$(this).hide();})
+                        .find('.delete-addr').val($('.inst-id', form).val()).end()
+                        .find('.del-address').hide().end()
+                        .find('.re-address').show();
+                }
+	    	},
+	    	restore: function(ref) {
+                var form = $('#' + ref);
+                form
+                    .fadeTo(0, 1)
+                    .find('.delete-addr').val("").end()
+                    .find('.del-address').show().end()
+                    .find('.re-address').hide();
+            },
+	    	init : function () {
+	    		$('#add-address').on('click', 'a', function (event) {
+                    event.preventDefault();
+	    			address.show();
+	    		});
+	    		$('body').on('click', 'a.del-address', function (event) {
+                    event.preventDefault();
+	    			address.hide($(this).attr('ref'));
+	    			
+	    		});
+	    		$('body').on('click', 'a.re-address', function (event) {
+                    event.preventDefault();
+	    			address.restore($(this).attr('ref'));
+	    		});
+	    	}
+	    };
+	
+		function StreetAutocompleteCallback (event, data, formatted) {
+			if(data!=undefined){
+				var id = data[0].split('=')[0];
+			}else{
+				var id = '';
+			}
+			if (id.length > 0) {
+		    	var name = $(event.target).attr('id');
+		    	name = name.replace('streetname', 'streetid');
+		    	$('#'+name).val(id);
+			}
+		}
+	
+		function UserAutocompleteCallback(event, data, formatted) {
+		    if (data != undefined) {
+		        var id = data[0].split('=')[0];
+		    } else {
+		        var id = '';
+		    }
+		    if (id.length > 0) {
+		        var name = $(event.target).attr('id');
+		        name = name.replace('username', 'user');
+		        $('#'+name).val(id);
+		    }
+		}
+	
+		function StartAutocomplete(obj,city) {
+			
+			var url = $(obj).attr("url");
+			var callback = $(obj).attr("callback");
+			var width = $(obj).attr("width");
+			$('.ac_results').css({'width': width});
+			
+			if(city==undefined && obj.id.indexOf("id_address_set")==0){
+				id_data = obj.id.split("-")
+				id_data.pop()
+				id_data.push("city_id")
+				city = $("#" + id_data.join("-")).val();
+				
+			}
+			if(city!=undefined){
+				url = url + "?city__id=" + city;
+			}
+	
+			$(obj).keyup(function(eventObject){
+				if(this.value.replace(/^\s+|\s+$/g,"") !== ''){
+					eval(callback+"(eventObject)");
+				}
+			});
+			
+			$(obj).autocomplete(url, {
+				delay: 100,
+				width: 400,
+				minChars: 1,
+				matchContains: true,
+				formatResult: function(row, i, max) {
+					return row[0].split('=')[1];
+				},
+				formatItem: function(row, i, max) {
+					return row[0].split('=')[1];
+				},
+				formatMatch: function(row, i, max) {
+					return row[0].split('=')[1];
+				}	
+			}).result(eval(callback));
+		}
+	
+		$(document).ready(function() {
+		    address.init();
+			$(".autocomplete_input").each(function() {
+				StartAutocomplete(this);
+			});
+			$(".cit_selector").change(function(){
+				id_data = this.id.split("-")
+				id_data.pop()
+				id_data.push("streetname")
+				obj = $("#" + id_data.join("-"))
+				var url = $(obj).attr("url");
+				obj.setOptions({"url":url+"?city__id="+$(this).val()});	
+			})
+		});	
+	</script>	
+	
+</div>

@@ -1,0 +1,78 @@
+{% extends 'newyear2014/layout.html' %}
+{% load staticfiles adv_tags newyear2014_tags thumbnail media_utils share_utils str_utils %}
+
+{% block title %}Новостная мозаика | {{ block.super }}{% endblock title %}
+{% block viewport %}
+    <meta name="viewport" content="width=1050, initial-scale=0.75">
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'newyear2014/js/puzzle/puzzle.js' %}"></script>
+{% endblock %}
+
+{% block b-content %}
+    <h1 class="g-intend">Новостная мозаика</h1>
+    <!-- Game canvas -->
+    <div class="b-ny2014-puzzle g-preload">
+        <ul class="b-ny2014-puzzle-list g-hide">
+            {% for puzzle in objects %}
+                {% thumbnail puzzle.image 960x600 as thumb %}
+                <li data-img="{{ thumb }}"><a href="{{ puzzle.url }}">{{ puzzle.title|typograf:"title"|safe }}</a></li>
+            {% endfor %}
+        </ul>
+        <canvas class="b-ny2014-puzzle-canvas" id="canvas"></canvas>
+    </div>
+    {% include 'newyear2014/base/browsers.html' %}
+    <section class="b-social go-center g-intend">
+        <div class="share" id="social-buttons">
+            <div class="share-twitter">
+                <a href="http://twitter.com/share?url=http%3A%2F%2Fwww.irk.ru/2014/puzzle/%3Futm_source%3Dtwitter%26utm_medium%3Dmicroblog%26utm_campaign%3Dtwitter1&amp;text=Новостная%20мозаика&amp;related=tvoyirkutsk" class="twitter-share-button">Tweet</a>
+            </div>
+            <div class="share-vkontakte"></div>
+            <div class="share-facebook">
+                <div id="fb-root"></div>
+                <div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-action="recommend" data-href="{{ request.scheme }}://{% get_site_url www %}/2014/puzzle/?utm_source=facebook&utm_medium=socialnetwork"></div>
+            </div>
+            <div id="ok_shareWidget" class="share-odnoklassniki"></div>
+        </div>
+        <script type="text/javascript">
+            yepnope([
+                {load: 'http://platform.twitter.com/widgets.js'},
+                {load: 'http://connect.facebook.net/ru_RU/all.js#xfbml=1'},
+                {
+                    load: 'http://vkontakte.ru/js/api/share.js',
+                    complete: function() {
+                        try {
+                            $('#social-buttons .share-vkontakte').append(
+                                    VK.Share.button({
+                                        type: 'round',
+                                        text: 'Сохранить',
+                                        url: '{{ request.scheme }}://{% get_site_url www %}/2014/puzzle/?utm_source=vk&utm_medium=socialnetwork&utm_campaign=vk1',
+                                        title: 'Новостная мозаика',
+                                        noparse: true
+                                    })
+                            );
+                        } catch (e) {}
+                    }
+                },
+                {
+                    load:
+                            !function (d, id, did, st) {
+                                var js = d.createElement("script");
+                                js.src = "http://connect.ok.ru/connect.js";
+                                js.onload = js.onreadystatechange = function () {
+                                    if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
+                                        if (!this.executed) {
+                                            this.executed = true;
+                                            setTimeout(function () {
+                                                OK.CONNECT.insertShareWidget(id,did,st);
+                                            }, 0);
+                                        }
+                                    }};
+                                d.documentElement.appendChild(js);
+                            }(document,"ok_shareWidget","http://irk.ru/2014/puzzle/","{width:145,height:30,st:'rounded',sz:20,ck:1}")
+                }
+            ]);
+        </script>
+    </section>
+{% endblock b-content %}

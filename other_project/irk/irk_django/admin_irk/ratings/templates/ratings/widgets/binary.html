@@ -1,0 +1,30 @@
+{% load staticfiles %}
+
+<span class="list-comments__rating-container j-rating-container">
+    {% if request.user_agent.is_gadget %}
+        <div class="mobile-rating j-mobile-rating{% if is_rated %} hidden{% endif %}">
+            <span data-href="{% url 'ratings:rate' %}?ct={{ content_type.pk }}&amp;obj={{ obj.pk }}&amp;value=-1{% if next %}&amp;next={{ next }}{% endif %}" class="mobile-rating__link minus j-rating-link j-minus"></span>
+            <span data-href="{% url 'ratings:rate' %}?ct={{ content_type.pk }}&amp;obj={{ obj.pk }}&amp;value=1{% if next %}&amp;next={{ next }}{% endif %}" class="mobile-rating__link plus j-rating-link j-plus"></span>
+            <span href="#" class="mobile-rating__link close j-mobile-rating-close"></span>
+        </div>
+    {% endif%}
+
+    <span class="list-comments__rating j-rating">
+        {% if not request.user_agent.is_gadget %}
+            <span title="Плохой комментарий" data-href="{% url 'ratings:rate' %}?ct={{ content_type.pk }}&amp;obj={{ obj.pk }}&amp;value=-1{% if next %}&amp;next={{ next }}{% endif %}" class="list-comments__button list-comments__button_minus j-rating-link j-minus {% if is_rated %}hidden{% endif %}"></span>
+        {% endif%}
+        <span class="list-comments__rating-text j-rating-current {% if request.user_agent.is_gadget %}list-comments__rating-text_mobile{% endif %}">
+            {% if request.user_agent.is_gadget %}
+                <span class="list-comments__target"></span>
+            {% endif %}
+            {% if rating %}
+                {% if rating.total_sum > 0 %}+{% endif %}{{ rating.total_sum }}
+            {% else %}
+                0
+            {% endif %}
+        </span>
+        {% if not request.user_agent.is_gadget %}
+            <span title="Хороший комментарий" data-href="{% url 'ratings:rate' %}?ct={{ content_type.pk }}&amp;obj={{ obj.pk }}&amp;value=1{% if next %}&amp;next={{ next }}{% endif %}" class="list-comments__button list-comments__button_plus j-rating-link j-plus {% if is_rated %}hidden{% endif %}"></span>
+        {% endif%}
+    </span>
+</span>

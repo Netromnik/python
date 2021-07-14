@@ -1,0 +1,11 @@
+{% extends "to_user.html" %}
+
+{% load site_utils str_utils %}
+
+{% block user_name %}{{ comment.user }}{% endblock %}
+
+{% block body_letter %}
+    <h3>Ваше сообщение удалено модератором на сайте Ирк.ру</h3>
+    <p>Ваше сообщение было удалено, так как не соответствует нашим правилам.</p>
+    <p>Текст Вашего сообщения приведён ниже:<br/><i>{{ comment.text|typograf:'user' }}</i></p>
+{% endblock %}

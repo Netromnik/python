@@ -1,0 +1,48 @@
+{% load static staticfiles media_utils site_utils options cache thumbnail cache_tags str_utils thumbnail news_tags pytils_dt pytils_numeral admin_utils %}
+
+{# header v3 with image #}
+<div class="article__header article__header_v3">
+    {% block article-header-inner %}
+        <div class="article__header__inner article__header__inner_v3">
+            <div class="article__header__bottom">
+                <h1 class="article__title">
+                    {{ object.title|typograf }}
+                    {% get_object_admin_link object %}
+                </h1>
+                <div class="article__info">
+                    {# автор #}
+                    {% if object.author %}
+                        <span class="article__info__item article__info__item_author">
+                            {{ object.author|typograf:'admin' }}
+                        </span>
+                    {% endif %}
+                    {# дата #}
+                    <time datetime="{{ object.stamp|date:'Y-m-d' }}" class="article__info__item">
+                        {{ object.stamp|ru_strftime:'%d %B %Y г.' }}
+                    </time>
+                    {# кол-во комментариев #}
+                    {% if object.comments_cnt %}
+                        <a href="#comments" class="article__info__item">
+                            {{ object.comments_cnt|get_plural:'комментарий,комментария,комментариев' }}
+                        </a>
+                    {% endif %}
+                    {# время чтения #}
+                    <span class="article__info__item">
+                        около {{ object.content|time_to_read|get_plural:"минуты,минут,минут" }} на чтение
+                    </span>
+
+                    {% if object.project %}
+                        <a href="{{ object.project.get_absolute_url }}" class="article__info__item article__info__item_project">
+                            {{ object.project.title }}&nbsp;→
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    <div class="article__header__img">
+        {% thumbnail object.header_image 1920x600 quality=100 stretch=1 as thumb %}
+        <img src="{{ thumb }}" alt="{% if object.image_label %}{{ object.image_label|typograf }}{% else %}{{ object.title|typograf }}{% endif %}">
+    </div>
+</div>

@@ -1,0 +1,118 @@
+{% load adv_tags staticfiles cache_tags str_utils thumbnail comments_tags share_utils site_utils news_tags polls_tags pytils_dt pytils_numeral admin_utils %}
+
+{% comment %}
+    Аналог news-less/article/read_base.html, но использует другие поля
+{% endcomment %}
+
+{% tilda_styles object %}
+{% tilda_scripts object %}
+
+<article class="b-content-article type_2 g-content-block tilda-article">
+    {# Адаптивный баннер #}
+    {% if not object.is_advertising and request.user_agent.is_gadget %}
+        {% ibanner id=545 as programmatic_banner_in_article %}
+        {% include 'news-less/base/banner/b-adaptive_banner-320x320.html' %}
+    {% endif %}
+    {% cache 86400 "article.instance.read" vary="object.id,is_moderator" tags="object" %}
+        <header class="b-content-article-header">
+            {# Баннер 554 Новости и статьи. Мобильный баннер над заголовком. #}
+            {% include 'news-less/base/banner/adaptive_banner_320x100_title.html' %}
+            <h1>
+                {{ object.title|typograf }}
+                {% get_object_admin_link object %}
+            </h1>
+            <div class="g-subtitle g-color-gray g-after-clear">
+                <time datetime="{{ object.stamp|date:'Y-m-d' }}" class="g-margin-right-10">{{ object.stamp|ru_strftime:'%d %B %Y г.' }}</time>
+                {% if object.comments_cnt %}<a href="#comments" class="g-hover">{{ object.comments_cnt|get_plural:'комментарий,комментария,комментариев' }}</a>{% endif %}
+            </div>
+        </header>
+
+        <div class="tilda-article__content {% if not request.user.is_staff %}j-article-scrollDepth-init j-article-scrollDepth-point_1{% endif %}" data-scrolldepth-url="/hydra/material/scroll_depth/" data-material-id="{{ object.pk }}">
+            <div class="j-article-scrollDepth-point_2"></div>
+            {% if object.introduction %}
+                <div class="b-content-article-introduction b-content-article-text">
+                    <p>{{ object.introduction|typograf:"admin" }}</p>
+                    {% share_custom obj_pk=object.pk url=object.get_absolute_url description=object.introduction|typograf stamp=object.stamp social_statistic=social_statistic %}
+                </div>
+            {% endif %}
+            <div class="b-content-article-text g-relative j-banners-article-text j-copyright-insert j-article-scrollDepth-start_read j-article-scrollDepth-read_time {% if not request.user.is_staff %}js-mediator-article{% endif %}" data-url="http://{% get_site_url 'www' %}{{ object.get_absolute_url }}">
+                {{ programmatic_banner_in_article }}
+
+                {% block b-content-article-text %}{% tilda_content object %}{% endblock %}
+
+                <div class="b-content-article-text-scrollDepth-middle j-article-scrollDepth-point_3"></div>
+            </div>
+            {% if not request.user.is_staff %}{% include 'mediator.html' %}{% endif %}
+
+            <footer class="b-content-article-footer j-article-scrollDepth-point_4">
+                {% if object.author %}<div class="b-content-article-author">{{ object.author|typograf:'admin' }}</div>{% endif %}
+
+                <div class="g-color-lightgray_2 g-indent g-font-base g-font-size-12 g-not-mobile">
+                    <p class="g-margin-bottom-5">URL:&nbsp;http://{% get_site_url www %}{{ object.get_absolute_url }}</p>
+
+                    <p class="MisprintSnippet">Чтобы сообщить об опечатке, выделите текст и нажмите <kbd>Ctrl</kbd>+<kbd>Enter</kbd></p>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            window.irk.misprintEngine.init();
+                        });
+                    </script>
+                </div>
+
+                {% if not object.is_hidden %}
+                    {% share_custom obj_pk=object.pk url=object.get_absolute_url description=object.title stamp=object.stamp social_statistic=social_statistic %}
+                {% endif %}
+
+                {% include 'news-less/subjects/snippets/subject_link.html' %}
+            </footer>
+
+    {% endcache %}
+            {% related_poll object 'polls/snippets/related_poll_less.html' %}
+        </div>
+    {% comment %}
+    <aside class="b-aside-r j-article-aside-float" data-float-target="content">
+        {% block b-aside-r %}{% include "news-less/article/b-aside-r.html" %}{% endblock %}
+    </aside>
+    {% endcomment %}
+</article>
+
+{% if object.is_advertising %}
+    {% ibanner ID=509 as banner_under_article %}
+{% else %}
+    {% ibanner ID=508 as banner_under_article %}
+{% endif %}
+
+{% if not hide_comments %}
+    <div class="tilda-article__comments">
+        <div class="b-content-cr g-margin-bottom-50 j-article-aside-float-target j-article-aside-float-target-comments">
+            {% if banner_under_article %}
+                <div class="g-desktop g-indent g-clear-left">{{ banner_under_article }}</div>
+            {% endif %}
+
+            {% comments object %}
+            {# Баннер 555 Новости и статьи. Мобильный баннер под комментариями. #}
+            {% include 'news-less/base/banner/adaptive_banner_320x100_comments.html' %}
+        </div>
+        <aside class="b-aside-r j-article-aside-float" data-float-target="comments" data-hide-first="true">
+            <div class="sticky j-article-aside-float-block g-accelerate">
+                {% hot_discussion current_object=object %}
+                {# Баннер под горячими обсуждениями, если комментов первго уровня >= 2 #}
+                {% include 'news-less/base/banner/under-hot-discussion.html' %}
+            </div>
+        </aside>
+        <div class="g-clear"></div>
+    </div>
+{% else %}
+        {% if banner_under_article %}
+            <div class="b-content-cr g-desktop g-indent g-clear-left">{{ banner_under_article }}</div>
+            <div class="g-clear"></div>
+        {% endif %}
+    <div class="g-clear"></div>
+{% endif %}
+
+{% block extra_news %}
+    {% if wide == True %}
+        {% news_extra_materials wide=True audit_material=object.id audit_goal='extra_clicks' %}
+    {% else %}
+        {% news_extra_materials audit_material=object.id audit_goal='extra_clicks' %}
+    {% endif %}
+{% endblock %}

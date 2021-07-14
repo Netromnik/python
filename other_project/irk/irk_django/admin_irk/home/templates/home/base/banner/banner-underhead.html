@@ -1,0 +1,7 @@
+{% load adv_tags %}
+{% ibanner ID=70 template='adv/banners/banner_layout.html' as banner %}
+{% if banner %}
+    <section class="b-adwords-banner-underhead g-desktop">
+        {{ banner }}
+    </section>
+{% endif %}

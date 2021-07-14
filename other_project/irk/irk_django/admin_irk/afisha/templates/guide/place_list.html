@@ -1,0 +1,25 @@
+{% load staticfiles event_admin profile_utils thumbnail comments_tags site_utils str_utils pytils_dt adv_tags map_tags cache_tags news_tags rating_tags afisha_tags paginator_utils %}
+
+{% for firm, address in firms_arr %}
+    <li class="places-list__item">
+        <section>
+            <header>
+                <h5 class="places-list__title">
+                    <a class="places-list__link" href="{{ firm.get_absolute_url }}">
+                        {{ firm.guide.name|typograf }}
+                    </a>
+                </h5>
+            </header>
+            <div class="places-list__address">
+                {% if address.0.phones %}
+                    {{ address.0.phones|typograf:"title"|safe }}
+                {% endif %}
+            </div>
+            <div class="places-list__bottom">
+                {% map_address firm.main_address %}
+                {% comments_cnt firm new_layout=True extra_class='places-list__comments' %}
+            </div>
+            <div id="j-places-map{{ address.0.id }}" class="places-list__map j-places-map j-places-map{{ address.0.id }}" data-map-id="{{ address.0.id }}"></div>
+        </section>
+    </li>
+{% endfor %}

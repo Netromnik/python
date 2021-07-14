@@ -1,0 +1,26 @@
+{% load str_utils thumbnail date_tags comments_tags utils_tags cache_tags pytils_numeral pytils_dt %}
+
+<article class="b-widget-article-big">
+    <a href="{{ material.get_absolute_url }}" class="b-widget-article-big-link{% if metrika_goal %} j-metrika-goal" data-metrika-goal="{{ metrika_goal }}{% endif %}">
+        {% if material.wide_image %}
+            {% thumbnail material.wide_image 805x345 crop as thumb %}
+            <img src="{{ thumb }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px">
+        {% endif %}
+        <section{% if not material.comments_cnt or material.comments_cnt == 0%} class="bottom-20"{% endif %}>
+            <header>
+                {% if material|classname != 'Metamaterial' %}
+                    <span class="b-widget-article-big-category">
+                        {{ material.label }}
+                    </span>
+                {% endif %}
+                <h2>{{ material.title|typograf }}</h2>
+            </header>
+            <p>{{ material.caption|typograf }}</p>
+        </section>
+    </a>
+    <footer>
+        <span{% if metrika_goal %} class="j-metrika-goal" data-metrika-goal="{{ metrika_goal }}"{% endif %}>
+            {% comments_cnt material new_layout=True new_card="big" %}
+        </span>
+    </footer>
+</article>

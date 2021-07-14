@@ -1,0 +1,11 @@
+{% extends "tourism/firm/create.html" %}
+
+{% load staticfiles media_utils str_utils thumbnail tourism_tags field_tags gallery_tags form_tags %}
+
+{% block title_name %}Редактирование организации{% endblock %}
+
+{% block look_site %}
+    <span class="add-tour-inline"><a href="{% url 'tourism:firm:read' section_slug=section.slug firm_id=object.id %}" title="Посмотреть на сайте">(Посмотреть на сайте)</a></span>
+{% endblock %}
+
+{% block h1_title %}Редактирование организации{% endblock %}

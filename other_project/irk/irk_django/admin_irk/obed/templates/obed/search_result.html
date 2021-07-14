@@ -1,0 +1,31 @@
+{% extends "obed/layout.html" %}
+
+{% load staticfiles media_utils str_utils comments_tags obedtags paginator_utils thumbnail rating_tags pytils_numeral %}
+
+{% block title %}Результаты поиска | {{ block.super }} {% endblock %}
+
+{% block b-content %}
+    {% if object_list %}
+        <div class="b-obed-establishment-toolbar">
+            <div class="g-left">
+                <h1>Найдено {{ object_list|length|get_plural:"заведение,заведения,заведений" }}</h1>
+            </div>
+        </div>
+
+        <ul class="b-obed-establishment-list" id="j-obed-establishment-search" data-url="{% url 'obed:search' %}?q={{ q }}"
+            data-page="2" data-start="{{ next_start_index }}" data-limit="{{ next_limit }}" data-content="true">
+            {% for establishment in object_list %}
+                <li>{% include 'obed/establishment/list_item.html' %}</li>
+            {% endfor %}
+        </ul>
+
+        {% if has_next %}
+            <div class="b-obed-more">
+                <span class="g-left g-color-lightgray_2 j-tab-switcher-page-counter" id="j-obed-establishment-search-page-counter">1 страница</span>
+                <span class="centered"><a href="{% establishment_list_url section_slug=current_section.slug %}" class="b-obed-more-show g-jlink j-showmore" data-type="json" id="j-obed-establishment-search-showmore" data-counter-target="j-obed-establishment-search-page-counter" data-target="j-obed-establishment-search">Показать еще <span>{{ next_limit }}</span></a></span>
+            </div>
+        {% endif %}
+    {% else %}
+        <h1>Заведений не найдено</h1>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "obed/establishment/add.html" %}
+
+{% block title-obed %}Редактирование заведения | {% endblock %}
+
+{% block obed-form-header %}
+    <h1>Редактировать заведение</h1>
+
+    {% if user_messages %}
+        {% for message in user_messages %}
+            <p class="b-form-row {{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

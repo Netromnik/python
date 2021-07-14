@@ -1,0 +1,25 @@
+#-*- coding: utf-8 -*-
+#from __future__ import unicode_literals
+
+#from django.db import migrations, models
+
+
+#class Migration(migrations.Migration):
+
+    #def copy_spampattern(apps, schema_editor):
+        #ForumSpamPattern = apps.get_model("forum", "SpamPattern")
+        #CommentsSpamPattern = apps.get_model("comments", "SpamPattern")
+
+        #forum_spampatterns = ForumSpamPattern.objects.all()
+
+        #for forum_spampattern in forum_spampatterns:
+            #CommentsSpamPattern.objects.create(text=forum_spampattern.text)
+
+    #dependencies = [
+        #('comments', '0004_auto_20180327_1224'),
+    #]
+
+    #operations = [
+        #migrations.RunPython(copy_spampattern, atomic=False),
+    #]
+

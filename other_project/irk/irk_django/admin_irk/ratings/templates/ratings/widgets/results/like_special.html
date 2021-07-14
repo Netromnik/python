@@ -1,0 +1,6 @@
+{% load pytils_numeral %}
+{% if rating %}
+<small class="g-color-gray">
+    <span class="icon-inline icon-left icon-like">{{ rating.total_cnt|choose_plural:"Считает, Считают, Считают" }} интересным  {{ rating.total_cnt }} {{ rating.total_cnt|choose_plural:"человек,человека,человек" }}</span>
+</small>
+{% endif %}

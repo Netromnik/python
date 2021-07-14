@@ -1,0 +1,67 @@
+<tr {% if field.errors %} class="errors"{% endif %}>
+    <th>
+        <label for="{{ field.id_for_label }}"{% if field.field.required %} class="required"{% endif %}>{{ field.label }} {% if field.field.required %}<span class="g-color-red">*</span>{% endif %}</label>
+    </th>
+    <td {% if class_name %} class="{{ class_name }}"{% endif %}>
+        {{ field }}
+
+        {% if field.help_text %}
+            <div class="help_text">{{ field.help_text }}</div>
+        {% endif %}
+
+        {# TODO: Это все мега уебански #}
+        <script type="text/javascript">
+            $(function(){
+                var box = $('.fileBox');
+                var gray_stroke = '<div class="g-stroke-gray"></div>';
+                var label = $('.delete-input label');
+                var inp_img = $('.fileBox input[type="file"]');
+                var tour_img = box.find('img');
+                var check_hot = $('#id_is_hot');
+                box.find('.block').append(gray_stroke);
+
+                check_hot.attr({
+                    checked: false,
+                    disabled: true
+                });
+
+                if ( tour_img.length != 0 ) {
+                    check_hot.attr({
+                        disabled: false,
+                        checked: true
+                    });
+                } else {
+                    check_hot.attr('disabled',true).after('<small class="g-color-red">Чтобы добавить тур в список лучших туров, необходимо загрузить к нему фотографию</small>');
+                }
+                inp_img.on('change', function() {
+                    if ( $(this).val().length != 0 ) {
+                        check_hot.attr({
+                            disabled: false
+                        });
+                        check_hot.next().html('');
+                    }
+                });
+
+                $('.delete-input input[type="checkbox"]').on('change', function(e) {
+                    var gray_b = $('.g-stroke-gray');
+                    gray_b.css('opacity','0.6');
+
+                    if ( $(this).is(':checked') ) {
+                        gray_b.show();
+                        check_hot.attr({disabled:true, checked:false}).after('<small class="g-color-red">Чтобы добавить тур в список лучших туров, необходимо загрузить к нему фотографию</small>');
+                    } else {
+                        gray_b.hide();
+                        check_hot.attr({disabled:false}).next().html('');
+                    }
+                });
+            });
+        </script>
+        <style type="text/css">
+            .fileBox {overflow: hidden; position: relative;}
+            .fileBox .block {position: relative;}
+            .delete-input label {margin-top: 10px;}
+            .fileBox .g-stroke-gray {position: absolute;top: .2em;left: .2em;right: .2em;bottom: 0.4em;background-color: #000;display: none;}
+            #id_is_hot + small.g-color-red {margin-left: 10px;}
+        </style>
+    </td>
+</tr>

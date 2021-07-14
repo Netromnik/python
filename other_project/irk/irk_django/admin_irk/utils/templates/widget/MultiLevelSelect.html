@@ -1,0 +1,13 @@
+<input type="hidden" name="{{ name }}" id="id_{{ name }}" class="{{ name }}" value="{% if val %}{{ val }}{% endif %}"/>
+<select id="id_{{name}}_level_1">
+	<option value="0">не указано</option>
+	{% for root_ch in choices %}
+	<option value="{{ root_ch.id }}">{{ root_ch.title }}</option>
+	{% endfor %}
+</select>
+
+<script type="text/javascript">
+{% autoescape off %}
+	extFields.init('{{ name }}',{{ levels }}, {{ choices_json }}, {{ initial }});
+{% endautoescape %}
+</script>

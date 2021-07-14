@@ -1,0 +1,23 @@
+{% extends "base_about.html" %}
+{% comment %}
+        @template
+        @name=Обычный
+{% endcomment %}
+
+{% load pages str_utils %}
+
+{% block title %}
+	{% if flatpage.title %}{{ flatpage.title|typograf:"title" }} | {% endif %}{{ block.super }}
+{% endblock %}
+
+{% block promo_A %}{% endblock %}
+
+{% block menu %}{% page_menu %}{% endblock %}
+
+{% block main_content %}
+	{% autoescape off %}
+		<h1>{{ flatpage.title|typograf }}</h1>
+
+		{{ flatpage.content|typograf:"admin"|safe }}
+	{% endautoescape %}
+{% endblock %}

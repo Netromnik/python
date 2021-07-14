@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+
+{% load adv_tags media_utils staticfiles %}
+
+{% block push-notifications %}{% include 'push_notifications/snippets/opener.html' %}{% endblock %}
+{% block push-notifications-feature %}{% include 'push_notifications/snippets/feature.html' %}{% endblock %}
+
+{% block text_widget %}{% ibanner id=302 template='adv/banners/text_widget_layout.html' %}{% endblock %}
+
+{% block meta_adaptive %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+{% endblock %}
+
+{% block style_adaptive %}
+    {% less '/less/compile/adaptive/apps/news.less' media='all' %}
+{% endblock %}
+
+{% block js_adaptive %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'news/js/adaptive-news.js' %}"></script>
+{% endblock %}
+
+{% block promo_A %}
+    {% ibanner id=475 as branding_top %}
+    {% include 'snippets/branding_top.html' %}
+{% endblock %}
+
+{% block promo_B %}
+    {% ibanner id=465 as branding_footer %}
+    {% if branding_footer %}
+        <div class="b-branding-bottom g-desktop">
+            {{ branding_footer }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block top_banner %}{% include 'news-less/base/banner/top_banner.html' %}{% endblock %}
+
+{% block b-adword-header %}
+    {% include 'news-less/base/banner/b-adwords-banner-underhead.html' %}
+{% endblock b-adword-header %}
+
+{% block style %}
+    {% include 'news-less/base/style.html' %}
+{% endblock style %}
+
+{% block js %}
+    {{ block.super }}
+    {% include 'news-less/base/js.html' %}
+{% endblock js %}
+
+{% block b-content-class %}{{ block.super }}{% endblock %}
+
+{% block b-content-header %}{% include 'news-less/base/content_header.html' %}{% endblock %}
+
+{% block b-footer-layout-banner %}
+    {% ibanner id=465 as branding_footer %}
+    {% ibanner id=544 as programmatic_footer %}
+    {% if request.user_agent.is_gadget and programmatic_footer %}
+        <div class="g-margin-bottom-20 g-centered-div g-not-desktop">{{ programmatic_footer }}</div>
+    {% endif %}
+{% endblock %}
+
+{% block float_banner %}
+    {% include 'news-less/base/banner/b-banner-1000x50-float.html' %}
+{% endblock %}

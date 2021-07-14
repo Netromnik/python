@@ -1,0 +1,9 @@
+{% extends "to_moder.html" %}
+
+{% load site_utils pytils_numeral %}
+
+{% block body_letter %}
+
+	<h3>Новая компания в разделе Туризм: «{{ firm.name }}»</h3>
+    <p><a href="http://{% get_site_url tourism domain %}{% url 'admin:phones_hotelproxy_change' firm.pk %}">Перейти на страницу редактирования</a></p>
+{% endblock %}

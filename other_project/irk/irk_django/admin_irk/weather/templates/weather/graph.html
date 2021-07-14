@@ -1,0 +1,37 @@
+{% load str_utils pytils_dt %}
+
+<html>
+    <head>
+        <title>{{ title }} на IRK.ru</title>
+    </head>
+    
+    <body>
+        <style>
+            body {margin: 0em; padding: 1em; font-family: Arial,sans-serif; font-size: 80%;}
+            h2 {font-size: 140%; margin: 10px 0; color: #147990;}
+            a, a:hover {color: #0e5aaa;}
+            a:visited {color: #800080;}
+        </style>       
+        <center>
+        <h1 class="weather">{{ title }} <nobr>на {{ now|ru_strftime:"%d %B" }}</nobr></h1>
+        <a href="javascript:void(0);" title="{{ title }}">
+        <img alt="{{ title }}" style="margin-top: 5px;" src='/img/weather/temp/map_{{ graph_id }}.jpg?g={% now "ymdh" %}'></a>
+        <p style="margin-top: 0.5em;">
+            {% if graph_id == 1 %}
+                Карта предоставлена <noindex><a href="http://gismeteo.ru" target="_blank">Gismeteo.Ru</a></noindex>.
+            {% endif %}
+            {% if graph_id == 2 %}
+                Давление приведено в ГПа (1 ГПа = 0,75 мм рт. ст.)<br>
+                Карта предоставлена <noindex><a href="http://gismeteo.ru" target="_blank">Gismeteo.Ru</a></noindex>.
+            {% endif %}
+            {% if graph_id == 3 %}
+                Карта предоставлена <noindex><a href="http://ckm.iszf.irk.ru" target="_blank">Институтом солнечно-земной физики СО РАН</a></noindex>.
+            {% endif %}
+            {% if graph_id == 4 %}
+                Карта предоставлена <noindex><a href="http://www.seis-bykl.ru/" target="_blank">Байкальским филиалом ФИЦ ЕГС РАН</a></noindex>.
+            {% endif %}                     
+            <br>Обновлено {{ now|ru_strftime:"%d %B %Yг" }}.
+        </p>
+        </center>
+    </body>
+</html>

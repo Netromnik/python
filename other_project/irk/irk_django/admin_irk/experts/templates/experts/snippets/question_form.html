@@ -1,0 +1,32 @@
+{% load staticfiles %}
+{# Форма задания вопроса в эксперте #}
+
+{% if limit_questions_error %}<h3>{{ limit_questions_error }}</h3>{% endif %}
+
+{% if highlight %}<div class="highlight br5">Спасибо, Ваш вопрос размещен, смотрите его ниже</div>{% endif %}
+
+{% if question_form %}
+    {% if request.user.is_authenticated %}
+    <div class="b-expert-ask-form">
+        <form action="{% url 'news:experts:question_create' expert.category.slug expert.pk %}" method="post" id="id_form_add_question">{% csrf_token %}
+            <h3>{% if question_form.question.errors %}{{ question_form.question.errors }}{% else %}Задать свой вопрос{% endif %}</h3>
+            <div class="b-expert-field g-indent">
+                <span id="question" class="form required{% if question_form.question.errors %} error{% endif %}">{{ question_form.question }}</span>
+            </div>
+            <button class="g-button_blue" type="submit">Отправить</button>
+            <div class="hint black">Сообщим об ответе эксперта на ваш e-mail</div>
+            <div class="hint g-color-gray">Удаляются оскорбления, мат и комментарии, не содержащие вопроса. Вопрос может быть отклонен, если дублирует заданный.</div>
+        </form>
+    </div>
+    <script type="text/javascript" src="{% static "js/lib/jquery.validform.js" %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#id_form_add_question').validForm();
+        });
+    </script>
+    {% else %}
+        <div class="g-answer-block no-bubble g-margin-bottom-30">
+            <span class="auth-link g-jlink">Войдите</span> или <a href="{% url 'authentication:register:index' %}" rel="nofollow">зарегистрируйтесь</a> чтобы задать вопрос эксперту
+        </div>
+    {% endif %}
+{% endif %}

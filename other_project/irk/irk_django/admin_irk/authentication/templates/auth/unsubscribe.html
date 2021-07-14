@@ -1,0 +1,16 @@
+{% extends "auth/layout.html" %}
+
+{% load profile_utils %}
+
+{% block h1 %}Отмена рассылки{% endblock %}
+{% block title %}Отмена рассылки{% endblock %}
+
+{% block main_content %}
+    <p><strong>Вы действительно хотите отказаться от рассылки на адрес {{ profile.user.email }}?</strong></p>
+    <form method="post">{% csrf_token %}
+        <input type="hidden" name="email" value="{{ email }}">
+        <input type="hidden" name="hash" value="{{ hash }}">
+        <input type="hidden" name="remove" value="1">
+        <button type="submit" class="b-button" id="save">Да, отказаться</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'landings/day2014/index.html' %}
+
+{% load site_utils %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function() {
+            var isRequesting = false,
+                $instagramList = $('.b-day2014-instagram-list').find('.b-list-v'),
+                $footer = $('.b-day2014-footer');
+            $footer.find('.link').click(function() {
+                if (isRequesting) {
+                    return;
+                }
+                $footer.addClass('g-preloader');
+                isRequesting = true;
+                var max_id = $instagramList.find('li:last-child').attr('data-id');
+                $.get('{% url 'landings_day2014_instagram_more' %}', {max_id: max_id}, function(response) {
+                    $footer.removeClass('g-preloader');
+                    $instagramList.append(response);
+                    isRequesting = false;
+                });
+
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block day2014_content %}
+    <div class="b-day2014-instagram">
+        <a class="link2" href="{% url 'landings_day2014' %}">Вернуться на главную</a>
+        <div class="b-day2014-dashed type2 w460">
+            <span>#мойиркутск</span>
+        </div>
+        <div class="hint g-color-gray">
+            помечайте интересные кадры хештегом в инстаграме, и они появятся на этой странице
+        </div>
+    </div>
+    <hr class="b-day2014-separator-top"/>
+    <div class="b-day2014-instagram-list">
+        <ul class="b-list-v">
+            {% for image in images %}
+                {% include 'landings/day2014/instagram-list-item.html' %}
+            {% endfor %}
+        </ul>
+        <div class="b-day2014-footer">
+            <span class="smthn"></span>
+            <span class="link">Показать еще</span>
+            <span class="smthn"></span>
+        </div>
+    </div>
+    <hr class="b-day2014-separator-bottom"/>
+    <script type="text/javascript">
+        var NAVIGATION = [32, 37, 38, 39, 40];
+        // запрещает скроллл при клике на стрелки
+        document.body.addEventListener("keydown", function(event) {
+            if (-1 != NAVIGATION.indexOf(event.keyCode))
+                event.preventDefault();
+        })
+        yepnope([
+            {load: 'http://platform.twitter.com/widgets.js'},
+            {load: 'http://connect.facebook.net/ru_RU/all.js#xfbml=1'},
+            {
+                load: 'http://vkontakte.ru/js/api/share.js',
+                complete: function() {
+                    try {
+                        $('#social-buttons').find('.share-vkontakte').append(
+                            VK.Share.button({
+                                type: 'round',
+                                text: 'Сохранить',
+                                url: '{{ request.scheme }}://{% get_site_url www %}/day2014/?utm_source=vk&utm_medium=socialnetwork&utm_campaign=vk1',
+                                title: 'День города в Иркутске',
+                                noparse: true
+                            })
+                        );
+                    } catch (e) {}
+                }
+            },
+            {
+                load: 'http://vkontakte.ru/js/api/share.js',
+                complete: function() {
+                    try {
+                        $('#social-buttons2').find('.share-vkontakte').append(
+                            VK.Share.button({
+                                type: 'round',
+                                text: 'Сохранить',
+                                url: '{{ request.scheme }}://{% get_site_url www %}/day2014/?utm_source=vk&utm_medium=socialnetwork&utm_campaign=vk1',
+                                title: 'День города в Иркутске',
+                                noparse: true
+                            })
+                        );
+                    } catch (e) {}
+                }
+            },
+            {
+                load:
+                    !function (d, id, did, st) {
+                        var js = d.createElement("script");
+                        js.src = "http://connect.ok.ru/connect.js";
+                        js.onload = js.onreadystatechange = function () {
+                            if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
+                                if (!this.executed) {
+                                    this.executed = true;
+                                    setTimeout(function () {
+                                        OK.CONNECT.insertShareWidget(id,did,st);
+                                    }, 0);
+                                }
+                            }};
+                        d.documentElement.appendChild(js);
+                    }(document,"ok_shareWidget","{{ request.scheme }}://{% get_site_url www %}/day2014/","{width:145,height:30,st:'rounded',sz:20,ck:1}")
+            },
+            {
+                load:
+                    !function (d, id, did, st) {
+                        var js = d.createElement("script");
+                        js.src = "http://connect.ok.ru/connect.js";
+                        js.onload = js.onreadystatechange = function () {
+                            if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
+                                if (!this.executed) {
+                                    this.executed = true;
+                                    setTimeout(function () {
+                                        OK.CONNECT.insertShareWidget(id,did,st);
+                                    }, 0);
+                                }
+                            }};
+                        d.documentElement.appendChild(js);
+                    }(document,"ok_shareWidget2","{{ request.scheme }}://{% get_site_url www %}/day2014/","{width:145,height:30,st:'rounded',sz:20,ck:1}")
+            }
+        ]);
+    </script>
+{% endblock %}

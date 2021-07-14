@@ -1,0 +1,42 @@
+{% extends 'news-less/layout.html' %}
+{% load game_tags staticfiles media_utils str_utils comments_tags thumbnail paginator_utils news_tags date_tags %}
+
+{% block title %}Статьи | {{ block.super }}{% endblock %}
+
+{% block container-class %}b-container_100 b-container_pt50{% endblock %}
+
+{% block b-adword-header %}{% endblock b-adword-header %}
+
+{% block b-content-header %}{% endblock b-content-header %}
+
+{% block b-content-class %} g-no-margin{% endblock %}
+
+{# удалить этот блок после игры #}
+{% block game2020 %}
+    {% treasure 'articles' %}
+{% endblock %}
+
+{% block b-content %}
+    <section class="articles-index">
+        {% if supermaterial %}
+            {% include 'news-less/article/blocks/big_article.html' with material=supermaterial %}
+        {% endif %}
+        <div class="grid-inner">
+            <div class="b-content-block">
+                {% include 'news-less/article/snippets/articles-menu.html' %}
+            </div>
+            <ul class="grid-list" id="articles-list" data-page="2" data-start="{{ next_start_index }}" data-limit="{{ next_limit }}">
+                {% include 'news-less/article/snippets/entries.html' %}
+            </ul>
+
+            <div class="g-loading-button">
+                <span class="g-loading-button__more g-height-60 g-line-height-60 g-font-bold j-showmore" data-type="json" data-target="articles-list">
+                    <span>Показать еще</span>
+                </span>
+            </div>
+        </div>
+        {% comment %}
+        {% paginator objects template='paginator/layout.html' name='новостей' %}
+        {% endcomment %}
+    </section>
+{% endblock %}

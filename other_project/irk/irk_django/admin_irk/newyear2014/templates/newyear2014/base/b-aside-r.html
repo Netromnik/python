@@ -1,0 +1,19 @@
+{% load adv_tags %}
+
+<aside class="b-aside-r">
+    {% if wallpaper == 1 %}
+        {% comment %}
+        <div class="b-ny2014-wallpapers-save">
+            <a href="#"><img src="{% static 'newyear2014/img/ny2014-wallpapers.png' %}" alt="Сохранить все">
+                <span class="button">Сохранить все (12 мб)</span>
+            </a>
+        </div>
+    {% endcomment %}
+    {% endif %}
+    <div class="b-aside-float-block">
+        {% ibanner ID=407 as banner %}
+        {% if banner %}
+            <div class="b-aside-block go-center">{{ banner }}</div>
+        {% endif %}
+    </div>
+</aside>

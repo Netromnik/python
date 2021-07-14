@@ -1,0 +1,88 @@
+{% load staticfiles media_utils str_utils %}
+
+<script type="text/javascript">
+    $(function () {
+        // Асинхронная загрузка яндекс карты
+        (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+        g.src='{{ scheme }}://api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU';
+        s.parentNode.insertBefore(g,s)}(document,'script'));
+
+        // Какие-то параметры принимаемые с сервера
+        var options = {
+            name: '{{ name }}',
+            zoom: {{ zoom }}
+        };
+
+        var map = {
+            data: {
+                id: 'map_{{ field }}',
+                $: null,
+                placemark: null,
+                coords: [],
+                def_coord: [],
+                zoom: 0,
+
+                getDefCoord: function () {
+                    var coord = $('#id_{{ field }}').val().split(',');
+                    if (!options.zoom) {
+                        options.zoom = 7;
+                    }
+                    if (coord.length < 2) {
+                        if (options.zoom < 10){
+                            coord = [53.673935, 106.304543];
+                        }
+                        else{
+                            // Центр иркутска
+                            coord = [52.2877787751457745, 104.2807411965482913];
+                        }
+                    }
+                    this.def_coord = coord;
+                    this.zoom = options.zoom;
+                },
+                setPlacemark: function () {
+                    this.placemark = new ymaps.Placemark(this.def_coord, {
+                        hintContent: 'Можешь меня перетаскивать'
+                    }, {
+                        draggable: true
+                    });
+                    this.$.geoObjects.add(this.placemark);
+                }
+            },
+            events: {
+                dragPlacemark: function (o) {
+                    o.data.placemark.events.add('dragend', function (e) {
+                        var coord = e.get('target').geometry.getCoordinates();
+                        $('#id_{{ field }}').val(coord);
+                    });
+                }
+            },
+            loadMap: function () {
+                var $that = this;
+                this.data.$ = new ymaps.Map(this.data.id, {
+                    center: $that.data.def_coord,
+                    type: 'yandex#hybrid',
+                    behaviors: ['default','scrollZoom','drag','dblClickZoom'],
+                    zoom: $that.data.zoom
+                });
+                this.data.$.controls.add('smallZoomControl', {top: 10, left: 10});
+            },
+            init: function () {
+                var $that = this;
+                var timer = setInterval(function () {
+                    try {
+                        if (ymaps != undefined) {
+                            $that.data.getDefCoord();
+                            $that.loadMap();
+                            $that.data.setPlacemark();
+                            $that.events.dragPlacemark($that);
+                            clearInterval(timer);
+                        }
+                    } catch(e) {
+
+                    }
+                }, 1);
+            }
+        };
+        map.init();
+    });
+</script>

@@ -1,0 +1,31 @@
+{# Дефолтный пагинатор #}
+
+{% if paginator.paginator.num_pages > 1 %}
+<section class="b-content-block b-paginator">
+    <h6>Страницы</h6>
+
+    {% if paginator.has_previous %}
+    <span class="i-paginator-link-left"><a id="i-paginator-prevPage" href="./?page={{ paginator.previous_page_number }}&amp;{{ url_params|default:'' }}{{ url_hash|default:'' }}">&larr;&nbsp;предыдущая</a></span>
+    {% else %}
+{#    <span class="i-paginator-link-left">&larr;&nbsp;предыдущая</span>#}
+    {% endif %}
+    {% if paginator.has_next %}
+        <span class="i-paginator-link-right"> <a id="i-paginator-nextPage" href="./?page={{ paginator.next_page_number }}&amp;{{ url_params|default:'' }}{{ url_hash|default:'' }}">следующая&nbsp;&rarr;</a></span>
+    {% else %}
+{#        <span class="i-paginator-link-right">следующая&nbsp;&rarr;</span>#}
+    {% endif %}
+
+    <nav>
+        <ul class="b-list-h">
+            {% for page in paginator.page_range %}
+            {% if page == paginator.number %}
+            <li class="b-paginator-active">{{ page }}</li>
+            {% else %}
+            <li><a href="./?page={{ page }}&amp;{{ url_params|default:'' }}{{ url_hash|default:'' }}">{{ page }}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+
+</section>
+{% endif %}

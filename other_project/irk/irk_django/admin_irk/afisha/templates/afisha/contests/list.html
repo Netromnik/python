@@ -1,0 +1,61 @@
+{% extends "afisha/layout_cr.html" %}
+
+{% load staticfiles media_utils paginator_utils str_utils thumbnail %}
+
+{% block title %} Конкурсы | {{ block.super }} {% endblock %}
+
+{% block b-content-cr %}
+    <section class="b-contests b-content-block">
+        <header>
+            <h1>Все конкурсы афиши от Ирк.ру</h1>
+        </header>
+        {% if opened|length > 0 %}
+        <section class="b-contests-opened g-indent">
+            <header>
+                <h2>Открытые</h2>
+            </header>
+            {% for contest in opened %}
+                <section class="b-content-block">
+                    <header>
+                        {% thumbnail contest.image 300x100000 as thumb %}
+                        <a href="{% url 'afisha:contests:read' contest.slug %}"><img src="{{ thumb }}" alt="{{ contest.title|typograf:"title"|safe }}">
+                            {{ contest.title|typograf:"title"|safe }}</a>
+                        <span class="g-color-gray date"><time>до {{ contest.date_end|date:"d.m" }}</time></span>
+                    </header>
+                    <article>
+                        {{ contest.caption|typograf:"admin"|safe }}
+                    </article>
+                </section>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        {% if closed|length > 0 %}
+            <section class="b-contests-closed g-indent">
+                <header>
+                    <h2>Закрытые</h2>
+                </header>
+                {% for contest in closed %}
+                    <section class="b-content-block">
+                        <header>
+                        {% if contest.image %}
+                            {% thumbnail contest.image 140x100000 as thumb %}
+                            <a href="{% url 'afisha:contests:read' contest.slug %}" class="closePromo_link"><img src="{{ thumb }}" alt="{{ contest.title|typograf:"title"|safe }}" style="width:{{  thumb.width }}px;height:{{  thumb.height }}px;"></a>
+                            <a href="{% url 'afisha:contests:read' contest.slug %}">{{ contest.title|typograf:"title"|safe }}</a>
+                        {%  endif %}
+                        </header>
+                        <article>
+                            {{ contest.caption|typograf:"admin"|safe }}
+                        </article>
+                    </section>
+                {% endfor %}
+            </section>
+        {% endif %}
+        <br clear="all">
+        {% paginator page_obj limit template='paginator/layout.html' name='конкурсов' %}
+    </section>
+{% endblock %}
+
+{% block b-aside-r %}
+    {% include 'afisha/base/b-aside-r-type2.html' with inner=True event_read=True %}
+{% endblock b-aside-r %}

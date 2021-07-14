@@ -1,0 +1,35 @@
+{% load staticfiles media_utils str_utils %}
+<script type="text/javascript">
+    (function() {
+        "use strict";
+        var options = {
+            whitelistUrls: [],
+            ignoreUrls: [],
+            ignoreErrors: {{ settings.ignore_errors|json }}
+        },
+            search = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,
+            replace = '\\$&',
+            urls = {{ settings.whitelist_urls|json }},
+            ignoreUrls = {{ settings.ignore_urls|json }};
+
+        for (var i=0; i<urls.length; i++) {
+            options.whitelistUrls.push(new RegExp(urls[i].replace(search, replace)));
+        }
+        for (i=0; i<ignoreUrls.length; i++) {
+            options.ignoreUrls.push(new RegExp(ignoreUrls[i].replace(search, replace)));
+        }
+
+        Modernizr.load({
+            load: '{% static 'js/lib/raven-1.1.2.min.js' %}',
+            complete: function() {
+                Raven.config('{{ url }}', options).install();
+                {% if user.is_authenticated %}
+                    Raven.setUser({
+                        username: '{{ user.username }}',
+                        cookie: document.cookie
+                    });
+                {% endif %}
+            }
+        });
+    })();
+</script>

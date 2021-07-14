@@ -1,0 +1,148 @@
+{% extends 'auth/layout.html' %}
+{% load staticfiles thumbnail str_utils date_tags comments_tags %}
+
+{% block title %}{{ profile.user }} | {{ block.super }}{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'profiles/js/profiles.js' %}"></script>
+{% endblock %}
+
+{% block main_content %}
+    <section class="b-auth-profile">
+        <header>
+            <div class="avatar{% if profile.is_corporative %} corporative{% endif %}">
+                {% if profile.image %}
+                    {% thumbnail profile.image 50x50 crop="50x50" as thumb %}
+                    <img src="{{ thumb }}" alt="{{ profile }}" style="width: 50px; height: 50px;"/>
+                {% else %}
+                    <span style="display: inline-block; width: 50px; height: 50px; background-color: gray;"></span>
+                {% endif %}
+            </div>
+            <div class="info">
+                <h1>{{ profile.user }}
+                    {% if profile.is_corporative %}
+                        <small class="g-color-green">(компания)</small>
+                    {% elif is_moderator and profile.is_verified %}
+                        <small class="g-color-green">(верифицирован)</small>
+                    {% endif %}
+                    {% if profile.is_closed %}
+                        <small class="g-color-red">(закрыт)</small>
+                    {% endif %}
+                    {% if ban %}
+                        <small class="g-color-red">(забанен)</small>
+                    {% endif %}
+                </h1>
+               <time>дата регистрации: {{ profile.user.date_joined|dates:'%d.%m|%d.%m.%Y' }}</time>
+               {% if ban %}
+                   <p>забанен до: {{ ban.ended|dates:'%d.%m|%d.%m.%Y' }}</p>
+                   <p>забанил: {{ ban.moderator }}</p>
+                   <p>причина: {{ ban.reason }}</p>
+               {% endif %}
+               {% if can_edit %}
+                   <a href="{% url 'authentication:profile:update' %}" rel="nofollow">Редактировать профиль</a>
+               {% endif %}
+               {% if can_edit or is_moderator %}
+                   {% if not profile.is_closed %}
+                       <a href="{% url 'profiles:close' profile_id=profile.id %}" class="j-profiles-account-close" rel="nofollow">
+                           Закрыть {% if not is_moderator %}мой {% endif %}аккаунт
+                       </a>
+                   {% endif %}
+               {% endif %}
+
+            </div>
+            {% if profile.is_personal and not profile.is_closed %}
+            <ul class="b-list-v social">
+                {% if association_vk %}
+                    <li>
+                        <a class="button" href="{{ association_vk.extra_data.profile_url }}" rel="nofollow"><span class="vk"></span></a>
+                        <a href="{{ association_vk.extra_data.profile_url }}">{{ association_vk.extra_data.screen_name }}</a>
+                        {% if is_moderator %}
+                            <form class="unlink" action="{% url 'authentication_social:disconnect' 'vk-oauth2' profile.user_id association_vk.id %}" method="post">{% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                                <button type="submit">Убрать привязку</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% elif can_edit %}
+                    <li><span class="button"><span class="vk"></span></span>
+                        {% if can_edit %}<a href="{% url 'social:begin' 'vk-oauth2' %}?next={{ profile.get_absolute_url }}" rel="nofollow">Привязать</a>{% endif %}
+                    </li>
+                {% endif %}
+
+                {% if association_twitter %}
+                    <li>
+                        <a class="button" href="{{ association_twitter.extra_data.profile_url }}" rel="nofollow"><span class="tw"></span></a>
+                        <a href="{{ association_twitter.extra_data.profile_url }}" rel="nofollow">{{ association_twitter.extra_data.screen_name }}</a>
+                        {% if is_moderator %}
+                            <form class="unlink" action="{% url 'authentication_social:disconnect' 'twitter' profile.user_id association_twitter.id %}" method="post">{% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                                <button type="submit">Убрать привязку</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% elif can_edit %}
+                    {% comment %}
+                    <li><span class="button"><span class="tw"></span></span>
+                        {% if can_edit %}<a href="{% url 'social:begin' 'twitter' %}?next={{ profile.get_absolute_url }}">Привязать</a>{% endif %}
+                    </li>
+                    {% endcomment %}
+                {% endif %}
+
+                {% if association_facebook %}
+                    <li>
+                        <a class="button" href="{{ association_facebook.extra_data.profile_url }}" rel="nofollow"><span class="fb"></span></a>
+                        <a href="{{ association_facebook.extra_data.profile_url }}" rel="nofollow">{{ association_facebook.extra_data.screen_name }}</a>
+                        {% if is_moderator %}
+                            <form class="unlink" action="{% url 'authentication_social:disconnect' 'facebook' profile.user_id association_facebook.id %}" method="post">{% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                                <button type="submit">Убрать привязку</button>
+                            </form>
+                        {% endif %}
+
+                    </li>
+                {% elif can_edit %}
+                    <li><span class="button"><span class="fb"></span></span>
+                        {% if can_edit %}<a href="{% url 'social:begin' 'facebook' %}?next={{ profile.get_absolute_url }}" rel="nofollow">Привязать</a>{% endif %}
+                    </li>
+                {% endif %}
+
+                {% if association_odnoklassniki %}
+                    <li>
+                        <a class="button" href="{{ association_odnoklassniki.extra_data.profile_url }}" rel="nofollow"><span class="ok"></span></a>
+                        <a href="{{ association_odnoklassniki.extra_data.profile_url }}" rel="nofollow">{{ association_odnoklassniki.extra_data.screen_name }}</a>
+                        {% if is_moderator %}
+                            <form class="unlink" action="{% url 'authentication_social:disconnect' 'odnoklassniki-oauth2' profile.user_id association_odnoklassniki.id %}" method="post">{% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                                <button type="submit">Убрать привязку</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% elif can_edit %}
+                    <li><span class="button"><span class="ok"></span></span>
+                        {% if can_edit %}<a href="{% url 'social:begin' 'odnoklassniki-oauth2' %}?next={{ profile.get_absolute_url }}" rel="nofollow">Привязать</a>{% endif %}
+                    </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+            {% if profile.is_corporative %}
+                {% with networks=profile.social.all %}
+                <ul class="b-list-v social">
+                    {% for net in networks %}
+                        <li>
+                            <a class="button" href="{{ net.url }}" rel="nofollow"><span class="{{ net.get_type_slug }}"></span></a>
+                            <a href="{{ net.url }}" rel="nofollow">{{ net.get_type_display }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% endwith %}
+            <ul class="b-list-v contacts">
+                {% if profile.user.address %}<li>{{ profile.user.address }}</li>{% endif %}
+                {% if profile.user.email %}<li><a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a></li>{% endif %}
+                {% if profile.phone %}<li><b>{{ profile.phone }}</b></li>{% endif %}
+            </ul>
+            {% endif %}
+        </header>
+    </section>
+
+{% endblock %}

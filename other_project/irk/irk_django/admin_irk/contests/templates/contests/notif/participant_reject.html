@@ -1,0 +1,13 @@
+{% extends "letter.html" %}
+{% load site_utils %}
+{% block content %}
+
+Здравствуйте<br/>
+
+Данное письмо отправлено автоматически, отвечать на него НЕ НУЖНО.<br/>
+
+Ваша фотография не прошла модерацию для конкурса «{{ participant.contest.title }}» на сайте «Твой Иркутск» (www.irk.ru)!<br/>
+
+Причина: {{ participant.reject_reason }}<br/>
+
+{% endblock %}

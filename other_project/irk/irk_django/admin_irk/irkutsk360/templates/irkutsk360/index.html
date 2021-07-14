@@ -1,0 +1,159 @@
+{% extends 'layout.html' %}
+{% load static staticfiles media_utils str_utils thumbnail paginator_utils irkutsk360_tags %}
+
+{% block meta_adaptive %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    {% less '/less/compile/apps/360.less' media='all' %}
+{% endblock style %}
+
+{% block style_adaptive %}
+    {{ block.super }}
+    {% less '/less/compile/adaptive/apps/360.less' media='all' %}
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        var DOMAIN_MEDIA = "{{ MEDIA_URL }}";
+        var auth_no_redir = {};
+        var auth_callback = {};
+        var irk = {};
+    </script>
+
+    <script type="text/javascript" src="{% static 'js/lib/jquery-3.4.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/modernizr-2.6.2-bro-fix.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/apps-js/landing/360.js' %}"></script>
+{% endblock js %}
+
+{% block title %}С праздником, Иркутск! | {{ block.super }}{% endblock %}
+
+{% block container-class %}b-container_100 b-container_pt50{% endblock %}
+
+{% block b-adword-header %}{% endblock b-adword-header %}
+
+{% block b-content-header %}{% endblock b-content-header %}
+
+{% block b-content %}
+
+    {% comment %}
+    {% url 'irkutsk360:index' %}
+    {% url 'irkutsk360:afisha' %}
+    {% url 'irkutsk360:gallery' %} темно синяя картинка
+    {% url 'irkutsk360:congratulations' %}
+    {% endcomment %}
+
+    <section class="anniversary">
+        <div class="anniversary__header">
+            <div class="anniversary__header__column anniversary__header__column_left {% block bg_header %}{% endblock %}">
+                <div class="anniversary__content anniversary__content_left">
+                    <div class="anniversary__logo">
+                        <img src="{% static 'img/360/logo.png' %}">
+                    </div>
+                </div>
+            </div>
+            <div class="anniversary__header__column anniversary__header__column_right">
+                <div class="anniversary__content anniversary__content_right">
+                    <div class="anniversary__text">
+                        <h1 class="anniversary__title">
+                            С праздником, Иркутск!
+                        </h1>
+                        <p>
+                            Иркутск отмечает 360-летие!
+                            В данном разделе мы собираем интересные мероприятия,
+                            которые пройдут в честь праздника,
+                            и рассказываем истории о городе и его жителях.
+                        </p>
+                        <p>
+                            <b>Отмечай это событие вместе с нами!</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="anniversary__inner">
+            <ul class="anniversary__menu {% block active_link %}lenta{% endblock %}">
+                <li class="anniversary__menu__item lenta">
+                    <a href="{% url 'irkutsk360:index' %}">
+                        <span>
+                            <img src="{% static '/img/360/icons/lenta.svg' %}" alt="Лента" />
+                        </span>
+                        <span>Лента</span>
+                    </a>
+                </li>
+                <li class="anniversary__menu__item afisha">
+                    <a href="{% url 'irkutsk360:afisha' %}">
+                        <span>
+                            <img src="{% static '/img/360/icons/afisha.svg' %}" alt="Календарь мероприятий" />
+                        </span>
+                        <span>Календарь мероприятий</span>
+                   </a>
+                </li>
+                <li class="anniversary__menu__item stories">
+                    <a href="{% url 'irkutsk360:stories' %}">
+                        <span>
+                            <img src="{% static '/img/360/icons/stories.svg' %}" alt="История города" />
+                        </span>
+                        <span>История города</span>
+                    </a>
+                </li>
+                <li class="anniversary__menu__item congratulation">
+                   <a href="{% url 'irkutsk360:congratulations:index' %}">
+                       <span>
+                           <img src="{% static '/img/360/icons/congratulations.svg' %}" alt="Поздравь Иркутск" />
+                       </span>
+                       <span>Поздравь Иркутск</span>
+                   </a>
+                </li>
+                <li class="anniversary__menu__item gallery">
+                   <a href="{% url 'irkutsk360:gallery' %}">
+                       <span>
+                           <img src="{% static '/img/360/icons/gallery.svg' %}" alt="Галерея" />
+                       </span>
+                       <span>Галерея</span>
+                   </a>
+                </li>
+            </ul>
+        </div>
+    {% block content_page %}
+        <div id="anniversary-ajax" data-page="2" data-start="{{ next_start_index }}" data-limit="{{ next_limit }}">
+            <div class="anniversary__inner">
+                <div class="anniversary__grid-wrapper">
+                    <div class="grid">
+                        {% for card in object_list %}
+                            {% if forloop.counter == 3 %}
+                                <div class="grid__item">
+                                    {% congratulation %}
+                                </div>
+                            {% elif forloop.counter == 8 %}
+                                <div class="grid__item j-fact-wrapper">
+                                    {% fact %}
+                                </div>
+                            {% elif forloop.counter == 5 or forloop.counter == 10 %}
+                                <div class="grid__item grid__item_x2">
+                                    {% include 'irkutsk360/choice_cards.html' %}
+                                </div>
+                            {% else %}
+                                <div class="grid__item">
+                                    {% include 'irkutsk360/choice_cards.html' %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="anniversary__inner">
+            <div class="anniversary__buttons">
+                <div class="g-loading-button">
+                    <span class="g-loading-button__more g-height-60 g-line-height-60 g-font-bold j-showmore" data-type="json" data-target="anniversary-ajax">
+                        <span>Показать еще</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    </section>
+{% endblock %}

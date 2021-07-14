@@ -1,0 +1,34 @@
+{% load pytils_numeral pytils_dt staticfiles str_utils thumbnail rating_tags comments_tags %}
+<article>
+    <header>
+        <div class="g-indent-small">
+            <h4><a href="{{ comment.target.get_absolute_url }}" class="{% if most_discussed %}g-black-link{% else %}g-link{% endif %}">
+                {{ comment.target }}
+            </a></h4>
+            <a href="{{ comment.target.get_absolute_url }}?tab=comments#content" class="icon-inline icon-left icon-comment">
+                {% comments_cnt comment.target new_layout=True %}
+            </a>
+        </div>
+        <div class="b-obed-comments-info">
+            {% thumbnail comment.user.profile.avatar 50x50 crop="30x30" as thumb %}
+            <a class="b-obed-comments-avatar" href="{{ comment.user.profile.get_absolute_url }}">
+                <img src="{{ thumb }}" alt="{{ comment.user }}" width="30px" height="30px" />
+            </a>
+            <h5><a class="b-obed-comments-user g-hover" href="{{ comment.user.profile.get_absolute_url }}">
+                {{ comment.user.get_full_name }}
+            </a></h5>
+            <time datetime="{{ comment.created|date:"Y-m-d H:i" }}">
+                {{ comment.created|ru_strftime:"%d %B %Y в %H:%M" }}
+            </time>
+        </div>
+    </header>
+    {% with comment.text|truncate_words_to_str_length:truncate|strip_forum_tags as text %}
+        <div class="b-obed-comments-text">
+            {{ text|typograf:'user'}}
+            {% if comment.text|length > text|length %}
+                <span class="b-obed-comments-showmore g-jlink j-obed-expand-comment">читать далее</span>
+                <div class="g-hide">{{ comment.text|typograf:'user'}}</div>
+            {% endif %}
+        </div>
+    {% endwith %}
+</article>

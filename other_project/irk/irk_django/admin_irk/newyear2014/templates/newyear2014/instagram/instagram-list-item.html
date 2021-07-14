@@ -1,0 +1,18 @@
+{% spaceless %}
+{% if tag.type == tag.VIDEO %}
+    <li id="{{ forloop.counter }}" data-id="{{ image.pk }}">
+        <iframe src="{{ image.data.link }}embed" width="510" height="590" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+    </li>
+{% else %}
+    <li id="{{ forloop.counter }}" data-id="{{ image.id }}">
+        <a href="{{ image.data.link }}">
+            <figure>
+                <img src="{{ image.data.images.standard_resolution.url }}" alt="" style="width: 510px; height: 510px;"/>
+                <figcaption>
+                    @{{ image.data.user.username }}
+                </figcaption>
+            </figure>
+        </a>
+    </li>
+{% endif %}
+{% endspaceless %}

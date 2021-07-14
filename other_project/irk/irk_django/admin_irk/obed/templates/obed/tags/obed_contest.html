@@ -1,0 +1,7 @@
+{% load str_utils %}
+{% if contest %}
+<article class="b-widget-contest g-indent"><header>
+    <h3><a href="{% url 'obed:contests:list' %}">Конкурсы</a></h3>
+    <h4><a href="{% url 'obed:contests:read' contest.slug %}">{{ contest.title|typograf:"title" }}</a></h4>
+</header></article>
+{% endif %}

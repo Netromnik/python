@@ -1,0 +1,32 @@
+{% load str_utils rating_tags thumbnail comments_tags afisha_tags %}
+
+<section class="b-afisha-cinema-announce g-indent g-clear">
+    <header class="b-afisha-announce-header g-indent-small">
+        <h2>
+            {% comment %} {# если решат таки удалить, то не забыть выпилить скрипт из afish.js j-afisha-cinema-announce-toggler #}
+            {% if not carousel %}<span class="g-jlink g-right j-afisha-cinema-announce-toggler" data-text="Сегодня" data-href="{% url 'afisha:announces.events_list' event_type='cinema' %}">Скоро</span>{% endif %}
+            {% endcomment %}
+            <a href="{% url 'afisha:events_type_index' event_type='cinema' %}" class="j-afisha-cinema-announce-link">
+                <span class="j-afisha-cinema-announce-link-word">Сегодня</span> в кино{% if not carousel %}<span class="announce_link"></span>{% endif %}
+            </a>
+        </h2>
+    </header>
+    {% if carousel %}
+        <div class="b-afisha-cinema-announce-list g-indent-small g-accelerate j-afisha-cinema-announce-carousel">
+            {% for event in events_today %}
+                {% event_card event metrika_goal='afisha_index_cinema_today' %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <ul class="b-afisha-cinema-announce-list g-indent-small b-list-v g-accelerate j-afisha-cinema-announce-list">
+            {% for event in events_today|slice:"2" %}
+                <li class="item">
+                    {% event_card event metrika_goal='afisha_index_cinema_today' %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <footer class="g-show-more">
+        <a class="j-afisha-cinema-announce-link" href="{% url 'afisha:events_type_index' event_type='cinema' %}">Полное расписание</a>
+    </footer>
+</section>

@@ -1,0 +1,14 @@
+{% extends 'to_moder.html' %}
+
+{% block body_letter %}
+    <h3>Новое сообщение на горячую линию наркоконтроля</h3>
+
+    <blockquote>{{ text|linebreaks|safe }}</blockquote>
+
+    {% if contacts %}
+        <div>
+            <strong>Контакты:</strong>
+            <div>{{ contacts|linebreaks|safe }}</div>
+        </div>
+    {% endif %}
+{% endblock %}

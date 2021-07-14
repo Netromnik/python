@@ -1,0 +1,14 @@
+{% load adv_tags staticfiles media_utils news_tags str_utils comments_tags thumbnail pytils_dt adwords_tags experts_tags %}
+
+{% block b-aside-r-banner %}
+    {% include 'obed/base/banner/banner_300x360.html' %}
+{% endblock %}
+
+{% similar_materials object as similars %}
+{% include 'news-less/tags/news-similar-materials.html' with materials=similars direction="vertical" article_read_page=True metrika_goal='news_page_right' audit_material=object.id audit_goal='similar_clicks' %}
+
+{% include 'obed/base/banner/banner_300x250.html' %}
+
+<section class="b-aside-block j-article-aside-float-block g-accelerate">
+    {% hot_discussion current_object=object %}
+</section>

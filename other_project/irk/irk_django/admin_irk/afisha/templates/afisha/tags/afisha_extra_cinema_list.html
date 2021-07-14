@@ -1,0 +1,7 @@
+{% load afisha_tags %}
+
+{% for event in event_list %}
+    <li class="grid-list__item">
+        {% event_card event metrika_goal='news_more_articles' %}
+    </li>
+{% endfor %}

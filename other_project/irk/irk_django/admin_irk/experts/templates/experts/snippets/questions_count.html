@@ -1,0 +1,10 @@
+{% load pytils_numeral %}
+{% if questions > 0 %}
+    <small class="g-color-gray icon-inline icon-left icon-comment">
+        {% if object.is_consultation %}
+            {{ questions }}&nbsp;{{ questions|choose_plural:"ответ, ответа, ответов" }}
+        {% else %}
+            {{ questions }}&nbsp;{{ questions|choose_plural:"вопрос, вопроса, вопросов" }}
+        {% endif %}
+    </small>
+{% endif %}

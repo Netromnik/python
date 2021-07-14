@@ -1,0 +1,86 @@
+{% extends "afisha/layout_lcr.html" %}
+
+{% load game_tags staticfiles event_admin profile_utils thumbnail comments_tags site_utils str_utils pytils_dt adv_tags map_tags cache_tags news_tags rating_tags afisha_tags paginator_utils %}
+
+{% block title %}{% for s in sections %}{% if s == section %}{{ s|typograf:'title' }} | {% endif %}{% endfor %}Гид по Иркутску на IRK.ru{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="//maps.api.2gis.ru/2.0/loader.js?pkg=full&skin=dark&lazy=true"></script>
+{% endblock %}
+
+{% block text_widget %}{% ibanner id=314 template='adv/banners/text_widget_layout.html' %}{% endblock %}
+
+{# удалить этот блок после игры #}
+{% block game2020 %}
+    {% if section.slug == 'cinema' %}
+        {% treasure 'guide_cinema' %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if request.user_agent.is_gadget %}
+    <section class="section-guide-top show-1200">
+        <a href="#" class="section-guide-top__link j-reveal-button" data-target="filter" data-speed="100">{% if section %}{{ section }}{% endif %}</a>
+    </section>
+    {% endif %}
+    <section class="section-places">
+    {% if firms_arr %}
+        <ol id="places-list-more" data-start="{{ next_start_index }}" data-limit="{{ next_limit }}" class="places-list">
+            {% for firm, address in firms_arr %}
+                <li class="places-list__item">
+                    <section>
+                        <header>
+                            <h5 class="places-list__title">
+                                <a class="places-list__link" href="{{ firm.get_absolute_url }}">
+                                    {{ firm.guide.name|typograf }}
+                                </a>
+                            </h5>
+                        </header>
+                        <div class="places-list__address">
+                            {% if address.0.phones %}
+                                {{ address.0.phones|typograf:"title"|safe }}
+                            {% endif %}
+                        </div>
+                        <div class="places-list__bottom">
+                            {% map_address firm.main_address %}
+                            {% comments_cnt firm new_layout=True extra_class='places-list__comments' %}
+                        </div>
+                        <div id="j-places-map{{address.0.id}}" class="places-list__map j-places-map j-places-map{{address.0.id}}" data-map-id="{{address.0.id}}"></div>
+                    </section>
+                </li>
+            {% endfor %}
+        </ol>
+        {% if has_next %}
+            <div class="afisha-more j-showmore" data-type="json" data-target="places-list-more">
+                <span class="afisha-more__link">
+                    Показать еще
+                </span>
+            </div>
+        {% endif %}
+    {% else %}
+        По данному запросу, увы, ничего не найдено.
+    {% endif %}
+    </section>
+{% endblock %}
+
+{% block b-aside-l-class %}{% endblock %}
+
+{% block b-aside-l %}
+    <section class="section-place">
+        <a href="#" class="place-menu-close j-reveal-block-filter j-reveal-block j-reveal-button" data-target="filter"></a>
+        <ul class="place-cat place-menu hide-1200 j-reveal-block j-reveal-block-filter">
+            {% for s in sections %}
+                <li class="place-cat__item{% if s == section %} g-active{% endif %}">
+                    {% if s == section %}
+                        <span class="place-cat__link">{{ s|typograf:'title' }}</span>
+                    {% else %}
+                        <a href="{% url 'guide:rubric' rub=s.slug %}" class="place-cat__link">{{ s|typograf:'title' }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock %}
+
+{% block b-aside-r %}{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "obed/layout.html" %}
+
+{% load obedtags staticfiles media_utils str_utils thumbnail polls_tags pages %}
+
+{% block title %}{{ flatpage.title|typograf:'title'|safe }} | {{ block.super }}{% endblock %}
+
+{% block header_content %}{% endblock %}{# Убираем перетяжку баннеров #}
+{% block b-adword-header %}{% endblock %}
+{% block b-content-parent %}
+    {{ flatpage.content|typograf:'admin,nolinebreaks'|safe }}
+{% endblock %}

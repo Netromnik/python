@@ -1,0 +1,31 @@
+{% comment %}
+    Фотки инстаграмма по погоде
+    input:
+        posts - список постов из инстаграма
+        request - объект запроса
+{% endcomment %}
+
+<section class="b-weather-instagram g-font-base">
+    <header class="b-weather-instagram-header g-indent g-float-center">
+        <h3 class="g-font-size-18 b-weather-instagram-icon g-indent-small j-scrollLoad-instagram">Погода из инстаграма</h3>
+        <p class="g-font-size-16">Отметьте снимок хэштегами <b>#погодаиркру</b> или <b>#иркрупогода</b>, и ваша фотография появится в ленте.</p>
+    </header>
+    <ul class="b-weather-instagram-list g-afisha-preloader j-instagram-list" id="instagram-list" data-url="{% url 'weather:instagram_posts' %}" data-page="1" data-start="0" data-limit="5" data-content="true"></ul>
+        <div class="g-show-more g-margin-bottom-50 padding g-clear-left j-showmore j-instagram-list-showmore" id="instagram-list-showmore" data-type="json" data-target="instagram-list">
+            <span class="centered"><a href="#" class="g-jlink">Показать еще</a></span>
+        </div>
+</section>
+
+
+<div class="b-overlay-swiper-layer g-hide j-overlay-swiper-layer j-overlay-swiper-layer-instagram j-overlay-swiper-layer-close" data-overlay-swiper-target="j-instagram-list">
+    <div class="b-overlay-swiper-layer-container g-relative">
+        <a class="close j-overlay-swiper-layer-close"></a>
+        <div class="b-overlay-swiper-layer-content g-relative j-overlay-swiper-layer-content">
+            <div class="swiper-container g-overflow j-overlay-swiper-container">
+                <div class="swiper-wrapper j-overlay-swiper-wrapper"></div>
+            </div>
+            <a href="#" class="b-overlay-swiper-prev swiper-button-prev j-overlay-swiper-button-prev"></a>
+            <a href="#" class="b-overlay-swiper-next j-overlay-swiper-button-next"></a>
+        </div>
+    </div>
+</div>

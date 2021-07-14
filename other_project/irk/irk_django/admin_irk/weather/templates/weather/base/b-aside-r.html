@@ -1,0 +1,13 @@
+{% load adv_tags comments_tags news_tags %}
+
+{% ibanner id=496 as banner_496 %}
+{% if banner_496 %}
+    <div class="b-weather-banner-300 g-desktop g-margin-bottom-20">
+        {{ banner_496 }}
+    </div>
+    <div class="g-clear"></div>
+{% endif %}
+
+<section class="b-widget-list-bordered j-show-main-container g-aside-block g-indent j-transform" data-transform-target="main">
+    {% last_news %}
+</section>

@@ -1,0 +1,15 @@
+{% load pytils_numeral %}
+<div class="b-expert-rating-like">
+    {% if not authenticated %}
+        <span class="g-button_green auth-link">Спасибо</span>
+    {% endif %}
+    {% if not is_rated %}
+		<form action="{% url 'ratings:rate' %}" method="post">
+			<input type="hidden" name="ct" value="{{ content_type.pk }}">
+			<input type="hidden" name="obj" value="{{ obj.pk }}">
+			<input type="hidden" name="value" value="1">
+            <button class="g-button_green" type="submit">Спасибо</button>
+		</form>
+	{% endif %}
+	<div class="count g-font-size-12 g-color-lightgray">{% if rating %}Сказали спасибо <span class="j-expert-rating-result">{{ rating.total_cnt }}</span> {{ rating.total_cnt|choose_plural:"раз,раза,раз" }}{% endif %}</div>
+</div>

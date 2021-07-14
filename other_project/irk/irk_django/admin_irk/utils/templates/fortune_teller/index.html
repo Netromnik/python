@@ -1,0 +1,98 @@
+{% load staticfiles media_utils site_utils options adv_tags cache metric_tags pages str_utils utils_tags share_utils %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <meta name="viewport" content="width=940">
+    <title>Каким будет твое настроение в 2019 году? | Твой Иркутск</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-touch-icon-57x57.png' %}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-touch-icon-72x72.png' %}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/icons/apple-touch-icon-114x114.png' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+    {% include 'share_meta.html' with url='/fortune_teller/' title='Каким будет твое настроение в 2019 году?' description='Узнай, какое настроение ожидает тебя в течение года' static_image='img/landing_pages/fortune/share.jpg' static_image_width=800 static_image_height=420 %}
+
+    {% block style %}
+        {% less '/less/compile/landings/fortune.less' %}
+    {% endblock style %}
+
+    {% if settings.DEBUG_ADAPTIVE or request.user_agent.is_gadget %}
+        {% block style_adaptive %}
+            {% less '/less/compile/adaptive/landings/fortune.less' media='all' %}
+        {% endblock style_adaptive %}
+    {% endif %}
+
+    {% if settings.DEBUG %}
+        <script type="text/javascript">var less = {env: "development"};</script>
+        <script type="text/javascript" src="{% static 'js/lib/less/less-1.7.5.js' %}"></script>
+    {% endif %}
+
+    {% block js %}
+        <script type="text/javascript">
+            var DOMAIN_MEDIA = "{{ MEDIA_URL }}";
+            var auth_no_redir = {};
+            var auth_callback = {};
+            var irk = {};
+        </script>
+        <script type="text/javascript" src="{% static 'js/lib/jquery-1.7.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lib/modernizr-2.6.2-bro-fix.js' %}"></script>
+        {% if settings.DEBUG %}<script type="text/javascript" src="{% static 'js/apps-js/debug.js' %}"></script>{% endif %}
+        <script type="text/javascript" src="{% static 'js/apps-js/landing/fortune.js' %}"></script>
+    {% endblock js %}
+
+    {% include 'google_analytics.html' %}
+</head>
+<body class="j-toggle-target-bodyhide" data-toggle-class="b-main-menu-opened">
+{% include 'yandex_metrika.html' %}
+
+{# Топ меню #}
+{% include 'snippets/header.html' %}
+
+<div class="fortune">
+    <article class="fortune__main">
+        <header class="fortune__header">
+            <h1 class="fortune__title">
+                Каким будет твое настроение в 2019 году?
+            </h1>
+            <p class="fortune__desc">
+                Наш emoji-прорицатель:
+            </p>
+        </header>
+        <div class="fortune__content">
+            {% block list-emoji %}
+            <ul class="list-emoji">
+                <li class="list-emoji__item j-emoji-result j-emoji-result-1">
+                    <i class="twa twa-question" title=":question:"></i>
+                </li>
+                <li class="list-emoji__item j-emoji-result j-emoji-result-2">
+                    <i class="twa twa-question" title=":question:"></i>
+                </li>
+                <li class="list-emoji__item j-emoji-result j-emoji-result-3">
+                    <i class="twa twa-question" title=":question:"></i>
+                </li>
+            </ul>
+            {% endblock list-emoji %}
+            <div class="fortune__buttons">
+                <a href="#" class="fortune__button j-emoji-button">
+                    Узреть свое будущее
+                </a>
+            </div>
+        </div>
+        <footer class="fortune__footer">
+            <div class="fortune__share">
+                <h5 class="fortune__share-title">
+                    Рассказать всем о магии:
+                </h5>
+                {% share_custom additional_class='j-share-hardstatistic' description='Узнай, какое настроение ожидает тебя в течение года' url='/fortune_teller/' social_statistic=socialstatistic %}
+            </div>
+        </footer>
+    </article>
+</div>
+
+
+
+{% include 'snippets/footer.html' %}
+
+{% include 'liveinternet_counter.html' %}
+</body>
+</html>

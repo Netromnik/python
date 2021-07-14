@@ -1,0 +1,57 @@
+{% load str_utils comments_tags thumbnail utils_tags cache_tags staticfiles news_tags pytils_numeral %}
+
+{% cache 3600 'news.tags.material_card_double_light' vary='material.pk,material.is_hidden,metrika_goal,audit_goal' tags='material' %}
+    <article class="b-widget-material-double-light{% if material.is_hidden %} g-hidden-material{% endif %}">
+        <a href="{{ material.get_absolute_url }}" class="b-widget-material-double-light-link {% if metrika_goal %}j-metrika-goal{% endif %} {% if audit_goal %}j-audit-goal-click{% endif %}
+            {% if 'impression' in track %}j-analytics-impression{% endif %} {% if 'click' in track %}j-analytics-click{% endif %}"
+           {% if metrika_goal %}
+               data-metrika-goal="{{ metrika_goal }}"
+           {% endif %}
+           {% if audit_goal %}
+               data-audit-goal="{{ audit_goal }}"
+               data-audit-material="{{ audit_material }}"
+           {% endif %}
+           {% if analytics_cat %}
+               data-analytics-category="{{ analytics_cat }}"
+               data-analytics-label="{{ material.title|escape }}"
+           {% endif %}
+           {% if target %}target="{{ target }}"{% endif %}
+        >
+            <div class="b-widget-material-double-light-title-container">
+                <h4 class="b-widget-material-double-light-title {% if material.title|length > 48 %}size2{% endif %}">{{ material.title|typograf }}</h4>
+            </div>
+            <h6 class="b-widget-material-double-light-summary">
+                {% if material.author %}
+                    <div class="b-widget-material-double-light-summary-author"></div>{{ material.author|truncatechars:45|typograf }}
+                {% else %}
+                    <div class="b-widget-material-double-light-summary-time"></div>около {{ object.content|time_to_read|get_plural:"минуты,минут,минут" }} на чтение
+                {% endif %}
+            </h6>
+            <div class="b-widget-material-double-light-icon with-text {{ material|classname|lower }}" title="{{ material|verbose_name }}">
+                <div class="b-widget-material-double-light-icon-text">{{ material|verbose_name }}</div>
+            </div>
+        </a>
+        {% if material.comments_cnt %}
+            <span class="b-widget-material-double-light-comments {% if metrika_goal %}j-metrika-goal{% endif %} {% if audit_goal %}j-audit-goal-click{% endif %}
+                    {% if 'impression' in track %}j-analytics-impression{% endif %} {% if 'click' in track %}j-analytics-click{% endif %}"
+                {% if metrika_goal %}
+                    data-metrika-goal="{{ metrika_goal }}"
+                {% endif %}
+                {% if audit_goal %}
+                    data-audit-goal="{{ audit_goal }}"
+                    data-audit-material="{{ audit_material }}"
+                {% endif %}
+                {% if analytics_cat %}
+                    data-analytics-category="{{ analytics_cat }}"
+                    data-analytics-label="{{ material.title|escape }}"
+                {% endif %}
+            >
+                {% comments_cnt material plural=',,' %}
+                {# todo заменить эту порнографию на новый фильтр когда его сделают =) #}
+                {% with material.comments_cnt|slugify as fuck %}
+                    <div class="b-widget-material-double-light-icon-text">{{ material.comments_cnt|get_plural:'отзыв,отзыва,отзывов'|cut:fuck }}</div>
+                {% endwith %}
+            </span>
+        {% endif %}
+    </article>
+{% endcache %}

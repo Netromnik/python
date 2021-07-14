@@ -1,0 +1,37 @@
+{% load news_tags str_utils thumbnail date_tags %}
+
+<li class="grid-list__item grid-list__item_100 grid-list__item_max g-margin-bottom-40">
+    <div class="articles-slider-wrapper">
+        <div class="articles-slider__buttons">
+            <span class="articles-slider__button articles-slider__button_prev j-articles-slider-prev" title="следующий фоторепортаж"></span>
+            <span class="articles-slider__button articles-slider__button_next j-articles-slider-next" title="предыдущий фоторепортаж"></span>
+        </div>
+        <div class="articles-slider j-articles-slider">
+
+            {% for item in photos %}
+                {# slider item #}
+                <a href="{{ item.get_absolute_url }}" class="articles-slider__item" target="_blank">
+                    <div class="articles-slider__header">
+                        <h4 class="articles-slider__title">
+                            {{ item.title|typograf }}
+                        </h4>
+                        <div class="articles-slider__info">
+                            <span class="articles-slider__gray">
+                                {{ item.gallery.main_gallery_pictures|length }} фото
+                            </span>
+                            <span class="articles-slider__gray" title="дата публикации">
+                                {{ item.stamp|dates:'%d.%m|%d.%m.%Y' }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="articles-slider__image">
+                        {% thumbnail item.gallery.best_image.image 1180x630 quality=80 x=item.watermark as thumb %}
+                        <img class="articles-slider__img" src="{{ thumb }}" alt="{{ item.title|typograf }}" />
+                    </div>
+                </a>
+                {# slider item #}
+            {% endfor %}
+
+        </div>
+    </div>
+</li>

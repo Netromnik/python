@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+{% load staticfiles media_utils adv_tags %}
+
+{% block title %}Конкурсы на IRK.ru{% endblock %}
+
+{% block meta_adaptive %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+{% endblock %}
+
+{% block style_adaptive %}
+    {% less '/less/compile/adaptive/apps/contests.less' media='all' %}
+{% endblock %}
+
+{% block style %}
+    {% include 'contests/base/style.html' %}
+{% endblock style %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.lazyload.1.9.3.js' %}"></script>
+    <script type="text/javascript" src="{% static 'contests/js/contests.js' %}"></script>
+{% endblock js %}
+
+{% block text_widget %}{% include 'contests/base/widget.html' %}{% endblock %}
+
+{% block container %}
+    {% block container-header %}{% endblock %}
+    {{ block.super }}
+    {% block container-footer %}{% endblock %}
+{% endblock %}
+
+{% block float_banner %}
+    {% include 'afisha/base/banner/adaptive_banner_1000x50.html' %}
+{% endblock %}

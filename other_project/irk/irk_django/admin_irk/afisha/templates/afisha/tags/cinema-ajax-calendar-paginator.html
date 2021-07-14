@@ -1,0 +1,36 @@
+{% load pytils_dt afisha_tags %}
+{% if calendar %}
+<div class="g-datecontainer j-datecontainer j-datecontainer-ajax g-ajax g-margin-right-30">
+    <div class="b-list-h b-afisha-datecontainer-filter j-afisha-datecontainer-filter">
+    {% for week in calendar %}
+        {% for date, has_sessions in week %}
+            <div class="item j-datecontainer-item {% if forloop.counter >= 6 %} vacation{% endif %}{% if forloop.counter == 7 %} g-last{% endif %}{% if date == today %} today{% endif %}{% if date == current_date %} g-active{% endif %}{% if not has_sessions %} g-disabled{% endif %}"
+                 data-url="{% afisha_paginator_url sessions_view_name view_kwargs year=date.year month=date|date:'m' day=date|date:'d' %}"
+                 data-href="{% afisha_paginator_url view_name view_kwargs year=date.year month=date|date:"m" day=date|date:"d" %}#event=sked"
+                 data-title="{{ obj }} {{ date|ru_strftime:"%d %B" }} | Афиша Иркутска на IRK.ru"
+            >
+                {% if has_sessions and date != current_date %}
+                    <a href="{% afisha_paginator_url view_name view_kwargs year=date.year month=date|date:"m" day=date|date:"d" %}#event=sked">{% else %}<span>
+                {% endif %}
+
+                {% comment %}
+                {% if date == today %}
+                    <p>Сегодня</p>
+                    <span>{{ date|ru_strftime:"%a"|capfirst }}, </span><time>{{ date.day }}</time>
+                {% else %}
+                {% endcomment %}
+                    <p>{{ date|ru_strftime:"%a"|capfirst }}</p>
+                    <time>{{ date.day }}</time>
+                {% comment %}
+                {% endif %}
+                {% endcomment %}
+                {% if has_sessions and date != current_date %}</a>{% else %}</span>{% endif %}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    </div>
+</div>
+<div class="b-afisha-cinema-filter j-dimension-filter">
+    <span class="j-dimension-button j-filter-all g-active">Все</span> <span class="j-dimension-button j-filter-2d">2D</span> <span class="j-dimension-button j-filter-3d">3D</span>
+</div>
+{% endif %}

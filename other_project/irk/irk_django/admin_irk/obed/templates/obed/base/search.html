@@ -1,0 +1,30 @@
+{% load staticfiles media_utils %}
+
+<script type="text/javascript" src="{% static 'js/lib/jquery.placeholder.min.js' %}"></script>
+<script type="text/javascript">
+    $(function() {
+        $('.b-widget-search').each(function () {
+            var $that = $(this),
+                $searchField = $('input[type="text"]', $that);
+
+            $that.on('click', '.j-search-submit', function (e) {
+                e.preventDefault();
+                $that.submit();
+            });
+
+            $that.on('click', '.j-search-insert', function (e) {
+                e.preventDefault();
+                $searchField.val($(this).text());
+            });
+
+            $searchField.placeholder();
+        });
+    });
+</script>
+
+<div class="j-transform-container j-transform-container-search-desktop j-transform-container-search-mobile_768">
+    <form class="b-widget-search j-transform" data-transform-target="search" action="{% url 'obed:search' %}" method="GET">
+        <input name="q" type="text" placeholder="Найти заведение" value="{{q}}"><span class="b-widget-search-button j-search-submit"></span>
+        <div class="b-widget-search-hint g-desktop g-mobile_768">например, <a href="#" class="g-jlink j-search-insert j-metrika-goal" data-metrika-goal="obed_search_hint">суши</a></div>
+    </form>
+</div>

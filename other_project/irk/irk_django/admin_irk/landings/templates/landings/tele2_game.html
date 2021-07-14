@@ -1,0 +1,105 @@
+{% load staticfiles media_utils site_utils options adv_tags cache metric_tags pages str_utils utils_tags share_utils %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <meta name="viewport" content="width=940">
+    <title>Понедельник — день подарков | Твой Иркутск</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-touch-icon-57x57.png' %}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-touch-icon-72x72.png' %}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/icons/apple-touch-icon-114x114.png' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+    {% include 'share_meta.html' with url='/tele2-game/' title='Понедельник — день подарков' description='Получай призы от Теле2 каждый понедельник!' static_image='img/landing_pages/tele2/share.jpg' static_image_width=800 static_image_height=420 %}
+
+    {% block style %}
+        {% less '/less/compile/landings/tele2.less' %}
+    {% endblock style %}
+
+    {% if settings.DEBUG_ADAPTIVE or request.user_agent.is_gadget %}
+        {% block style_adaptive %}
+            {% less '/less/compile/adaptive/landings/tele2.less' media='all' %}
+        {% endblock style_adaptive %}
+    {% endif %}
+
+    {% if settings.DEBUG %}
+        <script type="text/javascript">var less = {env: "development"};</script>
+        <script type="text/javascript" src="{% static 'js/lib/less/less-1.7.5.js' %}"></script>
+    {% endif %}
+
+    {% block js %}
+        <script type="text/javascript">
+            var DOMAIN_MEDIA = "{{ MEDIA_URL }}";
+            var auth_no_redir = {};
+            var auth_callback = {};
+            var irk = {};
+        </script>
+        <script type="text/javascript" src="{% static 'js/lib/jquery-1.7.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lib/modernizr-2.6.2-bro-fix.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/apps-js/landing/tele2.js' %}"></script>
+    {% endblock js %}
+
+    {% include 'google_analytics.html' %}
+</head>
+<body class="j-toggle-target-bodyhide" data-toggle-class="b-main-menu-opened">
+{% include 'yandex_metrika.html' %}
+
+{# Топ меню #}
+{% include 'snippets/header.html' %}
+
+<div class="fortune">
+    <article class="fortune__main">
+        <header class="fortune__header">
+            <h1 class="fortune__title">
+                Понедельник — день подарков
+            </h1>
+            <p class="fortune__desc">
+                Забудь про тяжелый понедельник, ведь мы приготовили для тебя классную игру с подарками от Tele2.
+                Узнай, что ждет тебя сегодня: кофе, пицца или скидка на поездку в такси.
+                Если не получилось сразу — попробуй еще, тебе обязательно повезет!
+            </p>
+        </header>
+        <div class="fortune__content">
+            {% block list-emoji %}
+            <ul class="list-emoji">
+                <li class="list-emoji__item j-emoji-result j-emoji-result-1">
+                    <i class="twa twa-question" title=":question:"></i>
+                </li>
+                <li class="list-emoji__item j-emoji-result j-emoji-result-2">
+                    <i class="twa twa-question" title=":question:"></i>
+                </li>
+                <li class="list-emoji__item j-emoji-result j-emoji-result-3">
+                    <i class="twa twa-question" title=":question:"></i>
+                </li>
+            </ul>
+            {% endblock list-emoji %}
+            <div class="fortune__buttons j-fortune-buttons">
+                <a href="#" class="fortune__button j-emoji-button j-emoji-button-init">
+                    Хочу подарок
+                </a>
+                <a href="#" class="fortune__more j-fortune-more g-hide">
+                    Крутить еще раз
+                </a>
+            </div>
+        </div>
+        <footer class="fortune__footer">
+            <div class="fortune__share">
+                <h5 class="fortune__share-title">
+                    Поздравить с понедельником:
+                </h5>
+                {% share_custom additional_class='j-share-hardstatistic' description='Получай призы от Теле2 каждый понедельник!' url='/tele2-game/' social_statistic=socialstatistic %}
+            </div>
+        </footer>
+    </article>
+    <div class="disclaimer">
+        Активировать подарок можно в приложении «Мой Tele2».
+        Акция действует с 17 августа по 30 ноября 2020 года и доступна для абонентов Tele2
+        тарифных планов «Мой Онлайн», «Мой Онлайн +», «Премиум», «Игровой», «Мой разговор»,
+        «Мой интернет», «Персональный», «VIP», «VIP Ultra».
+    </div>
+</div>
+
+{% include 'snippets/footer.html' %}
+{% include 'liveinternet_counter.html' %}
+</body>
+</html>

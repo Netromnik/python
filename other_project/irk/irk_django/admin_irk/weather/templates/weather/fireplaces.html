@@ -1,0 +1,29 @@
+{% extends "weather/layout.html" %}
+
+{% load staticfiles media_utils profile_utils str_utils pytils_dt adv_tags %}
+
+{% block title %}Карта пожаров по Иркутской области | {{ block.super }}{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="text/javascript" src="http://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU"></script>
+<script type="text/javascript" src={% static "weather/js/ya-map.js" %}></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    var data = {{ data|json }};
+    var img_href = '{% static 'weather/img/icons/fire.png' %}';
+	FirePlacesMap('map-container', data, img_href);
+    $('#map-container').css('height', '650');
+});
+</script>
+{% endblock %}
+
+{% block b-content-cr %}
+<h1>Карта пожаров по Иркутской области</h1>
+<p class="info" style="margin-bottom: 1em">Дата последнего обновления: {{ last_update|ru_strftime:"%d %B %Y года" }}. Данные о пожарах предоставлены <a href="http://sputnik.irk.ru">Иркутским центром дистанционного зондирования Земли</a>.</p>
+<div class="map">
+	<div id="map-container"></div>
+</div>
+<div class="clear"></div>
+{% endblock b-content-cr %}
+<br class="clear">

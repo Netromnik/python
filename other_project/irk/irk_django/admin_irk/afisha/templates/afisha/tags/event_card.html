@@ -1,0 +1,77 @@
+{% comment %}
+Карточка события в афише
+
+    inputs:
+        event - событие
+        event_image - изображение
+        review_url - url на рецензию
+        is_lazyload - ленивая загрузка изображений
+        metrika_goal - цель для Яндекс.Метрики
+        event_image - изображение для события
+        request - запрос
+
+    Также можно передвать и другие параметры через вызов {% event_card event param=value %}
+
+{% endcomment %}
+
+{% load staticfiles news_tags str_utils comments_tags thumbnail date_tags utils_tags pytils_numeral cache_tags rating_tags %}
+
+{% cache 3600 'afisha.tags.event_card' vary='event.pk,metrika_goal,request.user_agent.is_gadget' tags='event' %}
+
+    <article class="afisha-article__article afisha-article__article_height {% if event.is_hidden %}g-hidden-material{% endif %}">
+        <header class="afisha-article__header">
+            <a href="{{ event.get_absolute_url }}"
+                class="afisha-article__link {% if metrika_goal %}j-metrika-goal{% endif %}"
+                {% if metrika_goal %}data-metrika-goal="{{ metrika_goal }}"{% endif %}>
+                <figure class="afisha-article__figure afisha-article__figure_height afisha-article__figure_dark">
+                    {% if event_image %}
+                        {% if request.user_agent.is_gadget %}
+                            {% thumbnail event_image 340x210 as thumb %}
+                            <img{% if is_lazyload %} class="j-lazy-load" data-original="{{ thumb }}" src="{% static 'img/gag_widget_340x200.gif' %}"
+                                {% else %} src="{{ thumb }}"{% endif %} alt="{{ event.title|typograf }}" style="max-width: 100%; width: 100%;">
+                        {% else %}
+                            {% thumbnail event_image 280x190 crop as thumb %}
+                            <img{% if is_lazyload %} class="j-lazy-load" data-original="{{ thumb }}"{% else %} src="{{ thumb }}"{% endif %}
+                                    alt="{{ event.title|typograf }}" width="{{ thumb.width }}" height="{{ thumb.height }}">
+                        {% endif %}
+                    {% else %}
+                        <h4 class="afisha-article__noimage">
+                            {{ event|typograf }}
+                        </h4>
+                    {% endif %}
+                </figure>
+            </a>
+            <div class="afisha-article__elements">
+                {% if event.genre %}
+                <span class="afisha-article__event {% if event.is_tickets_exist %}afisha-article__event_max-width{% endif %}">
+                    {{ event.genre|typograf }}
+                </span>
+                {% endif %}
+                {% if event.type.alias == 'cinema' %}
+                    {% include 'afisha/snippets/cinema_buy_button.html' with additional_class='b-widget-article-button g-margin-right-10 left' metrika='cinema_buy_click' %}
+                {% else %}
+                    {% if event.is_tickets_exist %}
+                        {% include 'afisha/snippets/buy_button.html' with session=event.nearest_tickets_session metrika='afisha_buy_click' %}
+                    {% endif %}
+                {% endif %}
+                {% if event.is_free %}
+                    <span class="afisha-article__element afisha-article__element_green">
+                        Бесплатно
+                    </span>
+                {% endif %}
+            </div>
+        </header>
+        {% if event.age_rating >= 0 %}
+        <span class="afisha-article__age">
+            {{ event.age_rating }}+
+        </span>
+        {% endif %}
+        <h4 class="afisha-article__title">
+            <a href="{{ event.get_absolute_url }}" class="afisha-article__title-link {% if metrika_goal %}j-metrika-goal{% endif %}">
+                {{ event|typograf }}
+            </a>
+        </h4>
+        {% if event.comments_cnt %}{% comments_cnt event extra_class='afisha-article__review afisha-article__review_big' new_layout=True %}{% endif %}
+    </article>
+
+{% endcache %}

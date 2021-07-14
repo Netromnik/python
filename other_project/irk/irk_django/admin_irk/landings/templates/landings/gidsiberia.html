@@ -1,0 +1,393 @@
+{% load staticfiles media_utils site_utils options adv_tags cache metric_tags pages str_utils utils_tags thumbnail phones_tags %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+    <title>Гид по сибирской кухне | Твой Иркутск</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-touch-icon-57x57.png' %}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-touch-icon-72x72.png' %}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/icons/apple-touch-icon-114x114.png' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+    {% include 'share_meta.html' with url='/gidsiberia/' title='Гид по сибирской кухне' description='Гид по сибирской кухне' static_image='img/landing_pages/treasures/share.jpg' static_image_width=800 static_image_height=420 %}
+
+    {% block style %}
+        {% less '/less/compile/landings/gastromap.less' %}
+    {% endblock style %}
+
+    {% if settings.DEBUG_ADAPTIVE or request.user_agent.is_gadget %}
+        {% block style_adaptive %}
+            {% less '/less/compile/adaptive/landings/gastromap.less' media='all' %}
+        {% endblock style_adaptive %}
+    {% endif %}
+
+    {% if settings.DEBUG %}
+        <script type="text/javascript">var less = {env: "development"};</script>
+        <script type="text/javascript" src="{% static 'js/lib/less/less-1.7.5.js' %}"></script>
+    {% endif %}
+
+    {% block js %}
+        <script type="text/javascript">
+            var POINTS_URL = "/gidsiberia/points/";
+            var DOMAIN_MEDIA = "{{ MEDIA_URL }}";
+            var auth_no_redir = {};
+            var auth_callback = {};
+            var irk = {};
+        </script>
+        <script type="text/javascript" src="{% static 'js/lib/jquery-1.11.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lib/jquery-migrate-1.2.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lib/jquery-ui-1.9.2.custom.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lib/modernizr-2.6.2-bro-fix.js' %}"></script>
+        <script src="https://api-maps.yandex.ru/2.1/?apikey=f184704d-17dc-4b4d-84ac-9242bb69ee13&lang=ru_RU" type="text/javascript"></script>
+        {% if settings.DEBUG %}<script type="text/javascript" src="{% static 'js/apps-js/debug.js' %}"></script>{% endif %}
+        <script type="text/javascript" src="{% static 'js/lib/owl.carousel.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/apps-js/landing/gidsiberia.js' %}"></script>
+    {% endblock js %}
+
+    {% include 'google_analytics.html' %}
+</head>
+<body class="j-toggle-target-bodyhide" data-toggle-class="b-main-menu-opened">
+{% include 'yandex_metrika.html' %}
+
+{# Зона с контентом #}
+
+<div class="gastro-wrapper j-wrapper">
+    <div class="gastro">
+        <!--menu-->
+        <nav class="mainmenu j-mainmenu">
+            <ul class="mainmenu-list">
+                {% for site in sites %}
+                <li class="mainmenu-list__item {{ site.menu_class }}">
+                    <a href="{{ site.url }}" class="mainmenu-list__link">
+                        {{ site.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        <!--menu-->
+
+        <section class="gastro__info j-tabs">
+            <div class="gastro__header">
+                <div class="gastro__main">
+                    <div class="gastro__back hide j-back"></div>
+                    <a href="/" class="gastro__logo"></a>
+
+                    {% if en %}
+                        <a class="gastro__lang" href="{% url 'landings_gidsiberia_index' lang='ru'%}">EN</a>
+                    {% else %}
+                        <a class="gastro__lang" href="{% url 'landings_gidsiberia_index' lang='en'%}">RU</a>
+                    {% endif %}
+
+                    <a href="#" class="hamburger j-hamburger">
+                        <div class="hamburger__line hamburger__line_top"></div>
+                        <div class="hamburger__line hamburger__line_middle"></div>
+                        <div class="hamburger__line hamburger__line_bottom"></div>
+                    </a>
+
+                </div>
+                <nav class="gastro__menu j-menu">
+                    <ul class="gastro-tabs">
+                        <li class="gastro-tabs__item gastro-tabs__item_mobile">
+                            <a href="#tab-1" class="gastro-tabs__link j-menu-tab">
+                                {% if en %} Map {% else %} Карта {% endif %}
+                            </a>
+                        </li>
+                        <li class="gastro-tabs__item">
+                            <a href="#tab-2" class="gastro-tabs__link j-menu-tab">
+                                {% if en %} List of dishes {% else %} Список блюд {% endif %}
+                            </a>
+                        </li>
+                        <li class="gastro-tabs__item">
+                            <a href="#tab-3" class="gastro-tabs__link j-menu-tab">
+                                {% if en %} About {% else %} О проекте {% endif %}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="gastro__content j-content">
+                <div class="gastro__tabs j-tabs-content">
+                    <div class="gastro__tab gastro__tab_mobile" id="tab-1">
+
+                        {% if request.user_agent.is_gadget %}
+                            <div class="balloons">
+                                {% for establishment in  establishments %}
+
+                                    {% if establishment.dishes.v2.count > 1 %}
+
+                                        <!--balloon item-->
+                                        <div class="balloons__item balloons__item_multiple j-balloon" data-establishment="{{ establishment.pk }}">
+                                            <a href="#" class="balloons__close j-balloon-close"></a>
+
+                                            <div class="balloons__description">
+                                                {% if en %} Choose a dish: {% else %} Выберите блюдо: {% endif %}
+                                            </div>
+
+                                            {% for dish in  establishment.dishes.v2 %}
+                                                <a href="#" class="balloons__dish j-balloon-more" data-id="{{ dish.pk }}">
+                                                    <div class="balloons__dish__header">
+                                                        <h4 class="balloons__title">
+                                                            {% if en %} {{ dish.name_en }} {% else %} {{ dish.name }} {% endif %}
+                                                        </h4>
+                                                        <div class="balloons__image">
+                                                            {% thumbnail dish.gallery.main_image.image 90x90 crop as thumb %}
+                                                            <img src="{{ thumb }}" class="balloons__img" />
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            {% endfor %}
+
+                                            <p class="balloons__text">
+                                                {% if en %} {{ establishment.name_en }} {% else %} {{ establishment.name }} {% endif %} | {% if en %} {{ establishment.address_name_en }} {% else %} {{ establishment.main_address.name }} {% endif %}
+                                            </p>
+                                            <div class="balloons__links">
+                                                <a href="#" class="balloons__link j-balloon-route" data-id="{{ dish.pk }}" data-coordinates="{{ establishment.point }}">
+                                                    {% if en %} Show route {% else %} Построить маршрут {% endif %}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!--balloon item-->
+
+                                    {% else %}
+
+                                        {% for dish in  establishment.dishes.v2 %}
+                                        <!--balloon item-->
+                                        <div class="balloons__item j-balloon" data-id="{{ dish.pk }}" data-establishment="{{ dish.establishment_id }}">
+                                            <a href="#" class="balloons__close j-balloon-close"></a>
+                                            <div class="balloons__image">
+                                                {% thumbnail dish.gallery.main_image.image 90x90 crop as thumb %}
+                                                <img src="{{ thumb }}" class="balloons__img" />
+                                            </div>
+                                            <h4 class="balloons__title">
+                                                {% if en %} {{ dish.name_en }} {% else %} {{ dish.name }} {% endif %}
+                                            </h4>
+                                            <p class="balloons__text">
+                                                {% if en %} {{ dish.establishment.name_en }} {% else %} {{ dish.establishment.name }} {% endif %} | {% if en %} {{ dish.establishment.address_name_en }} {% else %} {{ dish.establishment.main_address.name }} {% endif %}
+                                            </p>
+                                            <div class="balloons__links">
+                                                <a href="#" class="balloons__link j-balloon-route" data-id="{{ dish.pk }}" data-coordinates="{{ dish.establishment.point }}">
+                                                    {% if en %} Show route {% else %} Маршрут {% endif %}
+                                                </a>
+                                                <a href="#" class="balloons__link j-balloon-more" data-id="{{ dish.pk }}">
+                                                    {% if en %} Description {% else %} Подробнее {% endif %}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!--balloon item-->
+                                        {% endfor %}
+
+                                    {% endif %}
+
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="gastro__mobilemap j-mobile-map"></div>
+                    </div>
+                    <div class="gastro__tab" id="tab-2">
+                        <!--список блюд-->
+                        <div class="dishlist">
+                            {% for establishment in  establishments %}
+                                {% for dish in  establishment.dishes.v2 %}
+                                    <a href="#" class="dishlist__item j-dishlist-item" data-id="{{ dish.pk }}" data-establishment="{{ dish.establishment_id }}">
+                                        <div class="dishlist__image">
+                                            {% thumbnail dish.gallery.main_image.image 400x280 crop as thumb %}
+                                            <img src="{{ thumb }}" class="dish-slider__img" />
+                                        </div>
+                                        <h4 class="dishlist__title">
+                                           {% if en %} {{ dish.name_en }} {% else %} {{ dish.name }} {% endif %}
+                                        </h4>
+                                        <div class="dishlist__rest">
+                                            {% if en %} {{ dish.establishment.name_en }} {% else %} {{ dish.establishment.name }} {% endif %} | {% if en %} {{ dish.establishment.address_name_en }} {% else %} {{ dish.establishment.main_address.name }} {% endif %} &rarr;
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                        <!--список блюд-->
+                    </div>
+                    <div class="gastro__tab" id="tab-3">
+                        <div class="about">
+                            <h3 class="about__title">
+                                Гид по сибирской кухне
+                            </h3>
+                            <div class="about__text">
+                                <p>Изучив кулинарные традиции региона, команда Гида отыскала в заведениях города лучшие образцы местной кухни.</p>
+                                <p>Результатами этого исследования мы рады поделиться с вами. Наша гастрономическая карта подскажет, в каких ресторанах Иркутска непременно стоит попробовать сибирские блюда.
+                                <br>Приятного аппетита!</p>
+                            </div>
+                            <div class="about__logo">
+                                <a href="/" class="gastro__logo"></a>
+                            </div>
+
+                            <div class="about__print">
+                                <div class="about__print__logo"></div>
+                                <p>
+                                    Заказать печатную версию карты <b>бесплатно</b> можно
+                                    по телефону 48-88-50 или почте <a href="mailto:news@irk.ru">news@irk.ru</a>
+                                </p>
+                            </div>
+
+                            <div class="about__partner">
+                                <div class="about__text">
+                                    <p>Сибирь богата уникальными вкусами, которые делают местные блюда непохожими на любые другие. Мы верим, что наш Гид привлечет внимание не только туристов, но и ресторанов, и традиционных рецептов в меню города станет больше.</p>
+                                </div>
+                                <div class="about__logo about__logo_nopb">
+                                    <img src="{% static 'img/landing_pages/treasures/dick.svg' %}" width="250" />
+                                </div>
+                            </div>
+
+                            <div class="about__partner about__partner_footer">
+                                <div class="about__log about__logo_center">
+                                    <img class="about__img" src="{% static 'img/landing_pages/treasures/treasures.png' %}" />
+                                    <a class="about__instagram" href="https://instagram.com/gidsiberia">
+                                        @gidsiberia
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                {% for establishment in  establishments %}
+                    {% for dish in  establishment.dishes.v2 %}
+                        <!--блюдо-->
+                        <div class="dish j-dish-item" data-id="{{ dish.pk }}">
+                            <h3 class="dish__title">
+                                {% if en %} {{ dish.name_en }} {% else %} {{ dish.name }} {% endif %}
+                            </h3>
+                            <div class="dish__gallery">
+                                <div class="dish-slider-wrapper">
+                                    {% if dish.gallery.main_gallery|length > 1 %}
+                                        <div class="dish-slider j-dish-slider">
+                                            {% for item in dish.gallery.main_gallery %}
+                                                {% thumbnail item.image 400x280 crop as thumb %}
+                                                <div class="dish-slider__item">
+                                                    <img src="{{ thumb }}" class="dish-slider__img" />
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="dish-slider">
+                                            {% thumbnail dish.gallery.main_image.image 400x280 crop as thumb %}
+                                            <div class="dish-slider__item dish-slider__item_image">
+                                                <img src="{{ thumb }}" class="dish-slider__img" />
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="dish__description">
+                                <div class="dish__desc">
+                                    <div class="dish__text {% if dish.content|length > 250 %}hide{% endif %} j-dish-text">
+                                        <p>
+                                            {{ dish.content }}
+                                        </p>
+                                    </div>
+                                    {% if dish.content|length > 250 %}
+                                        <a href="#" class="dish__more j-dish-more" data-id="{{ dish.pk }}">
+                                            {% if en %} more information {% else %} читать полностью {% endif %}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div class="dish__address">
+                                    <div class="dish__place">
+                                        <div class="dish__point"></div>
+                                        <div class="dish__label">
+                                            {% if en %}
+                                                {{ dish.establishment.type_name_en }}
+                                            {% else %}
+                                                {{ dish.establishment.type_name }}
+                                            {% endif %}
+                                        </div>
+                                        <h3 class="dish__rest">
+                                            {% if en %} {{ dish.establishment.name_en }} {% else %} {{ dish.establishment.name }} {% endif %}
+                                        </h3>
+                                        {% if dish.rating > 0%}
+                                            <div class="dish__rating dish__rating_color-{{ dish.rating }}">
+                                                <span class="dish__rating__item"></span>
+                                                <span class="dish__rating__item"></span>
+                                                <span class="dish__rating__item"></span>
+
+                                                <div class="dish__rating__description">
+                                                    &laquo;Шишки&raquo; указывают на количество интересных сибирских блюд
+                                                    и продуктов в меню ресторана. Одна шишка — 1-3 блюда.
+                                                    Две шишки — 4-5 блюд. Три шишки — 6 и более блюд.
+                                                </div>
+
+                                            </div>
+                                        {% endif %}
+                                        <div class="dish__route j-balloon-route j-dish-route" data-id="{{ dish.pk }}" data-coordinates="{{ dish.establishment.point }}">
+                                            {% if en %} show route {% else %} проложить маршрут {% endif %}
+                                        </div>
+                                        <div class="dish__contact">
+                                            <a href="tel:{{ dish.establishment.main_address.phones }}">
+                                                {{ dish.establishment.main_address.phones }}
+                                            </a> | {% if en %} {{ dish.establishment.address_name_en }} {% else %} {{ dish.establishment.main_address.name }} {% endif %}
+                                        </div>
+                                        <div class="dish__time">
+                                            {% worktime dish.establishment.main_address %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--блюдо-->
+                    {% endfor %}
+                {% endfor %}
+
+            </div>
+        </section>
+        <section class="gastro__map j-desktop-map">
+            <div id="map" style="width: 100%; height: 100%;"></div>
+
+            <div class="printmap j-print fixed">
+                <div class="printmap__content j-print-content">
+                    <div class="printmap__image"></div>
+                    <div class="printmap__info">
+                        <p>
+                            Заказать печатную версию
+                            карты <b>бесплатно</b> можно
+                            по телефону 48-88-50<br />
+                            или почте <a href="mailto:news@irk.ru">news@irk.ru</a>
+                        </p>
+                        <a href="#" class="printmap__button j-print-toggle">
+                            Ok
+                        </a>
+                    </div>
+                </div>
+                <div class="printmap__toggle j-print-toggle open">
+                    Печатная версия
+                </div>
+            </div>
+
+        </section>
+
+        <div class="popup j-popup">
+            <h3 class="popup__title">
+                Включите геолокацию
+            </h3>
+            <div class="popup__text">
+                У вас установлен запрет на определение местоположения.<br />
+                Измените это в настройках браузера и повторите попытку.
+            </div>
+            <div class="popup__buttons">
+                <a href="https://yandex.ru/support/common/browsers-settings/geolocation.xml" class="popup__link popup__link_blue" target="_blank">
+                    Открыть инструкцию
+                </a>
+                <a href="#" class="popup__link j-popup-close">
+                    В другой раз
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% include 'snippets/footer.html' %}
+{% include 'liveinternet_counter.html' %}
+</body>
+</html>

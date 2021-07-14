@@ -1,0 +1,11 @@
+{% load pytils_numeral %}
+
+{% if questions > 0 %}
+    <a href="{{ object.get_absolute_url }}" class="icon-inline icon-left icon-comment">
+        {% if object.is_consultation %}
+            {{ questions }}&nbsp;{{ questions|choose_plural:"ответ, ответа, ответов" }}
+        {% else %}
+            {{ questions }}&nbsp;{{ questions|choose_plural:"вопрос, вопроса, вопросов" }}
+        {% endif %}
+    </a>
+{% endif %}

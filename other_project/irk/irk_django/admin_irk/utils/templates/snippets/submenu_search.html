@@ -1,0 +1,25 @@
+{% load staticfiles media_utils %}
+
+<script type="text/javascript" src="{% static 'js/lib/jquery.placeholder.min.js' %}"></script>
+<script type="text/javascript">
+    $(function() {
+        $('.b-widget-search').each(function () {
+            var $that = $(this),
+                $searchField = $('input[type="text"]', $that);
+
+            $that.on('click', '.j-search-submit', function (e) {
+                e.preventDefault();
+                $that.submit();
+            });
+
+            $searchField.placeholder();
+        });
+    });
+</script>
+<span class="submenu-search-link j-focus j-toggle-button j-toggle-target-submenu-search" data-toggle-class="opened" data-toggle-target="submenu-search" data-focus-target="search"></span>
+<div class="submenu-search j-toggle-target-submenu-search" data-toggle-class="show">
+    <form class="submenu-search__form" action="{{ url }}" method="GET">
+        <span class="submenu-search__submit j-search-submit"></span>
+        <input class="submenu-search__input j-focus-target-search" name="q" type="text" placeholder="" value="{% if q %}{{q}}{% endif %}">
+    </form>
+</div>

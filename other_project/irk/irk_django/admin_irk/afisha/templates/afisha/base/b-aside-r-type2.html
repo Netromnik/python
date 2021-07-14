@@ -1,0 +1,70 @@
+{% load adv_tags staticfiles media_utils afisha_tags news_tags experts_tags contests_tags rating_tags %}
+
+{% if cinema_read %}
+    {% comment %}
+    <div class="j-transform-container j-transform-container-description-desktop j-transform-container-description-mobile_768">
+        <div class="b-afisha-film-description g-indent j-transform" data-transform-target="description">
+            {% rating event %}
+            <div class="g-clear"></div>
+            {% if event.imdb_rate %}
+                <span class="b-afisha-film-imdb-rate">
+                    <b>IMDb</b>
+                    {{ event.imdb_rate }}
+                </span>
+            {% endif %}
+            {% if event.schedule.first.kassy_session %}
+                <div class="g-indent">
+                    {% include 'afisha/snippets/buy_button.html' with session=event.schedule.first metrika='afisha_buy_click' %}
+                </div>
+            {% endif %}
+            {% if event.source_url %}<h5 class="b-afisha-film-url"><a href="{{ event.source_url }}">Официальный сайт</a></h5>{% endif %}
+            <div class="g-clear"></div>
+            {% if event.info %}
+                {{ event.info|cinemainfo|safe }}
+                <div class="g-clear-left g-indent"></div>
+            {% endif %}
+
+
+        </div>
+    </div>
+    {% endcomment %}
+
+    <ul class="grid-list grid-list_column grid-list_column-900">
+        <li class="grid-list__item g-desktop">
+            {% include 'afisha/base/banner/b-banner-200x300.html' %}
+        </li>
+        
+        {# Пять последних лонгридов и рецензия сверху (если есть) #}
+        {% afisha_sidebar_materials review=event.review.last %}
+        
+        <li class="grid-list__item g-desktop">
+            {% include 'afisha/base/banner/b-banner-280x520.html' %}
+        </li>
+    </ul>
+{% endif %}
+
+{% if inner %}
+    {% afisha_materials_read_sidebar_block %}
+
+    {# Баннер 200х100 #}
+    {% include 'afisha/base/banner/b-banner-200x100-r.html' %}
+
+    {% if not event_read %}
+        {% contest_latest template='contests/tags/afisha_latest.html' %}
+    {% endif %}
+{% elif not cinema_read %}
+    {% comment %}
+    {% cinema_afisha %}
+    {% endcomment %}
+    <ul class="grid-list grid-list_column grid-list_column-900">
+        <li class="grid-list__item g-desktop">
+            {% include 'afisha/base/banner/b-banner-200x300.html' %}
+        </li>
+
+        {% afisha_sidebar_materials %}
+
+        <li class="grid-list__item g-desktop j-article-aside-float-block g-accelerate">
+            {% include 'afisha/base/banner/b-banner-280x520.html' %}
+        </li>
+    </ul>
+{% endif %}

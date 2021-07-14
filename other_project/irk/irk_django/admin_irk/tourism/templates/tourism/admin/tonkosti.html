@@ -1,0 +1,73 @@
+{% extends "admin/base_site.html" %}
+{% load admin_list i18n paginator_utils staticfiles %}
+
+{# Шаблон для админки с ID мест отдыха из базы tonkosti.ru #}
+
+{% block extrastyle %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="{% static 'admin/css/changelists.css' %}" />
+	<style type="text/css">
+		#content-main td a.hidden { display: none; }
+		#content-main td:hover a.hidden { display: inline; }
+	</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs"> 
+  <a href="../../../"> 
+    Начало
+  </a> 
+   &rsaquo; 
+   <a href="../../"> 
+     Туризм
+  </a> 
+  &rsaquo; 
+	<a href="../">Места отдыха</a>
+  &rsaquo; 
+	База tonkosti.ru
+</div>
+{% endblock %}
+
+{% block bodyclass %}change-list{% endblock %}
+
+{% block content %}
+
+{% if countries %}
+<div id="content-main">
+	<table>
+		<thead>
+			<tr>
+				<th>Страна</th>
+				<th>Место отдыха</th>
+				<th>Код</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+			{% for country in countries %}
+			</tr>
+			<tr>
+				<td>{{ country.title }}</td>
+				<td></td>
+				<td>{{ country.id }}</td>
+			</tr>
+				{% for region in country.regions %}
+					<tr>
+						<td></td>
+						<td>{{ region.title }}</td>
+						<td>{{ region.id }}</td>
+					</tr>
+				{% endfor %}
+			<tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% else %}
+    <h1>База стран сайта tonkosti.ru недоступна</h1>
+{% endif %}
+
+{% paginator objects name='фирм' %}
+
+
+{% endblock %}

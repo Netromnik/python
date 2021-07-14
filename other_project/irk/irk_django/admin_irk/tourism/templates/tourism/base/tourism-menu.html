@@ -1,0 +1,117 @@
+{% load staticfiles media_utils str_utils thumbnail phones_tags %}
+
+<div class="submenu-wrapper">
+    {# блок поиска #}
+    {% url 'tourism:search' as tourism_url %}
+    {% include 'snippets/submenu_search.html' with url=tourism_url %}
+    {% get_phones_rubrics_from_section 2 as objects %}
+    {# блок поиска #}
+    <nav class="submenu">
+        <ul class="submenu-list">
+            {% if request.path == '/tourism/' %}
+                <li class="submenu-list__item active submenu-counter-index">
+                    <span>
+                        Лента
+                    </span>
+                </li>
+            {% else %}
+                <li class="submenu-list__item submenu-counter-index">
+                    <a class="submenu-list__link" href="{% url 'tourism:index' %}">
+                        Лента
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for obj in objects %}
+                {% if obj.slug %}
+                <li class="submenu-list__item{% if section.pk == obj.pk %} active{% endif %} submenu-counter-{{ obj.pk }}">
+                    {% if section.pk == obj.pk %}
+                        <span>
+                            {{ obj.name|typograf }}
+                        </span>
+                    {% else %}
+                        <a class="submenu-list__link" href="{% url 'tourism:firm:section_firm_list' section_slug=obj.slug %}">
+                            {{ obj.name|typograf }}
+                        </a>
+                    {% endif %}
+                </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if request.path == '/tourism/places/baikal/' %}
+                <li class="submenu-list__item active submenu-counter-baikal">
+                    <span>
+                        Отдых на Байкале
+                    </span>
+                </li>
+            {% else %}
+                <li class="submenu-list__item submenu-counter-baikal">
+                    <a class="submenu-list__link" href="/tourism/places/baikal/">
+                        Отдых на Байкале
+                    </a>
+                </li>
+            {% endif %}
+            <li class="submenu-list__item more">
+                <span class="g-jlink g-mobile j-toggle-button" data-toggle-target="mobile-submenu bodyhide">
+                    <span class="g-jlink g-color-black">
+                        еще
+                    </span>
+                </span>
+                <span class="g-jlink g-not-mobile j-toggle-button" data-toggle-target="mobile-submenu bodyhide">
+                    <span class="g-jlink g-color-black">
+                        еще
+                    </span>
+                </span>
+            </li>
+        </ul>
+        <div class="submenu-wrapper__mobile j-toggle-target-mobile-submenu" data-toggle-class="show">
+            <span class="submenu-wrapper__mobile__close j-toggle-button-touch" data-toggle-target="mobile-submenu bodyhide"></span>
+
+            <ul class="submenu-list submenu-list_mobile">
+                {% if request.path == '/tourism/' %}
+                    <li class="submenu-list__item active">
+                        <span>
+                            Лента
+                        </span>
+                    </li>
+                {% else %}
+                    <li class="submenu-list__item">
+                        <a class="submenu-list__link" href="{% url 'tourism:index' %}">
+                            Лента
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for obj in objects %}
+                    {% if obj.slug %}
+                    <li class="submenu-list__item{% if section.pk == obj.pk %} active{% endif %}">
+                        {% if section.pk == obj.pk %}
+                            <span>
+                                {{ obj.name|typograf }}
+                            </span>
+                        {% else %}
+                            <a class="submenu-list__link" href="{% url 'tourism:firm:section_firm_list' section_slug=obj.slug %}">
+                                {{ obj.name|typograf }}
+                            </a>
+                        {% endif %}
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if request.path == '/tourism/places/baikal/' %}
+                    <li class="submenu-list__item active">
+                        <span>
+                            Отдых на Байкале
+                        </span>
+                    </li>
+                {% else %}
+                    <li class="submenu-list__item">
+                        <a class="submenu-list__link" href="/tourism/places/baikal/">
+                            Отдых на Байкале
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>

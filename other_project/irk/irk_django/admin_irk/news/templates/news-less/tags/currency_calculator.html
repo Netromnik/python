@@ -1,0 +1,83 @@
+{% load staticfiles currency_tags %}
+
+<div class="b-calculator">
+        <script type="text/javascript" src="{% static 'js/lib/accounting.0.4.1.js' %}"></script>
+        <script type="text/javascript">
+            $(function () {
+                var money = {
+                    'usd':  {'course': '{{ today.usd|unsigned2_2f }}'},
+                    'euro': {'course': '{{ today.euro|unsigned2_2f }}'},
+                    'cny':  {'course': '{{ today.cny|unsigned2_2f }}'}
+                };
+
+                function getFormat (value) {
+                    return accounting.formatNumber(getFloat(value), 2, " ", ",");
+                }
+
+                function getFloat(value) {
+                    return parseFloat(value.toString().replace(',', '.'));
+                }
+
+            });
+        </script>
+
+    <section class="b-calculator-body">
+        <div class="b-calculator-information {% if not today.usd and not today.euro and not today.cny %}g-hide{% endif %}">
+            <h3 class="b-calculator-title">
+                Курсы центробанка РФ
+            </h3>
+            <div class="b-calculator-information-wrapper">
+                <ul class="b-calculator-list b-calculator-list-margin-bottom">
+                    <li class="b-calculator-list-item {% if not today.usd %}g-hide{% endif %}">
+                        <span class="b-calculator-list-currency">
+                            USD
+                        </span>
+                        <span class="b-calculator-list-rate {% if difference.usd != 0 %}{% if difference.usd < 0 %}red{% else %}green{% endif %}{% endif %}">
+                            {% if difference.usd != 0 %}
+                                {{ difference.usd|signed2_2f }}
+                            {% else %}
+                                &mdash;&mdash;
+                            {% endif %}
+                        </span>
+                        <span class="b-calculator-list-course rouble">
+                            {{ today.usd|unsigned2_2f }}
+                        </span>
+                    </li>
+                    <li class="b-calculator-list-item {% if not today.euro %}g-hide{% endif %}">
+                        <span class="b-calculator-list-currency">
+                            EUR
+                        </span>
+                        <span class="b-calculator-list-rate {% if difference.euro != 0 %}{% if difference.euro < 0 %} red{% else %}green{% endif %}{% endif %}">
+                            {% if difference.euro != 0 %}
+                                {{ difference.euro|signed2_2f }}
+                            {% else %}
+                                &mdash;&mdash;
+                            {% endif %}
+                        </span>
+                        <span class="b-calculator-list-course rouble">
+                            {{ today.euro|unsigned2_2f }}
+                        </span>
+                    </li>
+                    <li class="b-calculator-list-item {% if not today.cny %}g-hide{% endif %}">
+                        <span class="b-calculator-list-currency">
+                            CNY
+                        </span>
+                        <span class="b-calculator-list-rate {% if difference.cny != 0 %}{% if difference.cny < 0 %} red{% else %}green{% endif %}{% endif %}">
+                            {% if difference.cny != 0 %}
+                                {{ difference.cny|signed2_2f }}
+                            {% else %}
+                                &mdash;&mdash;
+                            {% endif %}
+                        </span>
+                        <span class="b-calculator-list-course rouble">
+                            {{ today.cny|unsigned2_2f }}
+                        </span>
+                    </li>
+                </ul>
+                <div class="b-calculator-price-desc {% if not today.cny %}g-hide{% endif %}">
+                    Цена за 10 юаней
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

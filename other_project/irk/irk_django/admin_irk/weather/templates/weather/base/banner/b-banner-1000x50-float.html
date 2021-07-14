@@ -1,0 +1,10 @@
+{% load adv_tags %}
+{% adaptive_banner mobile_id=449 targetix=0 as our_banner %}
+{% if our_banner %}
+    <div class="b-banner-float b-banner-float-s1000x50 g-not-desktop g-accelerate j-float-block" data-id="01" data-top="0" data-bottom="auto" data-type="hide" data-start="-1" style="display: none;">
+        {{ our_banner }}
+        <div class="g-close j-float-block-close"></div>
+    </div>
+{% else %}
+    {% adaptive_banner mobile_id=449 %}  {# выведет таргетикс, если он есть #}
+{% endif %}

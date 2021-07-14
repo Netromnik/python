@@ -1,0 +1,1022 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" /><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={licenseKey:"740020a769",applicationID:"565285"};window.NREUM||(NREUM={}),__nr_require=function(e,t,n){function r(n){if(!t[n]){var i=t[n]={exports:{}};e[n][0].call(i.exports,function(t){var i=e[n][1][t];return r(i||t)},i,i.exports)}return t[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var i=0;i<n.length;i++)r(n[i]);return r}({1:[function(e,t,n){function r(){}function i(e,t,n){return function(){return o(e,[u.now()].concat(c(arguments)),t?null:this,n),t?void 0:this}}var o=e("handle"),a=e(6),c=e(7),f=e("ee").get("tracer"),u=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],p="api-",l=p+"ixn-";a(d,function(e,t){s[t]=i(p+t,!0,"api")}),s.addPageAction=i(p+"addPageAction",!0),s.setCurrentRouteName=i(p+"routeName",!0),t.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,t){var n={},r=this,i="function"==typeof t;return o(l+"tracer",[u.now(),e,n],r),function(){if(f.emit((i?"":"no-")+"fn-start",[u.now(),r,i],n),i)try{return t.apply(this,arguments)}catch(e){throw f.emit("fn-err",[arguments,this,e],n),e}finally{f.emit("fn-end",[u.now()],n)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,t){m[t]=i(l+t)}),newrelic.noticeError=function(e,t){"string"==typeof e&&(e=new Error(e)),o("err",[e,u.now(),!1,t])}},{}],2:[function(e,t,n){function r(){return c.exists&&performance.now?Math.round(performance.now()):(o=Math.max((new Date).getTime(),o))-a}function i(){return o}var o=(new Date).getTime(),a=o,c=e(8);t.exports=r,t.exports.offset=a,t.exports.getLastTimestamp=i},{}],3:[function(e,t,n){function r(e,t){var n=e.getEntries();n.forEach(function(e){"first-paint"===e.name?d("timing",["fp",Math.floor(e.startTime)]):"first-contentful-paint"===e.name&&d("timing",["fcp",Math.floor(e.startTime)])})}function i(e,t){var n=e.getEntries();n.length>0&&d("lcp",[n[n.length-1]])}function o(e){e.getEntries().forEach(function(e){e.hadRecentInput||d("cls",[e])})}function a(e){if(e instanceof m&&!g){var t=Math.round(e.timeStamp),n={type:e.type};t<=p.now()?n.fid=p.now()-t:t>p.offset&&t<=Date.now()?(t-=p.offset,n.fid=p.now()-t):t=p.now(),g=!0,d("timing",["fi",t,n])}}function c(e){d("pageHide",[p.now(),e])}if(!("init"in NREUM&&"page_view_timing"in NREUM.init&&"enabled"in NREUM.init.page_view_timing&&NREUM.init.page_view_timing.enabled===!1)){var f,u,s,d=e("handle"),p=e("loader"),l=e(5),m=NREUM.o.EV;if("PerformanceObserver"in window&&"function"==typeof window.PerformanceObserver){f=new PerformanceObserver(r);try{f.observe({entryTypes:["paint"]})}catch(v){}u=new PerformanceObserver(i);try{u.observe({entryTypes:["largest-contentful-paint"]})}catch(v){}s=new PerformanceObserver(o);try{s.observe({type:"layout-shift",buffered:!0})}catch(v){}}if("addEventListener"in document){var g=!1,y=["click","keydown","mousedown","pointerdown","touchstart"];y.forEach(function(e){document.addEventListener(e,a,!1)})}l(c)}},{}],4:[function(e,t,n){function r(e,t){if(!i)return!1;if(e!==i)return!1;if(!t)return!0;if(!o)return!1;for(var n=o.split("."),r=t.split("."),a=0;a<r.length;a++)if(r[a]!==n[a])return!1;return!0}var i=null,o=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var c=navigator.userAgent,f=c.match(a);f&&c.indexOf("Chrome")===-1&&c.indexOf("Chromium")===-1&&(i="Safari",o=f[1])}t.exports={agent:i,version:o,match:r}},{}],5:[function(e,t,n){function r(e){function t(){e(a&&document[a]?document[a]:document[i]?"hidden":"visible")}"addEventListener"in document&&o&&document.addEventListener(o,t,!1)}t.exports=r;var i,o,a;"undefined"!=typeof document.hidden?(i="hidden",o="visibilitychange",a="visibilityState"):"undefined"!=typeof document.msHidden?(i="msHidden",o="msvisibilitychange"):"undefined"!=typeof document.webkitHidden&&(i="webkitHidden",o="webkitvisibilitychange",a="webkitVisibilityState")},{}],6:[function(e,t,n){function r(e,t){var n=[],r="",o=0;for(r in e)i.call(e,r)&&(n[o]=t(r,e[r]),o+=1);return n}var i=Object.prototype.hasOwnProperty;t.exports=r},{}],7:[function(e,t,n){function r(e,t,n){t||(t=0),"undefined"==typeof n&&(n=e?e.length:0);for(var r=-1,i=n-t||0,o=Array(i<0?0:i);++r<i;)o[r]=e[t+r];return o}t.exports=r},{}],8:[function(e,t,n){t.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,t,n){function r(){}function i(e){function t(e){return e&&e instanceof r?e:e?f(e,c,o):o()}function n(n,r,i,o){if(!p.aborted||o){e&&e(n,r,i);for(var a=t(i),c=v(n),f=c.length,u=0;u<f;u++)c[u].apply(a,r);var d=s[w[n]];return d&&d.push([b,n,r,a]),a}}function l(e,t){h[e]=v(e).concat(t)}function m(e,t){var n=h[e];if(n)for(var r=0;r<n.length;r++)n[r]===t&&n.splice(r,1)}function v(e){return h[e]||[]}function g(e){return d[e]=d[e]||i(n)}function y(e,t){u(e,function(e,n){t=t||"feature",w[n]=t,t in s||(s[t]=[])})}var h={},w={},b={on:l,addEventListener:l,removeEventListener:m,emit:n,get:g,listeners:v,context:t,buffer:y,abort:a,aborted:!1};return b}function o(){return new r}function a(){(s.api||s.feature)&&(p.aborted=!0,s=p.backlog={})}var c="nr@context",f=e("gos"),u=e(6),s={},d={},p=t.exports=i();p.backlog=s},{}],gos:[function(e,t,n){function r(e,t,n){if(i.call(e,t))return e[t];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,t,{value:r,writable:!0,enumerable:!1}),r}catch(o){}return e[t]=r,r}var i=Object.prototype.hasOwnProperty;t.exports=r},{}],handle:[function(e,t,n){function r(e,t,n,r){i.buffer([e],r),i.emit(e,t,n)}var i=e("ee").get("handle");t.exports=r,r.ee=i},{}],id:[function(e,t,n){function r(e){var t=typeof e;return!e||"object"!==t&&"function"!==t?-1:e===window?0:a(e,o,function(){return i++})}var i=1,o="nr@id",a=e("gos");t.exports=r},{}],loader:[function(e,t,n){function r(){if(!E++){var e=b.info=NREUM.info,t=p.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&t))return u.abort();f(h,function(t,n){e[t]||(e[t]=n)});var n=a();c("mark",["onload",n+b.offset],null,"api"),c("timing",["load",n]);var r=p.createElement("script");r.src="https://"+e.agent,t.parentNode.insertBefore(r,t)}}function i(){"complete"===p.readyState&&o()}function o(){c("mark",["domContent",a()+b.offset],null,"api")}var a=e(2),c=e("handle"),f=e(6),u=e("ee"),s=e(4),d=window,p=d.document,l="addEventListener",m="attachEvent",v=d.XMLHttpRequest,g=v&&v.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:v,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var y=""+location,h={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1184.min.js"},w=v&&g&&g[l]&&!/CriOS/.test(navigator.userAgent),b=t.exports={offset:a.getLastTimestamp(),now:a,origin:y,features:{},xhrWrappable:w,userAgent:s};e(1),e(3),p[l]?(p[l]("DOMContentLoaded",o,!1),d[l]("load",r,!1)):(p[m]("onreadystatechange",i),d[m]("onload",r)),c("mark",["firstbyte",a.getLastTimestamp()],null,"api");var E=0},{}],"wrap-function":[function(e,t,n){function r(e){return!(e&&e instanceof Function&&e.apply&&!e[a])}var i=e("ee"),o=e(7),a="nr@original",c=Object.prototype.hasOwnProperty,f=!1;t.exports=function(e,t){function n(e,t,n,i){function nrWrapper(){var r,a,c,f;try{a=this,r=o(arguments),c="function"==typeof n?n(r,a):n||{}}catch(u){p([u,"",[r,a,i],c])}s(t+"start",[r,a,i],c);try{return f=e.apply(a,r)}catch(d){throw s(t+"err",[r,a,d],c),d}finally{s(t+"end",[r,a,f],c)}}return r(e)?e:(t||(t=""),nrWrapper[a]=e,d(e,nrWrapper),nrWrapper)}function u(e,t,i,o){i||(i="");var a,c,f,u="-"===i.charAt(0);for(f=0;f<t.length;f++)c=t[f],a=e[c],r(a)||(e[c]=n(a,u?c+i:i,o,c))}function s(n,r,i){if(!f||t){var o=f;f=!0;try{e.emit(n,r,i,t)}catch(a){p([a,n,r,i])}f=o}}function d(e,t){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(e);return n.forEach(function(n){Object.defineProperty(t,n,{get:function(){return e[n]},set:function(t){return e[n]=t,t}})}),t}catch(r){p([r])}for(var i in e)c.call(e,i)&&(t[i]=e[i]);return t}function p(t){try{e.emit("internal-error",t)}catch(n){}}return e||(e=i),n.inPlace=u,n.flag=a,n}},{}]},{},["loader"]);</script><script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam-cell.nr-data.net","queueTime":0,"licenseKey":"740020a769","agent":"","transactionName":"ZgRXYhQHD0NVUUxQDV9Oc0MIBRVZW1wXUBBaT1JXCwNPRl1XT0pYeA9RUx4wCFVDHF9cFg==","applicationID":"565285","errorBeacon":"bam-cell.nr-data.net","applicationTime":530}</script>
+    <link rel="shortcut icon" href="https://static.irk.ru/static2/img/favicon.e509539fe967.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+    <title>Твой Иркутск</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="https://static.irk.ru/static2/img/icons/apple-touch-icon-57x57.3d2b25224c38.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="https://static.irk.ru/static2/img/icons/apple-touch-icon-72x72.87c322e7b00e.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="https://static.irk.ru/static2/img/icons/apple-touch-icon-114x114.59e76ba38b70.png" />
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
+    
+        <link rel="stylesheet" type="text/css" media="all" href="https://static.irk.ru/static2/css/compiled/compile/landings/game2020.8926260a6a3f.css">
+    
+
+    
+
+    
+
+    
+        <script type="text/javascript">
+            var DOMAIN_MEDIA = "https://static.irk.ru/media/";
+            var auth_no_redir = {};
+            var auth_callback = {};
+            var irk = {};
+        </script>
+
+        <script type="text/javascript" src="https://static.irk.ru/static2/js/lib/jquery-3.4.1.min.220afd743d9e.js"></script>
+        <script type="text/javascript" src="https://static.irk.ru/static2/js/lib/modernizr-2.6.2-bro-fix.01d73b8c0af3.js"></script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        <script type="text/javascript" src="https://static.irk.ru/static2/js/apps-js/landing/game2020.f41952053462.js"></script>
+    
+
+    
+    <!-- Google Analytics -->
+    <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        
+            ga('create', 'UA-2755893-1', 'auto');
+        
+        ga('set', 'transport', 'beacon');
+        ga('require', 'displayfeatures');
+        ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script>
+    <!-- / Google Analytics -->
+
+
+</head>
+<body class="j-toggle-target-bodyhide" data-toggle-class="b-main-menu-opened">
+
+    
+    <script type="text/javascript">
+        var yaParams = {
+            ab: typeof window.irk_ab == "undefined",
+            auth_user: false,
+            text_link_underline: false
+        };
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter11092822 = new Ya.Metrika({id:11092822,
+                        clickmap:true,
+                        trackLinks:true,
+                        webvisor:true,
+                        accurateTrackBounce:true,
+                        params:yaParams});
+                    
+                } catch(e) { }
+
+                $(function () {
+                    var irk = window.irk;
+                    // Цель — переход по ссылке или нажатие кнопки.
+                    irk.vars.$body.on('click', '.j-metrika-goal', function () {
+                        
+                        w.yaCounter11092822.reachGoal($(this).data('metrikaGoal'));
+                    });
+                    // Цель срабатывает когда элемент появляется в области видимости экрана
+                    irk.vars.$body.on('metrika-hover.irk-metrikaReachGoal', '.j-metrika-goal-hover', function () {
+                        
+                        w.yaCounter11092822.reachGoal($(this).data('metrikaGoal'));
+                        $(this).removeClass('j-metrika-goal-hover');
+                    });
+                    /* Достижение целей в js */
+                    $.extend(irk.utils, {
+                        metrikaReachGoal: function (goal) {
+                            
+                            w.yaCounter11092822.reachGoal(goal);
+                        }
+                    });
+                    /* Создаем событие инициализации метрики */
+                    irk.vars.$body.triggerHandler('init.irk-metrika');
+                });
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+                    s = d.createElement("script"),
+                    f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script>
+    <noscript><div><img src="//mc.yandex.ru/watch/11092822" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    
+
+
+
+
+
+
+
+<header class="b-header g-accelerate">
+    
+    <span class="b-header-scroll-top j-scroll-top">наверх</span>
+    <div class="b-header-container">
+        
+
+    <nav> <!--удалить после нг-->
+        
+            <a href="/" class="b-header-logo"></a>
+        
+        <ul class="b-list-h">
+            
+            <li class="menu1">
+                
+                    <a class="menu-news" href="/news/">Новости</a>
+                
+            </li>
+            
+            <li class="menu2">
+                
+                    <a class="menu-" href="/news/articles/">Статьи</a>
+                
+            </li>
+            
+            <li class="menu3">
+                
+                    <a class="menu-" href="https://www.irk.ru/covid/">COVID-19</a>
+                
+            </li>
+            
+            <li class="menu4">
+                
+                    <a class="menu-afisha" href="/afisha/">Афиша</a>
+                
+            </li>
+            
+            <li class="menu5">
+                
+                    <a class="menu-weather" href="/weather/">Погода</a>
+                
+            </li>
+            
+            <li class="menu6">
+                
+                    <a class="menu-tourism" href="/tourism/">Туризм</a>
+                
+            </li>
+            
+            <li class="menu7">
+                
+                    <a class="menu-obed" href="/obed/">Обед</a>
+                
+            </li>
+            
+            <li class="menu8">
+                
+                    <a class="menu-testing" href="/tests/">Тесты</a>
+                
+            </li>
+            
+            <li class="menu9">
+                
+                    <a class="menu-" href="/special/">Спецпроекты</a>
+                
+            </li>
+            
+            <li class="menu10">
+                
+                    <a class="menu-" href="/about/">Реклама</a>
+                
+            </li>
+            
+        </ul>
+
+
+    </nav>
+
+
+        <div class="b-header-toolbar">
+            <div class="b-header-toolbar-container b-header-toolbar-auth j-header-toolbar-auth">
+            <ul class="b-header-toolbar-auth-menu g-accelerate j-header-auth-menu j-push-notifications-auth-menu j-reveal-block-toggle j-reveal-block-toggle-authmenu">
+                <li class="b-igrajdanin-list-item">
+                        <div class="b-igrajdanin-menu-container">
+                            <a class="g-block g-margin-bottom-5"
+                                href="//igrajdanin.ru/"><img
+                                class="b-igrajdanin-link-img g-block"
+                                src="https://static.irk.ru/static2/img/igrajdanin.43346b17b68d.png"
+                                srcset="https://static.irk.ru/static2/img/igrajdanin@2x.9fc22647c4ff.png 2x"
+                            ></a>
+                            <a href="//www.irk.ru/igrajdanin/" class="b-igrajdanin-menu-button">Сообщить о проблеме</a>
+                        </div>
+                    </li>
+                    
+                        <li><a href="/auth/login/" class="auth-link auth_link" rel="nofollow">войти</a></li>
+                    
+                </ul>
+                <a class="avatar j-push-feature-close j-header-toolbar-grajdanin-check j-reveal-button-toggle click"
+                    data-target="authmenu" href="">
+                    
+                        <span class="icon-inline-svg user-ava"></span>
+                    
+                    <div
+                            class="b-header-toolbar-indicator j-header-toolbar-indicator g-hide"
+                            data-grajdanin-url="/users/set_option/"
+                            data-grajdanin-param="news.igrajdaninhintoption"
+                            data-grajdanin-option="1"
+                    ></div>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="game-popup-wrapper j-gamepopup hide">
+    <div class="popup-window">
+        <span class="popup-window__close j-gamepopup-close"></span>
+        <div class="popup-window__content">
+            <h4>
+                Внимание!
+            </h4>
+            <p>
+                Игра закончится, как только вы заберёте подарок.
+            </p>
+            
+                <p>
+                    Хотите другой подарок? Тогда продолжайте поиски!
+                </p>
+            
+        </div>
+        <div class="popup-window__buttons">
+            <a href="#" class="popup-window__button j-gamepopup-buy">Забрать!</a>
+            
+                <a href="#" class="popup-window__button popup-window__button_white j-gamepopup-close">Искать дальше</a>
+            
+        </div>
+        <div class="popup-window__cat"></div>
+    </div>
+    <div class="game-popup-wrapper__shadow"></div>
+</div>
+
+<div class="game">
+
+    <section class="ontop">
+        <div class="inner">
+            <div class="columns">
+                <div class="columns__item">
+                    <h1 class="ontop__title">
+                        Ищи Emoji, которые мы спрятали на сайте и получи подарки от IRK.ru!
+                    </h1>
+                </div>
+                <div class="columns__item columns__item_x2">
+                    <div class="ontop__emoji"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="prizes">
+        <div class="inner">
+            <div class="columns">
+                <div class="columns__item">
+                    <div class="prizes__text">
+                        <p>
+                            Обычно именинникам дарят подарки, но мы сделаем исключение.
+                            По всему сайту мы спрятали секретные Emoji - найди их и получи полезный подарок от IRK.ru.
+                        </p>
+                        <p>
+                            Подарок можно получить за определенное количество найденных Emoji.
+                        </p>
+                        <p class="gray">
+                            Внимание: подарки разыгрываются по одному для каждого участника.
+                        </p>
+                        <div class="prizes__stripe"></div>
+                    </div>
+                </div>
+                <div class="columns__item columns__item_x2">
+                    <div class="prize-list">
+
+                        <div class="prize-list__item">
+                            <div class="prize-list__content">
+                                <div class="prize-list__circle">
+                                    <div class="prize-list__count">
+                                        <span class="prize-list__number">28</span>
+                                        <span class="prize-list__text">emoji</span>
+                                    </div>
+                                    <div class="prize-list__prize prize-list__prize_p1">
+                                        <img src="https://static.irk.ru/static2/img/landing_pages/game2020/p1.f14081f29c4f.png" alt="сумка" />
+                                    </div>
+                                    <div class="prize-list__emoji prize-list__emoji_s1"></div>
+                                </div>
+                            </div>
+                            <div class="prize-list__title">
+                                Сумка
+                            </div>
+                        </div>
+
+                        <div class="prize-list__item">
+                            <div class="prize-list__content">
+                                <div class="prize-list__circle">
+                                    <div class="prize-list__count">
+                                        <span class="prize-list__number">29</span>
+                                        <span class="prize-list__text">emoji</span>
+                                    </div>
+                                    <div class="prize-list__prize prize-list__prize_p3">
+                                        <img src="https://static.irk.ru/static2/img/landing_pages/game2020/p3.8c5c3fa95c0f.png" alt="бутылка для воды" />
+                                    </div>
+                                    <div class="prize-list__emoji prize-list__emoji_s3"></div>
+                                </div>
+                            </div>
+                            <div class="prize-list__title">
+                                Бутылка для воды
+                            </div>
+                        </div>
+
+                        <div class="prize-list__item">
+                            <div class="prize-list__content">
+                                <div class="prize-list__circle">
+                                    <div class="prize-list__count">
+                                        <span class="prize-list__number">30</span>
+                                        <span class="prize-list__text">emoji</span>
+                                    </div>
+                                    <div class="prize-list__prize prize-list__prize_p2">
+                                        <img src="https://static.irk.ru/static2/img/landing_pages/game2020/p2.18433fd3afb8.png" alt="термостакан" />
+                                    </div>
+                                    <div class="prize-list__emoji prize-list__emoji_s2"></div>
+                                </div>
+                            </div>
+                            <div class="prize-list__title">
+                                Термостакан
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="prizes__border"></div>
+    </section>
+
+    
+        <section class="info info_auth">
+            <div class="inner">
+                <h4 class="block-title">
+                    Внимание!
+                </h4>
+                <div class="blue blue_auth">
+                    <div class="register">
+                        Для участия вам необходимо <a href="https://www.irk.ru/auth/register/">зарегистрироваться</a>
+                        или <a href="/auth/login/?next=/game/">войти</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+
+
+    <section class="bottom">
+        <div class="inner">
+            <h4 class="block-title">
+                Статистика игроков
+            </h4>
+            <div class="columns columns_bottom">
+                <div class="columns__item columns__item_x2">
+
+                    <div class="users">
+                        
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/5bc62398-1ec3-4517-a493-2973ea622faa_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Alexoff получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">21:28</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/ac0ffc28-ea8d-432a-9c2d-924ee3b38b68_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Анастасия Вечер получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">20:03</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/2751ccce-c4a1-48bd-befd-f49c01149f88_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Никита Атаманов получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">19:37</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/a214551e-9f37-4afa-9c71-b30d1f245018_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Elena получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">19:25</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/9742370e-134c-4af6-b45c-5fe1079e3b94_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Alexey-v получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">18:59</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/3b8fed9b-a46f-41d1-b9c8-fb9a3b5cf9e1_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">mozies получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">18:39</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/8df46600-5c60-41e4-9dae-529ec12c62b2_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Dodge Viper получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">18:35</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/332/ff4db5d8-7c8f-409f-aac7-acd33f8c84fb_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Полина Рубцова получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">18:32</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/372/e9376b77-36fb-4497-8048-90eff8ec0461_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Mimi Ksyu получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">18:28</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/437/5497020f-c58d-4862-a9e4-ac0d0d400826_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Лёшка Рулёв получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">17:56</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/261/8d631cac-f635-4095-bf82-b54c03eca700_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Stanislav Milenkih получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">16:07</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/225/0c6fe3e1-3585-432b-94a5-fecc2a65a007_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Федор Волков получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">16:03</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/b388b54a-62d8-4494-aec4-06265a08735e_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">veklena получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">15:58</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/4434cd7c-b906-4bf6-b270-9facb9ed1a4d_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Bogomir получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">15:54</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/f2b31caa-86fa-408f-9c87-53833fe398ff_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Алексей М получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">15:51</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/271/2b3badd2-7f05-4bd3-b6af-164008424033_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Джон Смит получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">15:50</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/328/20b5d5d3-9fab-42cc-a8d1-e385b9c94fb2_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Александр Демидов получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">15:49</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/a34373e4-b4f2-4824-9fde-a1cb7c5c47e9_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Андрей получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">15:48</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/440/5e8b6ce1-92aa-454d-8b02-589a861ea9ab_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Anna получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">15:48</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/22183170-8db7-4ca8-ac8d-76b2eb960ba0_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Александр получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">15:48</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/440/92d50de8-1cbd-4082-a3c2-8611360d7119_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Авторитет получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">15:45</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/4b6fb3f9-b3b4-4964-8b5e-549043788508_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">mirageml получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">15:40</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/4cdd5dcc-73ed-4b2c-927d-be500cb515d9_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">PermyakovaVera получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">15:39</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/2a48f117-edf5-48df-9769-5ea245a9c945_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">visio получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:38</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/440/5860dcb4-0833-466b-bc7d-185cb40cdbb2_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Victoria получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">15:37</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/d2c6e679-af23-4f82-8267-a2e871faaa8e_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">kopirochka получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:33</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/37745061-66e4-4b23-8899-098d862db33d_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">FireKate получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:32</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/b6044d9d-1d7d-4d80-8b63-9a3b19f4c4a6_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Энни Грин  получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:31</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/382/6d7f9318-0c92-4417-b035-618bc7d39296_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Lenashel получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:29</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/431/170e2ad6-06f2-45b1-ab1f-2f0a4bcebe3c_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Anna получил <b>Термокружка</b>!</span>
+                                        <span class="users__time">15:28</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/f581ecd3-592b-45b5-955e-1b954272324e_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">AlexIrk получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:27</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/441/96901ac6-e9f6-47d5-a6ff-3c74dbc27f71_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Sid777 получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">15:24</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/440/bbe671e1-29ae-4437-8a37-0efc25c1f6c7_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">koshelev1gor получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:19</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/e42c09f7-133e-49d2-ba02-46a2abd0f2b2_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">nix получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">15:16</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/00013889-8204-4dbe-a1a7-da2e7b5e00ce_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">SyavikOFF получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:15</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/437/490cf66d-b46d-4ade-9a86-aa9447980137_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">miracle_nasty получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:13</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/330/99cb977a-059d-4145-b3f4-537f88cb72c6_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Olga Butakova получил <b>Бутылка для воды</b>!</span>
+                                        <span class="users__time">15:05</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/214/05472b0e-1b36-4ea3-9a26-cc4404f4899f_jpg_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">RoyalCat получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">15:05</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/435/8082ff24-44d9-471a-908a-27911f802f21_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Директор стадиона получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">15:04</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        
+                                            
+                                            <img src="https://static.irk.ru/media/img/site/profiles/201/e252accb-2915-430e-be08-14f2aea123ab_png_60x60_crop-60x60_q85.jpg" alr="avatar" />
+                                        
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">Natuska получил <b>Экосумка</b>!</span>
+                                        <span class="users__time">14:50</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            
+                        
+                    </div>
+
+                </div>
+                <div class="columns__item">
+                    <div class="cat">
+                        <img src="https://static.irk.ru/static2/img/landing_pages/game2020/cat.8c35e9953e29.png" alt="кот" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<footer class="b-footer j-float-stop-02">
+<section class="b-footer-container"><nav class="b-footer-nav"><ul class="b-list-h b-footer-nav-icons"><li><a target="_blank" class="icon fb" href="https://www.facebook.com/tvoyirkutsk"></a></li><li><a target="_blank" class="icon vk" href="https://vk.com/tvoy_irkutsk"></a></li><li><a target="_blank" class="icon tw" href="https://twitter.com/tvoyirkutsk"></a></li><li><a target="_blank" class="icon ig j-ee-pokeball-target" href="https://instagram.com/tvoyirkutsk/"></a></li><li><a class="icon rss" href="https://www.irk.ru/news.rss"></a></li><li><a class="icon search j-reveal-button-toggle click" data-target="footer-search" href="#"></a></li></ul><div class="b-footer-search g-accelerate j-reveal-block-toggle j-reveal-block-toggle-footer-search"><form action="/news/search/" name="" method="GET"><input name="q" type="text" class="b-footer-search-input" placeholder="Поиск в новостях" value=""><input type="image" src="https://static.irk.ru/static2/img/search/search-input-submit.c365facca54b.png" class="b-footer-search-button"><input type="submit" class="g-hidden"></form></div><ul class="b-list-h b-footer-nav-list"><li><a href="/obed/?tab=critic#article-list">Ресторанный обозреватель</a></li><li><a href="/special/club/">Клуб путешественников</a></li><li><a href="/irkgidsiberia/">Гид по сибирской кухне</a></li></ul></nav><nav class="b-footer-nav-other g-indent"><ul class="b-list-v"><li><a href="/about/">Реклама на сайте</a></li><li><a href="/about/mediakit/">Аудитория сайта</a></li></ul><ul class="b-list-v"><li><a href="/about/about_us/">О проекте</a></li><li><a href="/about/feedback/">Написать редакции</a></li><li><a href="/about/vacancy/">Вакансии</a></li></ul><ul class="b-list-v"><li><a href="/recycle/">Экокарта</a></li><li><a href="/tourism/avia/">Покупка авиабилетов</a></li><li><a href="/tourism/airport/">Онлайн-табло аэропорта</a></li><li><a href="/tourism/etrains/">Расписание электричек</a></li><li><a href="/tourism/trains/">Расписание поездов</a></li><li><a href="/tourism/boats_baikal/">Водный транспорт</a></li><li><a href="/news/subscription/">Подписка на новости</a></li><li><a href="/special/">Спецпроекты</a></li></ul></nav><div class="b-footer-copy-side"><div class="b-policy-link"><a href="/conf/">Политика конфиденциальности</a></div><p>Сайт содержит материалы, охраняемые авторским правом, и&nbsp;средства индивидуализации (логотипы, фирменные знаки). Использование материалов сайта в&nbsp;интернете разрешено только с&nbsp;указанием гиперссылки на&nbsp;сайт&nbsp;www.irk.ru. Использование материалов сайта в&nbsp;печати, ТВ&nbsp;и&nbsp;радио разрешено только с&nbsp;указанием названия сайта «Твой&nbsp;Иркутск». К&nbsp;нарушителям данного положения применяются все меры, предусмотренные&nbsp;ст.&nbsp;1301&nbsp;ГК&nbsp;РФ.</p></div><div class="b-footer-copy"><p>Все рекламные товары подлежат обязательной сертификации, все услуги - лицензированию. Редакция не несет ответственности за содержание рекламных материалов. Реклама изготовлена и размещена на основе материалов, предоставленных заказчиком. Все рекламные предложения не являются публичной офертой.</p><p>На&nbsp;сайте www.irk.ru размещаются в&nbsp;том числе и&nbsp;материалы от&nbsp;информационного агентства &laquo;Иркутск онлайн&raquo; (регистрационный номер СМИ ИА &#8470; ФС77-74154 от&nbsp;29&nbsp;октября 2018&nbsp;г., выданное Федеральной службой по надзору в сфере связи, информационных технологий и массовых коммуникаций) с&nbsp;соответствующей пометкой. Учредитель&nbsp;&mdash; ООО &laquo;Ирк.ру&raquo;. Главный редактор&nbsp;&mdash; Павлова С.В., <a href="mailto:news@irk.ru">news@irk.ru</a>.
+    <br>
+    Телефон редакции: <a href="tel:+73952488850"><nobr>+7 (3952) 48-88-50</nobr></a> (доб. 200).</p><p class="copy">&copy; 2003&#150;2020 Твой Иркутск <img class="age j-ee-pokeball" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAKCAYAAABblxXYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MEE5Nzc4RTg4NzQ5MTFFNEI3NjlCMjQ3OTlCRTQxQjciIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MEE5Nzc4RTk4NzQ5MTFFNEI3NjlCMjQ3OTlCRTQxQjciPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowQTk3NzhFNjg3NDkxMUU0Qjc2OUIyNDc5OUJFNDFCNyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowQTk3NzhFNzg3NDkxMUU0Qjc2OUIyNDc5OUJFNDFCNyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PrmuRb4AAAC1SURBVHjapJKBEcIgDEWRDboCKzALruAIOEJX0BFYoR3BjmBHsCPEYOP5TQF757t7V8hdQkKxRGTAnlY8xPL6Rh8uKmcjbhIkYtE7bYmtotasDGxgF/ONZx07sQf2CPE3kSXJf5GLdrI+saMqOsNBHcQn00K1ngrjB/ZRGD1RmWTNb7x0eYVx/T+dBtWdl/0AOVFiQf+oGk59F9Ht6bR2P6ES7/c8qRqjvIoZYvluz62kpwADAGzJdk+X/nvgAAAAAElFTkSuQmCC" title="18+" alt="18+"/></p></div></section>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        new Image().src = "//counter.yadro.ru/hit?r"+
+        escape(document.referrer)+((typeof(screen)=="undefined")?"":
+        ";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+        screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+        ";"+Math.random();//-->
+    </script>
+
+
+</body>
+

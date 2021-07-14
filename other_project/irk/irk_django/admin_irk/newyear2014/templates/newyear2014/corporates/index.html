@@ -1,0 +1,23 @@
+{% extends 'newyear2014/layout.html' %}
+
+{% load adv_tags afisha_tags thumbnail staticfiles str_utils pytils_dt comments_tags rating_tags paginator_utils date_tags %}
+
+{% block title %}Корпоративы | {{ block.super }}{% endblock title %}
+
+{% block b-content %}
+     <section class="b-obed-corporatives-container g-indent{% if not see_also_establishments %} no-also-establishments{% endif %}">
+            <div class="b-obed-corporatives">
+                <header class="b-obed-corporatives-promo-header">
+                    <h3 class="b-obed-corporatives-promo-hint">Подскажем, где провести корпоратив</h3>
+                </header>
+
+                <ul class="b-list-l">
+                    {% for establishment in corporates %}
+                        <li>
+                            {% include 'obed/establishment/list_item.html' with establishment=establishment corporatives=True %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+{% endblock b-content %}

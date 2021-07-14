@@ -1,0 +1,70 @@
+{% extends 'news-less/layout_cr.html' %}
+
+{% load staticfiles media_utils news_tags thumbnail str_utils utils_tags %}
+
+{% block title %}Сюжеты | {{ block.super }}{% endblock %}
+
+{% block b-content-cr %}
+    <section class="b-subject-list-page g-content-block">
+        {% if objects.0.main %}
+            {% with objects.0 as object %}
+                <h1>Сюжет дня</h1>
+                <ul class="b-news-article-list main">
+                    <li class="b-news-article-list-item main {{ object|classname }}">
+                        <article>
+                            <header>
+                                <a href="{{ object.get_absolute_url }}">
+                                    {% if object.image %}
+                                        {% thumbnail object.image 300x200 as thumb %}
+                                        <figure><img src="{{ thumb }}" title="{{ object.title|typograf }}" alt="{{ object.image_title|typograf }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px"></figure>
+                                    {% endif %}
+                                    <h2>{{ object.title|typograf }}</h2>
+                                </a>
+                            </header>
+                            <div class="g-overflow">
+                                <p>{{ object.caption_small|typograf }}</p>
+                            </div>
+                        </article>
+                    </li>
+                </ul>
+                <h2>Другие сюжеты</h2>
+            {% endwith %}
+        {% else %}
+            <h1>Сюжеты</h1>
+        {% endif %}
+
+        <ul class="b-news-article-list-item">
+            {% for object in objects %}
+                {% if not forloop.first or not object.main %}
+                    <li class="b-news-article-list-item {{ object|classname }}">
+                        <article>
+                            <header>
+                                <a href="{{ object.get_absolute_url }}">
+                                    {% if object.image %}
+                                        {% thumbnail object.image 220x150 as thumb %}
+                                        <figure><img src="{{ thumb }}" title="{{ object.title|typograf }}" alt="{{ object.image_title|typograf }}" width="{{ thumb.width }}px" height="{{ thumb.height }}px"></figure>
+                                    {% endif %}
+                                    <h2>{{ object.title|typograf }}</h2>
+                                </a>
+                            </header>
+                            <div class="g-overflow">
+                                <p>{{ object.caption_small|typograf }}</p>
+                            </div>
+                        </article>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </section>
+
+    <div class="b-content-block">
+        <ul class="b-list-h b-news-archive-navigation">
+            {% if objects.has_previous %}
+                <li><a href="?page={{ objects.previous_page_number }}">&larr;&nbsp;Предыдущие</a></li>
+            {% endif %}
+            {% if objects.has_next %}
+                <li class="g-last"><a href="?page={{ objects.next_page_number }}">Следующие&nbsp;&rarr;</a></li>
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'special/layout.html' %}
+
+{% load adv_tags staticfiles media_utils str_utils thumbnail paginator_utils share_utils cache_tags news_tags %}
+
+{% block title %}Подкасты | {{ block.super }}{% endblock %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'news.podcast' tags='podcast' %}{% spaceless %}
+        {% include 'share_meta.html' with url='/news/podcast/' title='Подкасты IRK.ru' description='Говорим о самом важном в городе и регионе, рассуждаем и привлекаем внимание.' static_image='img/podcast/podcast_background.jpg' static_image_width=800 static_image_height=420 %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block layout-base-class %}{{ block.super }} header-flow-lock {% if request.user_agent.is_gadget %}black{% else %}transparent-header{% endif %}{% endblock layout-base-class %}
+
+{% block promo_A %}
+    <div class="b-special-branding j-special-branding j-toggle-target-menumore" data-toggle-class="podcast-no-branding">
+        {% if not request.user_agent.is_gadget %}
+            <img class="b-special-branding-image placeholder" src="{% static 'img/podcast/podcast_background.jpg' %}" width="1920px" height="600px">
+        {% endif %}
+        <figure class="b-special-branding-inner"
+                {% if request.user_agent.is_gadget %}style="background-image: url({% static 'img/podcast/podcast_background.jpg' %})"{% endif %}>
+            <figcaption class="b-special-branding-caption">
+                <h1 class="title">Подкасты IRK.ru</h1>
+                <div class="text">Говорим о самом важном в городе и регионе, рассуждаем и привлекаем внимание.</div>
+                <div class="b-special-branding-share">
+                    {% share_custom url='/news/podcast/' description='Подкасты IRK.ru' additional_class='black' %}
+                </div>
+            </figcaption>
+            <img class="b-special-branding-image" src="{% static 'img/podcast/podcast_background.jpg' %}" width="1920px" height="600px">
+        </figure>
+    </div>
+{% endblock %}
+
+{% block adblock-message %}{% endblock %}
+
+{% block container-class %}b-container_wide{% endblock %}
+
+{% block container %}
+    <div class="b-container-wrapper">{{ block.super }}</div>
+{% endblock %}
+
+{% block b-content-parent %}
+    <section class="b-content b-special">
+        <h1 class="g-absolute g-hidden">Подкасты</h1>
+
+        {% block b-content-header %}
+            <header class="b-news-content-header g-margin-bottom-25">
+                {% include 'news-less/base/search.html' %}
+
+                {% news_rubricator %}
+            </header>
+        {% endblock %}
+
+        <ul class="g-list-v b-podcast-list g-centered j-resp-ajax-pag" data-page="{% if objects.has_next %}{{ objects.number }}{% else %}none{% endif %}">
+            {% include 'news-less/podcast/snippets/entries.html' %}
+        </ul>
+
+        {% paginator page_obj template="paginator/layout.html" name="новостей" %}
+    </section>
+{% endblock b-content-parent %}
+
+{% block b-footer-container %} 123{% endblock %}
+
+{% block b-footer %}
+    {% include 'snippets/footer.html' with footer_class=" b-footer-container_wide" %}
+{% endblock b-footer %}

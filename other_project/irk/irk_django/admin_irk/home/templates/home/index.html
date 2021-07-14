@@ -1,0 +1,563 @@
+{% extends 'home/layout.html' %}
+{% load game_tags home_tags adwords_tags staticfiles media_utils thumbnail news_tags experts_tags str_utils pytils_numeral comments_tags %}
+{% load weather_tags currency_tags adv_tags rating_tags pytils_dt map_tags cache_tags metric_tags date_tags blogs_tags utils_tags %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="yandex-verification" content="9b72490023290d37" />
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/lib/jquery.swiper.3.0.5.js' %}"></script>
+    <script src="{% static 'js/lib/jquery.lazyload.1.9.3.js' %}"></script>
+    <script src="{% static 'home/js/home.js' %}"></script>
+{% endblock %}
+
+{% block urgent_news %}
+    {% has_banner id=474 as top_branding %}
+    {% include 'snippets/urgent_news.html' with material=news.urgent banner=top_branding %}
+{% endblock %}
+
+{% block b-content-class %} b-home b-home-container-columns{% endblock %}
+
+{# удалить этот блок после игры #}
+{% block game2020 %}
+    {% treasure 'home' %}
+{% endblock %}
+
+{% block b-content %}
+    {# Группа баннеров, которые необходимо учитывать для формирования списка материалов #}
+
+    {# Баннер справа от первой новости 580x250 #}
+    {% ibanner ID=546 as banner_double_first %}
+    {% if not banner_double_first %}{% ibanner ID=519 as banner_double_first %}{% endif %}
+
+    {# Баннер слева от афиши 280х250 #}
+    {% ibanner ID=520 as banner_single_first %}
+
+    {# Баннер справа от афиши 280х520 #}
+    {% ibanner ID=521 as banner_double_vertical_first %}
+
+    {# текстовый баннера, над блоком сюжетов #}
+    {% ibanner id=451 template='adv/banners/text_widget_banner.html' as banner_text_1 %}
+    {% ibanner id=452 template='adv/banners/text_widget_banner.html' as banner_text_2 %}
+    {% ibanner id=513 template='adv/banners/text_widget_banner.html' as banner_text_3 %}
+    {% ibanner id=514 template='adv/banners/text_widget_banner.html' as banner_text_4 %}
+
+
+    {# Адаптивный баннер в списке новостей 1 #}
+    {% adaptive_banner mobile_id=524 template='adv/adaptive_banner_content.html' as adaptive_banner_320_1 %}
+
+    {# Адаптивный баннер в списке новостей 2 #}
+    {% adaptive_banner mobile_id=525 template='adv/adaptive_banner_content.html' as adaptive_banner_320_2 %}
+
+    {# Адаптивный баннер в списке новостей 3 #}
+    {% adaptive_banner mobile_id=590 template='adv/adaptive_banner_content.html' as adaptive_banner_320_3 %}
+
+    <div class="b-home-news-container">
+        {# Главная Новость #}
+        {% cache 3600 'home.news.main' vary='news.is_moderator,request.user_agent.is_gadget' tags='news' %}
+            {% if news.main %}
+                {% with entry=news.main %}
+                    <section class="b-home-news-main{% if not entry.standard_image %} no-picture{% endif %} g-indent {% if entry.is_hidden %}g-hidden-material{% endif %}">
+                        <header class="b-home-news-main-header">
+                            <h1 class="b-home-news-main-header-title {% if entry|length > 82 %}size2{% endif %}">
+                                <a class="g-color-black visited" href="{{ entry.get_absolute_url }}">
+                                    {{ entry|typograf }}
+                                </a>
+                            </h1>
+                        </header>
+                        <article class="b-home-news-main-caption">
+                            <a href="{{ entry.get_absolute_url }}">{{ entry.caption|typograf|truncatechars:'200' }}</a>
+                        </article>
+                        <footer class="b-home-news-main-footer g-color-gray g-font-size-14">
+                            {% if entry.has_video %}
+                                <span class="icon-inline-svg video"></span>
+                            {% endif %}
+                            {% if entry.has_audio %}
+                                <span class="icon-inline-svg icon-inline-svg-audio g-margin-right-5"></span>
+                            {% endif %}
+                            <time datetime="{{ entry.stamp|date:'Y-m-d' }} {{ entry.published_time|date:'H:i' }}">
+                                {% if entry.stamp != today %}{{ entry.stamp|dates:'%d %B|%d %B %Y' }}&nbsp;{% endif %}{{ entry.published_time|date:'H:i' }}
+                            </time>&nbsp;
+                            {% comments_cnt entry new_layout=True %}
+                        </footer>
+                    </section>
+                {% endwith %}
+            {% endif %}
+        {% endcache %}
+
+        {# Последние новости #}
+        {% cache 3600 'home.news.last' vary='news.is_moderator,request.user_agent.is_gadget,adaptive_banner_320_1,adaptive_banner_320_2,adaptive_banner_320_3' tags='news' %}
+            {% if news.last %}
+                <ul id="home-news-list" data-start="{{ news.next_start_index }}" class="b-home-news-list g-all-block-list {% if not banner_text_1 and not banner_text_2 and not banner_text_3 and not banner_text_4 %}no-text-banners{% endif %}">
+                    {% for entry in news.last|slice:':14' %}
+
+                        {# удалить после эпидемии #}
+                        {% if forloop.counter == 3 and covid_cases %}
+                            <li class="b-home-news-list-item-covid">
+                                <div><span>covid-19</span></div>
+                                <a href="{% url 'landings_covid_index' %}">
+                                    <b>Иркутская область:</b> {{ covid_cases }} заражено
+                                    <span>&nbsp;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if adaptive_banner_320_1 and forloop.counter == 3 %}
+                            <li class="b-banners-adaptive_320x320-container g-margin-bottom-30 g-mobile_320 g-mobile_480 j-transform-container j-transform-container-banner-adaptive_320x320_1-mobile_320 j-transform-container-banner-adaptive_320x320_1-mobile_480">
+                                <div class="b-banners-adaptive_320x320 j-transform" data-transform-target="banner-adaptive_320x320_1">{{ adaptive_banner_320_1 }}</div>
+                            </li>
+                        {% endif %}
+                        {% if adaptive_banner_320_2 and forloop.counter == 7 %}
+                            <li class="b-banners-adaptive_320x320-container g-margin-bottom-20 g-mobile_320 g-mobile_480 j-transform-container j-transform-container-banner-adaptive_320x320_2-mobile_320 j-transform-container-banner-adaptive_320x320_2-mobile_480">
+                                <div class="b-banners-adaptive_320x320 j-transform" data-transform-target="banner-adaptive_320x320_2">{{ adaptive_banner_320_2 }}</div>
+                            </li>
+                        {% endif %}
+                        {% if adaptive_banner_320_3 and forloop.counter == 11 %}
+                            <li class="b-banners-adaptive_320x320-container g-margin-bottom-20 g-mobile_320 g-mobile_480 j-transform-container j-transform-container-banner-adaptive_320x320_3-mobile_320 j-transform-container-banner-adaptive_320x320_3-mobile_480">
+                                <div class="b-banners-adaptive_320x320 j-transform" data-transform-target="banner-adaptive_320x320_3">{{ adaptive_banner_320_3 }}</div>
+                            </li>
+                        {% endif %}
+                        {% include 'home/snippets/last_news_list.html' %}
+                    {% endfor %}
+                </ul>
+                <div class="g-loading-button g-mobile_480 g-mobile_320 g-margin-bottom-20">
+                    <span class="g-loading-button__more g-loading-button__more_arrow g-height-50 g-line-height-50 j-showmore j-analytics-click" data-type="json" data-target="home-news-list" data-analytics-category="Home Show Мore" data-analytics-label="click">
+                        <span>Больше новостей</span>
+                    </span>
+                </div>
+            {% endif %}
+        {% endcache %}
+        <div class="j-transform-container j-transform-container-second_banner-mobile_620 j-transform-container-second_banner-mobile_768">
+            <div class="j-transform" data-transform-target="second_banner"></div>
+        </div>
+    </div>
+
+    <ul class="b-home-materials-first-list margin-left first-gag j-analytics-impression" data-analytics-category="Home First Screen Block">
+        {% cache 3600 'home.materials.block1' vary='news.is_moderator,request.user_agent.is_gadget,banner_double_first,adaptive_banner_320_2' tags='longread' %}
+            {% if banner_double_first %}
+                <li class="b-home-materials-first-list-item double-h g-desktop g-mobile_960 g-not-mobile_768">
+                    {{ banner_double_first }}
+                </li>
+            {% else  %}
+                <li class="b-home-materials-first-list-item">
+                    {% material_card materials.0 is_double=True is_lazyload=True metrika_goal='first_article' analytics_cat='Home First Screen' track='click' %}
+                </li>
+            {% endif %}
+
+            {% if banner_double_first %}
+                {% for material in materials|slice:":3" %}
+                    <li class="b-home-materials-first-list-item">{% material_card material is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}</li>
+                {% endfor %}
+            {% else %}
+                {% for material in materials|slice:"1:4" %}
+                    <li class="b-home-materials-first-list-item">{% material_card material is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}</li>
+                {% endfor %}
+            {% endif %}
+        {% endcache %}
+
+        {% cache 3600 'home.materials.block2' vary='news.is_moderator,request.user_agent.is_gadget,banner_double_first,banner_single_first' tags='longread' %}
+            {% if banner_single_first %}
+                <li class="b-home-materials-first-list-item b-home-material-banner-single g-desktop g-mobile_960">
+                    {{ banner_single_first }}
+                </li>
+            {% else %}
+                <li class="b-home-materials-first-list-item g-desktop g-mobile_320 g-mobile_480 g-mobile_960">
+                    <div class="j-transform-container j-transform-container-second_banner-desktop j-transform-container-second_banner-mobile_960 j-transform-container-second_banner-mobile_320 j-transform-container-second_banner-mobile_480">
+                        <div class="j-transform" data-transform-target="second_banner">
+                            {% if banner_double_first %}
+                                {% material_card materials.3 is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}
+                            {% else %}
+                                {% material_card materials.4 is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+            {% endif %}
+        {% endcache %}
+
+        {# Адаптивный баннер перед афишей #}
+        {% include 'home/base/banner/adaptive-banner-before-afisha.html' %}
+
+        {# afisha #}
+        <li class="b-home-materials-first-list-item b-home-material-banner-single">
+            <div class="b-home-afisha swiper-container j-home-afisha">
+                <header class="b-home-afisha-header">
+                    <h3 class="b-home-afisha-header-title"><a class="b-home-afisha-header-title-link" href="{% url 'afisha:index' %}">Афиша</a></h3>
+                </header>
+                <div class="b-home-afisha-button-prev icon-inline-svg swiper-arrow-left j-home-afisha-button-prev"></div>
+                <div class="b-home-afisha-button-next icon-inline-svg swiper-arrow-right j-home-afisha-button-next"></div>
+                <article class="b-home-afisha-wrapper swiper-wrapper j-home-afisha-swiper">
+                    {% for event in afisha.events %}
+                        {% if event.gallery.main_image.image %}
+                            {% thumbnail event.gallery.main_image.image 280x250 crop as thumb %}
+                            {% if request.user_agent.is_gadget %}
+                                {% thumbnail event.gallery.main_image.image 340x250 crop as afisha_img_mobile %}
+                            {% endif %}
+                            <a class="b-home-afisha-event swiper-slide" href="{{ event.get_absolute_url }}">
+                                {% if afisha_img_mobile %}
+                                    <img class="b-home-afisha-event-img swiper-lazy" data-src="{{ afisha_img_mobile }}" src="{% static 'img/fon.png' %}" alt="{{ event.gallery.main_image.alt }}"
+                                         style="width: 100%;">
+                                {% else %}
+                                    <img class="b-home-afisha-event-img swiper-lazy" data-src="{{ thumb }}" src="{% static 'img/fon.png' %}" alt="{{ event.gallery.main_image.alt }}"
+                                         width="{{ thumb.width }}" height="{{ thumb.height }}" />
+                                {% endif %}
+                                <div class="b-home-afisha-event-info">
+                                    <h4 class="b-home-afisha-event-title">
+                                        {{ event.title|typograf }}. <span class="g-inline-block">{{ event.date|ru_strftime:"%d %B" }}</span>
+                                    </h4>
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </article>
+            </div>
+        </li>
+
+        <li class="b-home-materials-first-list-item double-v float-r b-home-materials-vertical-one g-desktop g-mobile_960">
+            {% if banner_double_vertical_first %}
+                {{ banner_double_vertical_first }}
+            {% else %}
+                {% ibanner ID=512 as banner_double_vertical_first_alt %}
+                {{ banner_double_vertical_first_alt }}
+            {% endif %}
+        </li>
+        {% cache 3600 'home.materials.block3' vary='news.is_moderator,request.user_agent.is_gadget,banner_double_first,banner_single_first' tags='longread' %}
+            {% if banner_double_first and banner_single_first %}
+                <li class="b-home-materials-first-list-item">
+                    <div class="j-transform-container j-transform-container-first-double-desktop"><div class="j-transform" data-transform-target="first-double">{% material_card materials.3 is_lazyload=True is_double=True metrika_goal='main_super_article' analytics_cat='Home First Screen' track='click' %}</div></div>
+                    <div class="j-transform-container j-transform-container-first-single-mobile_960 j-transform-container-first-single-mobile_768 j-transform-container-first-single-mobile_480 j-transform-container-first-single-mobile_320"></div>
+                </li>
+                <li class="b-home-materials-first-list-item g-not-mobile_768">
+                    <div class="j-transform-container j-transform-container-first-single-desktop"><div class="j-transform" data-transform-target="first-single">{% material_card materials.4 is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}</div></div>
+                    <div class="j-transform-container j-transform-container-first-double-mobile_960 j-transform-container-first-double-mobile_480 j-transform-container-first-double-mobile_320"></div>
+                </li>
+                {% for material in materials|slice:"5:7" %}
+                    <li class="b-home-materials-first-list-item g-mobile_960 g-desktop j-transform-container j-transform-container-first-list-{{ forloop.counter }}-mobile_960 j-transform-container-first-list-{{ forloop.counter }}-desktop">
+                        <div class="j-transform" data-transform-target="first-list-{{ forloop.counter }}">{% material_card material is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}</div>
+                    </li>
+                {% endfor %}
+            {% elif banner_double_first or banner_single_first %}
+                <li class="b-home-materials-first-list-item">
+                    <div class="j-transform-container j-transform-container-first-double-desktop g-desktop"><div class="j-transform" data-transform-target="first-double">{% material_card materials.4 is_lazyload=True is_double=True metrika_goal='main_super_article' analytics_cat='Home First Screen' track='click' %}</div></div>
+                    <div class="j-transform-container j-transform-container-first-single-mobile_960 j-transform-container-first-single-mobile_768 j-transform-container-first-single-mobile_480 j-transform-container-first-single-mobile_320"></div>
+                </li>
+                <li class="b-home-materials-first-list-item g-not-mobile_768">
+                    <div class="j-transform-container j-transform-container-first-single-desktop"><div class="j-transform" data-transform-target="first-single">{% material_card materials.5 is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}</div></div>
+                    <div class="j-transform-container j-transform-container-first-double-mobile_960 j-transform-container-first-double-mobile_480 j-transform-container-first-double-mobile_320"></div>
+                </li>
+                {% for material in materials|slice:"6:8" %}
+                    <li class="b-home-materials-first-list-item g-mobile_960 g-desktop j-transform-container j-transform-container-first-list-{{ forloop.counter }}-mobile_960 j-transform-container-first-list-{{ forloop.counter }}-desktop">
+                        <div class="j-transform" data-transform-target="first-list-{{ forloop.counter }}">{% material_card material is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}</div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="b-home-materials-first-list-item">
+                    <div class="j-transform-container j-transform-container-first-double-desktop"><div class="j-transform" data-transform-target="first-double">{% material_card materials.5 is_lazyload=True is_double=True metrika_goal='main_super_article' analytics_cat='Home First Screen' track='click' %}</div></div>
+                    <div class="j-transform-container j-transform-container-first-single-mobile_960 j-transform-container-first-single-mobile_768 j-transform-container-first-single-mobile_480 j-transform-container-first-single-mobile_320"></div>
+                </li>
+                <li class="b-home-materials-first-list-item g-not-mobile_768">
+                    <div class="j-transform-container j-transform-container-first-single-desktop"><div class="j-transform" data-transform-target="first-single">{% material_card materials.6 is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}</div></div>
+                    <div class="j-transform-container j-transform-container-first-double-mobile_960 j-transform-container-first-double-mobile_480 j-transform-container-first-double-mobile_320"></div>
+                </li>
+                {% for material in materials|slice:"7:9" %}
+                    <li class="b-home-materials-first-list-item g-mobile_960 g-desktop j-transform-container j-transform-container-first-list-{{ forloop.counter }}-mobile_960 j-transform-container-first-list-{{ forloop.counter }}-desktop">
+                        <div class="j-transform" data-transform-target="first-list-{{ forloop.counter }}">{% material_card material is_lazyload=True is_light=True metrika_goal='main_top3_article' analytics_cat='Home First Screen' track='click' %}</div>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        {% endcache %}
+    </ul>
+    {% if request.user_agent.is_gadget %}
+        <ul class="b-home-materials-first-list-adaptive g-clear g-mobile_620 g-mobile_768 g-mobile_480 g-mobile_320">
+            <li class="b-home-materials-first-list-item double-h j-transform-container j-transform-container-first-double-mobile_768"></li>
+            <li class="b-home-materials-first-list-item j-transform-container j-transform-container-first-list-1-mobile_768 j-transform-container-first-list-1-mobile_480 j-transform-container-first-list-1-mobile_320"></li>
+            <li class="b-home-materials-first-list-item j-transform-container j-transform-container-first-list-2-mobile_768 j-transform-container-first-list-2-mobile_480 j-transform-container-first-list-2-mobile_320"></li>
+
+            {# Адаптивный баннер после 4 статьи #}
+            {% include 'home/base/banner/adaptive-banner-four-article.html' %}
+
+        </ul>
+    {% endif %}
+{% endblock b-content %}
+
+{% block b-content-parent %}
+    {{ block.super }}
+
+{% endblock b-content-parent %}
+
+{% block container-footer %}
+    {# Адаптивный баннер в списке новостей #}
+    {% adaptive_banner mobile_id=524 template='adv/adaptive_banner_content.html' as adaptive_banner_320_1 %}
+    {# Адаптивный баннер в списке статей #}
+    {% adaptive_banner mobile_id=525 template='adv/adaptive_banner_content.html' as adaptive_banner_320_2 %}
+    {# текстовый баннера, над блоком сюжетов #}
+    {% ibanner id=451 template='adv/banners/text_widget_banner.html' as banner_text_1 %}
+    {% ibanner id=452 template='adv/banners/text_widget_banner.html' as banner_text_2 %}
+    {% ibanner id=513 template='adv/banners/text_widget_banner.html' as banner_text_3 %}
+    {% ibanner id=514 template='adv/banners/text_widget_banner.html' as banner_text_4 %}
+    {% if adaptive_banner_320_1 or adaptive_banner_320_2 %}
+    <div class="b-banners-adaptive_320x320_double-container g-margin-bottom-30 g-mobile_620 g-mobile_768">
+        {% if adaptive_banner_320_1 %}<div class="b-banners-adaptive_320x320 j-transform-container j-transform-container-banner-adaptive_320x320_1-mobile_620 j-transform-container-banner-adaptive_320x320_1-mobile_768"></div>{% endif %}
+        {% if adaptive_banner_320_2 %}<div class="b-banners-adaptive_320x320 j-transform-container j-transform-container-banner-adaptive_320x320_2-mobile_620 j-transform-container-banner-adaptive_320x320_2-mobile_768"></div>{% endif %}
+    </div>
+    {% endif %}
+    {% if banner_text_1 or banner_text_2 or banner_text_3 or banner_text_4 %}
+        <div class="b-container no-padding-top">
+            <ul class="b-home-teaser-list">
+                <li class="b-home-teaser-list-item b-widget-adv">
+                    {% if banner_text_1 %}
+                        {{ banner_text_1 }}
+                    {% else %}
+                        {% ibanner id=518 template='adv/banners/text_widget_banner.html' as banner_text_1_alt %}
+                        {{ banner_text_1_alt }}
+                    {% endif %}
+                </li>
+                <li class="b-home-teaser-list-item b-widget-adv">
+                    {% if banner_text_2 %}
+                        {{ banner_text_2 }}
+                    {% else %}
+                        {% ibanner id=515 template='adv/banners/text_widget_banner.html' as banner_text_2_alt %}
+                        {{ banner_text_2_alt }}
+                    {% endif %}
+                </li>
+                <li class="b-home-teaser-list-item b-widget-adv">
+                    {% if banner_text_3 %}
+                        {{ banner_text_3 }}
+                    {% else %}
+                        {% ibanner id=516 template='adv/banners/text_widget_banner.html' as banner_text_3 %}
+                        {{ banner_text_3 }}
+                    {% endif %}
+                </li>
+                <li class="b-home-teaser-list-item b-widget-adv">
+                    {% if banner_text_4 %}
+                        {{ banner_text_4 }}
+                    {% else %}
+                        {% ibanner id=517 template='adv/banners/text_widget_banner.html' as banner_text_4_alt %}
+                        {{ banner_text_4_alt }}
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+
+    {# Баннер во всю ширину, над блоком сюжетов #}
+    {% ibanner ID=522 as banner_under_subject %}
+
+    {% if banner_under_subject %}
+        <div class="b-container no-padding-top"><div class="b-home-banner-under_subject g-clear g-desktop g-margin-bottom-30">{{ banner_under_subject }}</div></div>
+    {% endif %}
+
+    {# Новые журналы не публиковались с мая 2018  возможно блок не нужен #}
+    {% if magazine.magazine %}
+        <section class="b-home-magazine-container">
+            <div class="b-home-magazine">
+                <h3 class="g-hidden g-absolute">{{ magazine.magazine.title|typograf }}</h3>
+                <a href="{{ magazine.magazine.get_absolute_url }}" class="b-home-magazine-image-link">
+                    {% thumbnail magazine.magazine.home_image 500x693 as magazine_image %}
+                    <img src="{{ magazine_image }}" alt="{{ magazine.magazine.title|typograf }}" class="b-home-magazine-image" width="500" height="693">
+                </a>
+                <div class="b-home-magazine-info">
+                    <div class="b-home-magazine-info-section">
+                        <div class="b-magazine-person-text">
+                            {{ magazine.magazine.caption|typograf:'admin' }}
+                        </div>
+                        <section class="b-magazine-person-container g-margin-right-20 g-margin-bottom-30">
+                            {% thumbnail magazine.magazine.caption_author.image 50x50 as author_image %}
+                            {% if author_image %}
+                                <img src="{{ author_image }}" alt="{{ magazine.magazine.caption_author.name }}" title="{{ magazine.caption_author.name }}" width="50" height="50" class="b-magazine-person-photo">
+                            {% endif %}
+                            <div class="b-magazine-person-info">
+                                <h3 class="b-magazine-person-name">{{ magazine.magazine.caption_author.name }}</h3>
+                                <div class="b-magazine-person-position">{{ magazine.magazine.caption_author.position }}</div>
+                            </div>
+                        </section>
+                        <a href="{{ magazine.magazine.get_absolute_url }}" class="b-home-magazine-info-link g-margin-bottom-30">Читать журнал</a>
+                    </div>
+                    <div class="b-home-magazine-info-section">
+                        <section class="b-magazine-subscribe-container margin-bottom-30 g-margin-right-20">
+                            <h4 class="b-magazine-subscribe-caption j-magazine-subscribe-caption type2">Получить следующий номер на&nbsp;почту:</h4>
+                            <form class="b-magazine-subscribe-input-container j-magazine-subscribe-form" action="{% url 'magazine:subscribe' %}">
+                                <input pattern="[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]*$" required placeholder="ваш e-mail" type="email" class="b-magazine-subscribe-input" id="magazine:subscribe_email">
+                                <button type="submit" class="b-magazine-subscribe-input-label">&nbsp;</button>
+                            </form>
+                        </section>
+                        {% include 'magazine/snippets/share_black.html' with title=magazine.magazine.title additional_class='g-margin-bottom-30' %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    {# Группа баннеров, которые необходимо учитывать для формирования списка материалов #}
+    {# Баннер справа от первой новости 580x250 #}
+    {% ibanner ID=546 as banner_double_first %}
+    {% if not banner_double_first %}{% ibanner ID=519 as banner_double_first %}{% endif %}
+
+    {# Баннер слева от афиши 280х250 #}
+    {% ibanner ID=520 as banner_single_first %}
+
+    {# блок новогодних корпоративов #}
+    {% if settings.OBED_CORPORATIVES %}
+        <div class="j-home-corp" data-url="{% url 'obed:corporatives_block' %}"></div>
+    {% endif %}
+
+    {# блок доставок #}
+    {% if settings.OBED_DELIVERY %}
+        <div class="j-home-corp" data-url="{% url 'obed:delivery_block' %}"></div>
+    {% endif %}
+
+    {% cache 3600 'home.subject.subject' tags='subjects' %}
+    {% if subject.subject %}
+        {% thumbnail subject.subject.home_image 1920x400 quality=90 as subject_home_image %}
+        <section class="b-home-subject-container {% if subject.subject.home_image %}j-lazy-load{% else %}no-image{% endif %}" data-original="{{ subject_home_image }}">
+            <div class="j-metrika-goal-hover" data-metrika-goal="index_scroll_subject"></div>
+            <div class="b-home-subject-content">
+                <div class="b-home-subject-label">Сюжет</div>
+                <h3 class="b-home-subject-title g-color-white"><a class="b-home-subject-title-link j-metrika-goal" data-metrika-goal="subject_click" href="{{ subject.subject.get_absolute_url }}">{{ subject.subject.title|typograf }}</a></h3>
+                <div class="b-home-subject-news-container">
+                    <div class="b-home-subject-news-container-icon b-widget-material-double-light-summary-time{% if subject.subject.home_image %} white{% endif %}"></div>
+                    <h5 class="b-home-subject-news-title"><a class="b-home-subject-news-title-link" href="{{ subject.subject.get_absolute_url }}">Все новости →</a></h5>
+                    <ul class="b-home-subject-news-list">
+                        {% for news in subject.news %}
+                        <li class="b-home-subject-news-list-item">
+                            <h4 class="b-home-subject-news-list-item-title">
+                                <a class="b-home-subject-news-list-item-title-link g-color-white visited j-metrika-goal" data-metrika-goal="subject_click" href="{{ news.get_absolute_url }}">{{ news.title|typograf }}</a>
+                            </h4>
+                            <time class="b-home-subject-news-list-item-time" datetime="{{ news.stamp|date:'Y-m-d' }}">
+                                {{ news.published_time|date:"H:i" }}
+                            </time>
+                            <span class="b-home-subject-news-list-item-comments j-metrika-goal" data-metrika-goal="subject_click">{% comments_cnt news new_layout=True %}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <ul class="b-home-subject-article-list">
+                    {% for material in subject.materials %}
+                    <li class="b-home-subject-article-list-item">
+                        <div class="b-widget-material-double-light-icon {{ material|classname|lower|default:'article' }}{% if subject.subject.home_image %} white{% endif %}"></div>
+                        <h4 class="b-home-subject-article-list-item-title">
+                            <a class="b-home-subject-article-list-item-title-link g-color-white visited j-metrika-goal" data-metrika-goal="subject_click" href="{{ material.get_absolute_url }}">{{ material.title|typograf }}</a>
+                        </h4>
+                        <span class="b-home-subject-article-list-item-comments j-metrika-goal" data-metrika-goal="subject_click">{% comments_cnt material new_layout=True %}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+    {% endif %}
+    {% endcache %}
+
+    {# Зона хаоса #}
+    <div class="b-container-inner">
+        {% cache 3600 'home.materials.block4' vary='news.is_moderator,request.user_agent.is_gadget,banner_double_first,banner_single_first' tags='longread' %}
+        <ul class="b-home-materials-first-list j-analytics-impression" data-analytics-category="Home Chaos Block">
+        {% if banner_double_first and banner_single_first %}
+            {% for material in materials|slice:"7:16" %}
+                {% if forloop.first %}
+                    <li class="b-home-materials-first-list-item double-h">{% material_card material is_double=True is_lazyload=True metrika_goal='main_center_article' analytics_cat='Home Chaos' track='click' %}</li>
+                {% elif forloop.counter == 6 %}
+                    <li class="b-home-materials-first-list-item double-h b-home-mobile-material-smaller-size1">{% material_card material is_double=True is_lazyload=True is_light=True metrika_goal='main_center_article' analytics_cat='Home Chaos' track='click' %}</li>
+                {% elif forloop.counter == 8 %}
+                    <li class="b-home-materials-first-list-item double-h b-home-mobile-material-smaller-size1">{% material_card material is_double=True is_lazyload=True metrika_goal='main_center_article' analytics_cat='Home Chaos' track='click' %}</li>
+                {% else %}
+                    <li class="b-home-materials-first-list-item">{% material_card material is_lazyload=True is_light=True metrika_goal='main_center_article'  analytics_cat='Home Chaos' track='click' %}</li>
+                    {% if forloop.counter == 4 %}
+                        {# Адаптивный баннер после 8 статьи #}
+                        {% include 'home/base/banner/adaptive-banner-eight-article.html' %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% elif banner_double_first or banner_single_first %}
+            {% for material in materials|slice:"8:17" %}
+                {% if forloop.first or forloop.counter == 2 %}
+                    <li class="b-home-materials-first-list-item double-h{% if forloop.counter == 2 %} b-home-mobile-material-smaller-size2{% endif %}">{% material_card material is_double=True is_lazyload=True metrika_goal='main_center_article' analytics_cat='Home Chaos' track='click' %}</li>
+                {% elif forloop.counter == 8 %}
+                    <li class="b-home-materials-first-list-item double-h b-home-mobile-material-smaller-size1 b-home-mobile-material-smaller-size2">{% material_card material is_double=True is_lazyload=True metrika_goal='main_center_article' analytics_cat='Home Chaos' track='click' %}</li>
+                {% else %}
+                    <li class="b-home-materials-first-list-item">{% material_card material is_lazyload=True is_light=True metrika_goal='main_center_article'  analytics_cat='Home Chaos' track='click' %}</li>
+                    {% if forloop.counter == 4 %}
+                        {# Адаптивный баннер после 8 статьи #}
+                        {% include 'home/base/banner/adaptive-banner-eight-article.html' %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% for material in materials|slice:"9:18" %}
+                {% if forloop.first %}
+                    <li class="b-home-materials-first-list-item double-h">{% material_card material is_double=True is_lazyload=True metrika_goal='main_center_article' analytics_cat='Home Chaos' track='click' %}</li>
+                {% elif forloop.counter == 6 %}
+                    <li class="b-home-materials-first-list-item double-h b-home-mobile-material-smaller-size1">{% material_card material is_double=True is_lazyload=True is_light=True metrika_goal='main_center_article' analytics_cat='Home Chaos' track='click' %}</li>
+                {% elif forloop.counter == 8 %}
+                    <li class="b-home-materials-first-list-item double-h b-home-mobile-material-smaller-size1">{% material_card material is_double=True is_lazyload=True metrika_goal='main_center_article' analytics_cat='Home Chaos' track='click' %}</li>
+                {% else %}
+                    <li class="b-home-materials-first-list-item">{% material_card material is_lazyload=True is_light=True metrika_goal='main_center_article'  analytics_cat='Home Chaos' track='click' %}</li>
+                    {% if forloop.counter == 4 %}
+                        {# Адаптивный баннер после 8 статьи #}
+                        {% include 'home/base/banner/adaptive-banner-eight-article.html' %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        </ul>
+        {% endcache %}
+    </div>
+
+    {# Адаптивный баннер после 12 статьи #}
+    {% include 'home/base/banner/adaptive-banner-twelve-article.html' %}
+
+    {% cache 3600 'home.special_projects' vary='request.user_agent.is_gadget' tags='longread,project' %}
+        {% home_special_projects %}
+    {% endcache %}
+
+    <div class="b-container-inner">
+        <div class="b-home-tests-container">
+            <h3 class="g-block g-margin-bottom-20 g-color-black"><a href="{% url 'testing:index' %}" class="g-inline-block">Тесты &rarr;</a></h3>
+            <ul class="b-home-materials-first-list g-clearfix j-analytics-impression" data-analytics-category="Home Tests Block">
+                {% for test in tests %}
+                    <li class="b-home-materials-first-list-item">{% material_card test is_lazyload=True is_light=True metrika_goal='main_index_test' analytics_cat='Home Test' track='click' %}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {# Адаптивный баннер перед блогами #}
+        {% include 'home/base/banner/adaptive-banner-blogs.html' %}
+
+        {% blog_sidebar_block limit=4 is_lazyload=True request=request home=True %}
+    </div>
+    {% cache 3600 'home.photo.photos' vary='news.is_moderator' tags='photo' %}
+    {% if photo.photos %}
+    <div class="b-home-photorep-container-outer">
+        <div class="b-home-photorep-container no-padding-top j-analytics-impression j-analytics-click" data-analytics-category="Home Photorep Block">
+            <div class="j-metrika-goal-hover" data-metrika-goal="index_scroll_photorep"></div>
+            <h3 class="b-home-photorep-title"><a href="{% url 'news:photo:index' %}" class="g-inline-block">Фото</a></h3>
+            <div class="b-home-photorep-button-prev icon-inline-svg swiper-arrow-left j-home-photorep-button-prev"></div>
+            <div class="b-home-photorep-button-next icon-inline-svg swiper-arrow-right j-home-photorep-button-next"></div>
+            <div class="b-home-photorep-side-prev j-home-photorep-button-prev"></div>
+            <div class="b-home-photorep-side-next j-home-photorep-button-next"></div>
+            <div class="b-home-photorep swiper-container j-home-photorep-swiper">
+                <div class="b-home-photorep-wrapper swiper-wrapper">
+                    {% for item in photo.photos %}
+                        <a href="{{ item.get_absolute_url }}" class="b-home-photorep-slide swiper-slide j-metrika-goal" data-metrika-goal="main_foto_article">
+                            <div class="b-home-photorep-slide-link">Весь репортаж &rarr;</div>
+                            <h4 class="b-home-photorep-name g-color-white">{{ item.title|typograf }}</h4>
+                            {% thumbnail item.gallery.best_image.image 940x660 quality=70 x=item.watermark as thumb %}
+                            <img class="b-home-photorep-slide-image swiper-lazy j-lazy-load" data-original="{{ thumb }}" data-src="{{ thumb }}" src="{% static 'img/gag_340x160.png' %}" alt="" width="940" height="627">
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endcache %}
+
+    <div class="b-container no-padding-top">
+        {% include 'home/base/banner/footer-layout-banner.html' %}
+    </div>
+{% endblock %}
+
+{% block b-footer-class %} j-metrika-goal-hover{% endblock %}
+{% block b-footer-data %} data-metrika-goal="index_scroll_footer"{% endblock %}

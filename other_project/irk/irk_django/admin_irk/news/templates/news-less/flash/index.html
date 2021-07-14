@@ -1,0 +1,74 @@
+{% extends 'news-less/layout_cr.html' %}
+
+{% load game_tags staticfiles media_utils news_tags thumbnail str_utils comments_tags adv_tags %}
+
+{# удалить этот блок после игры #}
+{% block game2020 %}
+    {% treasure 'flash' %}
+{% endblock %}
+
+{% block b-adword-header %}{% include 'news-less/base/banner/b-adwords-banner-underhead-flash.html' %}{% endblock b-adword-header %}
+
+{% block title %}{{ title }} | {{ block.super }}{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.placeholder.min.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            var submitButton = $('#add-flash-news-button').find('button');
+            var text_title = $('#id_title');
+            if (text_title.length > 0) {
+                window.setInterval(function() {
+                    var l = text_title.val().length;
+                    if (l < 10 || l > 255) {
+                        submitButton.attr('disabled', 'disabled');
+                    } else {
+                        submitButton.removeAttr('disabled');
+                    }
+                }, 200);
+                text_title.placeholder();
+                text_title.focus();
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block promo_A %}
+    {% ibanner id=477 as branding_top %}
+    {% include 'snippets/branding_top.html' %}
+{% endblock %}
+
+{% block promo_B %}
+    {% ibanner id=467 as branding_footer %}
+    {% if branding_footer %}
+        <div class="b-branding-bottom g-desktop">
+            {{ branding_footer }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block b-content-cr %}
+    <section class="g-content-resp g-worubrics">
+        <article class="b-content-block b-news-flash-index">
+            {% if dtp_page %}
+                <h1>{{ title }}</h1>
+            {% endif %}
+            {% include 'news-less/flash/created.html' %}
+            {% include 'news-less/flash/snippets/entries.html' %}
+            <div id="flash-news-paging" class="br-r-r-r-r">
+                Загрузка
+                <div>
+                    {% for page_number in page.paginator.page_range %}
+                        {% if not forloop.first %}
+                            <a href="?page={{ page_number }}">{{ page_number }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </article>
+    </section>
+{% endblock %}
+
+{% block b-aside-r %}
+    {% include 'news-less/flash/b-aside-r.html' %}
+{% endblock b-aside-r %}

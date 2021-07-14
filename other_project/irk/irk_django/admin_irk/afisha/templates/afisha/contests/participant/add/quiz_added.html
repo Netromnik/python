@@ -1,0 +1,15 @@
+{% extends "afisha/layout_cr.html" %}
+
+{% load staticfiles media_utils %}
+
+{% block title %} Участник добавлен | {{ block.super }}{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    {% less '/less/compile/apps/contests.less' %}
+{% endblock style %}
+
+{% block content %}
+    <p class="b-thankyou"><b>Спасибо за участие!</b> Ваше сообщение успешно отправлено.</p>
+
+{% endblock %}

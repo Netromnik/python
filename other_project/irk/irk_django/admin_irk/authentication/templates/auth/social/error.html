@@ -1,0 +1,20 @@
+{% extends 'auth/social/details.html' %}
+{% load staticfiles %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            setTimeout(function(){
+                window.close();
+            }, 2000)
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div style="text-align: center; margin-top: 10px">
+        <img src="{% static 'img/logo_240.png' %}">
+        <h1 class="g-color-gray">Авторизация невозможна</h1>
+        <p>Этот аккаунт уже используется на сайте</p>
+    </div>
+{% endblock %}

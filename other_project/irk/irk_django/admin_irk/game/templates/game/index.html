@@ -1,0 +1,385 @@
+{% load staticfiles media_utils site_utils options adv_tags cache metric_tags pages str_utils utils_tags thumbnail phones_tags str_utils %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+    <title>Твой Иркутск</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-touch-icon-57x57.png' %}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-touch-icon-72x72.png' %}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/icons/apple-touch-icon-114x114.png' %}" />
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
+    {% block style %}
+        {% less '/less/compile/landings/almaz.less' %}
+    {% endblock style %}
+
+    {% if settings.DEBUG_ADAPTIVE or request.user_agent.is_gadget %}
+        {% block style_adaptive %}
+            {% less '/less/compile/adaptive/landings/almaz.less' media='all' %}
+        {% endblock style_adaptive %}
+    {% endif %}
+
+    {% if settings.DEBUG %}
+        <script type="text/javascript">var less = {env: "development"};</script>
+        <script type="text/javascript" src="{% static 'js/lib/less/less-1.7.5.js' %}"></script>
+    {% endif %}
+
+    {% block js %}
+        <script type="text/javascript">
+            var DOMAIN_MEDIA = "{{ MEDIA_URL }}";
+            var auth_no_redir = {};
+            var auth_callback = {};
+            var irk = {};
+        </script>
+
+        <script type="text/javascript" src="{% static 'js/lib/jquery-3.4.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lib/modernizr-2.6.2-bro-fix.js' %}"></script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/apps-js/landing/game2020.js' %}"></script>
+    {% endblock js %}
+
+    {% include 'google_analytics.html' %}
+</head>
+<body class="j-toggle-target-bodyhide" data-toggle-class="b-main-menu-opened">
+{% include 'yandex_metrika.html' %}
+{% include 'snippets/header.html' %}
+
+<div class="game-popup-wrapper j-gamepopup hide">
+    <div class="popup-window">
+        <span class="popup-window__close j-gamepopup-close"></span>
+        <div class="popup-window__content">
+            <h4>
+                Внимание!
+            </h4>
+            <p>
+                Игра закончится, как только вы заберёте подарок.
+            </p>
+            {% if g.gamer.progress.count < 30 %}
+                <p>
+                    Хотите другой подарок? Тогда продолжайте поиски!
+                </p>
+            {% else %}
+                <p>
+                    Вы нашли максимальное количество emoji. Заберите свой подарок сейчас!
+                </p>
+            {% endif %}
+        </div>
+        <div class="popup-window__buttons">
+            <a href="#" class="popup-window__button j-gamepopup-buy">Забрать!</a>
+            {% if g.gamer.progress.count < 30 %}
+                <a href="#" class="popup-window__button popup-window__button_white j-gamepopup-close">Искать дальше</a>
+            {% endif %}
+        </div>
+        <div class="popup-window__cat"></div>
+    </div>
+    <div class="game-popup-wrapper__shadow"></div>
+</div>
+
+<div class="game">
+{% if g.gamer.taked_prize %}
+    <section class="info info_gameover">
+        <div class="inner">
+            <div class="columns columns_top">
+                <div class="columns__item columns__item_adaptive">
+                    <h1 class="ontop__title__end g-margin-bottom-20">
+                        Спасибо за участие!
+                    </h1>
+                    <div class="prizes__text">
+                        <p>
+                            Выдача подарков осуществляется в срок <b>с 16.04.2021 г. по 23.05.2021 г</b>.
+                            во Флагманском магазине «Алмаз» по&nbsp;адресу г. Иркутск, ул. Сухэ-Батора,
+                            17а (вход со стороны ул. Карла Маркса).
+                        </p>
+                        <p class="italic">
+                            <b>Важно!</b> При выдаче приза подписывается акт приема-передачи,
+                            куда важно будет вписать паспортные данные. При себе необходимо
+                            иметь паспорт.
+                        </p>
+                    </div>
+                </div>
+                <div class="columns__item columns__item_gameover">
+                    <h4 class="block-title">
+                        Что я выиграл?
+                    </h4>
+                    <div class="blue blue_flex blue_gameover">
+                        <div class="prize-image">
+                            {% thumbnail g.gamer.taked_prize.image 123x135 as taked_prize_image %}
+                            <img src="{{ taked_prize_image }}" alt="{{ prize.name }}" />
+                        </div>
+                        <span class="prize-name">
+                            {{ g.gamer.taked_prize }}
+                        </span>
+                    </div>
+                </div>
+                <div class="columns__item columns__item_gameover">
+                    <h4 class="block-title">
+                        Ваш персональный код
+                    </h4>
+                    <div class="blue blue_padding">
+                        <div class="username">
+                            <div class="username__counter">
+                                {{ g.gamer.prize_code }}
+                            </div>
+                            <div class="username__name">
+                                Назови его при&nbsp;получении
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% else %}
+    <section class="ontop">
+        <div class="inner inner_top">
+            <div class="ontop__info">
+                <div class="ontop__logo">
+                    <img src="{% static 'img/landing_pages/game2020/logo.png' %}" alt="logo" />
+                </div>
+                <h1 class="ontop__title">«Алмаз» отмечает день рождения и дарит подарки!</h1>
+                <div class="ontop__sub">Мы рады делиться с вами теплом и положительными эмоциями, поэтому предлагаем поиграть.</div>
+            </div>
+            <div class="ontop__right"></div>
+        </div>
+    </section>
+    <section class="prizes">
+        <div class="inner inner_padding">
+            <div class="prize-list">
+                <h3 class="prize-list__title">
+                    На страницах сайта находи драгоценные Emoji и обменивай их в личном кабинете на один из 20 приятных подарков!
+                </h3>
+                <h4 class="prize-list__subtitle">
+                    Внимание: подарки разыгрываются по одному для каждого участника.
+                </h4>
+                <div class="prize-list__snow">
+                    <img src="{% static 'img/landing_pages/game2020/almaz.png' %}" alt="snow" />
+                </div>
+                <div class="prizes__items">
+
+                    {% for prize in g.prizes %}
+
+                        <div class="prize-list__item">
+                            <div class="prize-list__content">
+                                <div class="prize-list__circle">
+                                    <div class="prize-list__count">
+                                        <span class="prize-list__number">{{ prize.price }}</span>
+                                        <span class="prize-list__text">emoji</span>
+                                    </div>
+                                    <div class="prize-list__prize prize-list__prize_p{{ prize.slug }}">
+                                        <img src="{% static 'img/landing_pages/game2020/p' %}{{ prize.slug }}.png" alt="" />
+                                    </div>
+                                    <div class="prize-list__emoji prize-list__emoji_s{{ prize.slug }}"></div>
+                                </div>
+                            </div>
+                            <div class="prize-list__name">
+                                {{ prize.name }}
+                            </div>
+                            <div class="prize-list__counter">
+                                Осталось {{ prize.amount_left }} из {{ prize.amount }}
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+        </div>
+        <div class="prizes__border"></div>
+    </section>
+
+    {% if request.user.is_authenticated %}
+        <section class="info">
+            <div class="inner">
+                <div class="columns columns_top">
+                    <div class="columns__item">
+                        <h4 class="block-title">
+                            Сколько Emoji я нашел?
+                        </h4>
+                        <div class="blue blue_padding">
+                            <div class="username">
+                                <div class="username__avatar">
+                                    {% if g.gamer.user.profile.image %}
+                                        {% thumbnail g.gamer.user.profile.image 60x60 crop="60x60" as thumb_user %}
+                                        <img src="{{ thumb_user }}" alr="avatar" />
+                                    {% endif %}
+                                </div>
+                                <div class="username__name">
+                                    {{ g.gamer }}
+                                </div>
+                                <div class="username__counter">
+                                    {{ g.gamer.progress.count }}
+                                </div>
+                            </div>
+                        </div>
+                        <img src="{% static 'img/landing_pages/game2020/emoji_list_almaz.png' %}" alt="emoji" class="emoji-list g-margin-bottom-20" />
+                    </div>
+                    <div class="columns__item">
+                        <h4 class="block-title">
+                            Что я могу получить?
+                        </h4>
+
+                        <div class="blue">
+                            <div class="slider j-slider">
+
+                                {% for prize in g.prizes %}
+
+                                    <!--item-->
+                                    <div class="slider__item">
+                                        <div class="slider__prize">
+                                            {% thumbnail prize.image 123x135 as prize_image %}
+                                            <img src="{{ prize_image }}" alt="{{ prize.name }}" />
+                                        </div>
+                                        <h3 class="slider__title">
+                                            {{ prize.name }}
+                                        </h3>
+                                        <div class="slider__buttons">
+                                            {% if g.gamer %}
+                                                {% if g.gamer.taked_prize %}
+                                                    <span class="slider__button slider__button_red">
+                                                        Вы уже забрали подарок
+                                                    </span>
+                                                {% else %}
+                                                    {% if not prize.is_in_stock %}
+                                                        <span class="slider__button slider__button_red">
+                                                            Подарок закончился
+                                                        </span>
+                                                    {% else %}
+                                                        {% if prize.is_enough_tresuse %}
+                                                            <a href="{% url 'game:purchase' prize.pk %}" class="slider__button slider__button_link slider__button_almaz j-game-buy">
+                                                                Забрать подарок!
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="slider__button">
+                                                                Ищите emoji дальше!
+                                                            </span>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+
+                                        </div>
+                                        <div class="slider__info">
+                                            {% if prize.tresuse_left == 0 %}
+                                                Вы нашли достаточно emoji чтобы получить этот подарок!
+                                            {% else %}
+                                                Найди еще {{ prize.tresuse_left }} emoji чтобы получить <b>{{ prize.name }}</b>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <!--item-->
+
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns__item">
+                        <h4 class="block-title">
+                            Где найти Emoji?
+                        </h4>
+                        <div class="blue blue_hint">
+                            <div class="hint">
+                                <p>
+                                    Будь очень внимателен в поисках! Emoji могут
+                                    быть очень хорошо спрятаны, но и лежать прямо перед носом.
+                                </p>
+                            </div>
+                            <div class="hint-text">
+                                <p class="italic">
+                                    <b>Подсказка:</b>
+                                </p>
+                                {{ g.gamer.get_hint|typograf:'admin'|safe }}
+                            </div>
+                            <div class="hint-img">
+                                <img src="{% static 'img/landing_pages/game2020/gerb_2.png' %}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inner inner_padding">
+                <div class="info__text">
+                    <h3 class="prize-list__title">
+                        С 15 по 18 апреля 2021 года выбирайте в наших магазинах ювелирные украшения с
+                        <b>выгодой до 35%</b> и получите шанс выиграть колье из белого золота с бриллиантом,
+                        Apple Watch и другие подарки при покупке от 1000 рублей.
+                    </h3>
+                    <h4 class="prize-list__subtitle prize-list__subtitle_bottom">
+                        С информацией об организаторе розыгрыша, о правилах его проведения,
+                        количестве призов или выигрышей, по результатам мероприятия, сроках,
+                        месте и порядке их получения можно ознакомиться по телефону 8 (3952) 500-980.
+                        Розыгрыш проводится 15.04.2021г. Итоги будут подводиться 15.04.2021г.
+                        Подарки могут отличаться от фотографий на сайте. Выдача подарков осуществляется до 23.05.2021г.
+                        <div style="margin-top:10px;">*Эмоджи</div>
+                    </h4>
+                </div>
+            </div>
+        </section>
+    {% else %}
+        <section class="info info_auth">
+            <div class="inner">
+                <h4 class="block-title">
+                    Внимание!
+                </h4>
+                <div class="blue blue_auth">
+                    <div class="register">
+                        Для участия вам необходимо <a href="https://www.irk.ru/auth/register/">зарегистрироваться</a>
+                        или <a href="{% url 'authentication:login' %}?next={{ request.get_full_path|urlencode }}">войти</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+{% endif %}
+
+    <section class="bottom">
+        <div class="inner">
+            <h4 class="block-title">
+                Статистика игроков
+            </h4>
+            <div class="columns columns_bottom">
+                <div class="columns__item columns__item_x2">
+
+                    <div class="users">
+                        {% if g.purchases|length > 0 %}
+                            {% for purchase in g.purchases %}
+                                <!--item-->
+                                <div class="users__item">
+                                    <div class="users__avatar">
+                                        {% if purchase.gamer.user.profile.image %}
+                                            {% thumbnail purchase.gamer.user.profile.image 60x60 crop="60x60" as thumb_user %}
+                                            <img src="{{ thumb_user }}" alr="avatar" />
+                                        {% endif %}
+                                    </div>
+                                    <div class="users__info">
+                                        <span class="users__name">{{ purchase.gamer.user.get_full_name }} получил <b>{{ purchase.prize.name }}</b>!</span>
+                                        <span class="users__time">{{ purchase.created|date:"H:i" }}</span>
+                                    </div>
+                                </div>
+                                <!--item-->
+                            {% endfor %}
+                        {% else %}
+                            <div class="users__error">
+                                Победителей еще нет... Ты можешь быть первым!
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+                <div class="columns__item">
+                    <div class="cat">
+                        <img src="{% static 'img/landing_pages/game2020/balloons.png' %}" alt="кот" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include 'snippets/footer.html' %}
+{% include 'liveinternet_counter.html' %}
+</body>
+

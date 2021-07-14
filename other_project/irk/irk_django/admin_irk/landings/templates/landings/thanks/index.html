@@ -1,0 +1,152 @@
+{% load staticfiles media_utils site_utils options adv_tags cache metric_tags pages str_utils utils_tags thumbnail phones_tags %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+    <title>Благодарность докторам  | Твой Иркутск</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-touch-icon-57x57.png' %}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-touch-icon-72x72.png' %}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/icons/apple-touch-icon-114x114.png' %}" />
+    {% include 'share_meta.html' with url='/thanks/' title='Спасибо, доктор!' description='Вырази свою благодарность медикам' static_image='img/landing_pages/thanks/share.jpg' static_image_width=800 static_image_height=420 %}
+
+    {% block style %}
+        {% less '/less/compile/landings/thanks.less' %}
+    {% endblock style %}
+
+    {% if settings.DEBUG_ADAPTIVE or request.user_agent.is_gadget %}
+        {% block style_adaptive %}
+            {% less '/less/compile/adaptive/landings/thanks.less' media='all' %}
+        {% endblock style_adaptive %}
+    {% endif %}
+
+    {% if settings.DEBUG %}
+        <script type="text/javascript">var less = {env: "development"};</script>
+        <script type="text/javascript" src="{% static 'js/lib/less/less-1.7.5.js' %}"></script>
+    {% endif %}
+
+    {% block js %}
+        <script type="text/javascript">
+            var DOMAIN_MEDIA = "{{ MEDIA_URL }}";
+            var auth_no_redir = {};
+            var auth_callback = {};
+            var irk = {};
+        </script>
+
+        <script type="text/javascript" src="{% static 'js/lib/jquery-3.4.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lib/modernizr-2.6.2-bro-fix.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/apps-js/landing/thanks.js' %}"></script>
+    {% endblock js %}
+
+    {% include 'google_analytics.html' %}
+</head>
+<body class="j-toggle-target-bodyhide" data-toggle-class="b-main-menu-opened">
+
+{% include 'yandex_metrika.html' %}
+{% include 'snippets/header.html' %}
+
+<div class="doctor">
+    <div class="doctor__header">
+        <div class="doctor__header__inner">
+            <h1 class="doctor__title">
+                Спасибо, доктор!
+            </h1>
+            <h3 class="doctor__subtitle">
+                Вырази свою благодарность медикам
+            </h3>
+            <div class="doctor__img doctor__img_left"></div>
+            <div class="doctor__img doctor__img_right"></div>
+        </div>
+    </div>
+    <div class="inner g-relative">
+        <span class="button-history j-history">
+            Рассказать свою историю
+        </span>
+
+        <div class="spoiler j-spoiler">
+            <div class="doctor__description">
+                Укажите имя и фамилию врача или отметьте весь коллектив, в каком учреждении трудятся. Добавьте, от кого звучит обращение.
+            </div>
+
+            <div class="form">
+                <form action="{% url 'landings_thanks_index' %}" method="post" class="doctor__form j-form">
+                    {% csrf_token %}
+
+                    <div class="form__flex">
+                        <div class="form__flex__left">
+                            <input type="text" name="name" required="required" id="id_name" class="doctor__form__input g-margin-bottom-30" placeholder="Ваше имя" />
+                            <input type="text" name="contact" required="required" id="id_contact" class="doctor__form__input" placeholder="Ваш e-mail или номер телефона" />
+
+                            <div class="form__flex__left__description">
+                                Ваши контактные данные используются для обратной связи (на сайте не публикуются)
+                            </div>
+
+                            <input type="checkbox"
+                                   name="personal_data"
+                                   id="form_checkbox"
+                                   class="doctor__form__checkbox"
+                                   onchange="if(this.checked){$('.j-doctor-submit').removeAttr('disabled')} else {$('.j-doctor-submit').attr('disabled','disabled')}" />
+
+                            <label for="form_checkbox" class="doctor__form__checkbox__label">Я согласен на обработку персональных данных</label>
+
+                            <input type="submit" class="doctor__form__submit j-doctor-submit" value="Отправить" disabled="disabled" />
+                        </div>
+                        <div class="form__flex__right">
+                            <textarea class="doctor__form__textarea" name="text" id="id_text" placeholder="Ваша благодарность врачу или коллективу лечебного учереждения..." required="required"></textarea>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="form__description">
+                    Редакция оставляет за собой право вносить грамматические, орфографические, стилистические, пунктуационные правки в текст, не меняя сути содержания.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="success j-success g-hide">
+            <div class="success__message">
+                <h3 class="success__message__title">
+                    Ваша история отправлена!
+                </h3>
+                <div class="success__message__text">
+                    Перед публикацией на сайте IRK.ru все сообщения проходят модерацию.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="doctor__cards">
+        <div class="inner">
+            <h3 class="cards-title">
+                Истории участников акции
+            </h3>
+
+            {% if thanks|length > 0 %}
+                <div id="cards-list-ajax" data-page="2" data-url="{% url 'landings_thanks_index' %}">
+                    {% include 'landings/thanks/cards_list.html' with thanks=thanks %}
+                </div>
+            {% else %}
+                <div class="doctor__empty">
+                    Тут пока ещё нет ни одной истории :(
+                </div>
+            {% endif %}
+
+            {% if thanks|length == 10 %}
+                <div class="doctor__cards__pagination">
+                    <div class="g-loading-button">
+                        <span class="g-loading-button__more g-height-60 g-line-height-60 g-font-bold j-showmore" data-target="cards-list-ajax">
+                            <span>Показать еще</span>
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

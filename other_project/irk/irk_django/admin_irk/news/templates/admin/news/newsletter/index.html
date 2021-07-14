@@ -1,0 +1,59 @@
+{% extends "admin/base_site.html" %}
+
+{% load i18n staticfiles media_utils admin_urls %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> &rsaquo;
+        <a href="{% url 'admin:app_list' app_label='news' %}">News</a>
+        {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+{% endblock %}
+
+{% block extrastyle %}
+    {% less 'less/compile/admin/apps/news.less' media='all' %}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.adminIncludes[window.adminIncludes.length] = '{% url 'admin:jsi18n' %}';
+        window.adminIncludes[window.adminIncludes.length] = '{% static 'news/js/admin.js' %}';
+        window.adminIncludes[window.adminIncludes.length] = '{% static 'news/js/material-positions.js' %}';
+    </script>
+    {% include 'admin/snippets/edit-notification.html' with object_id=object_id %}
+
+    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/apps-js/admin.js' %}"></script>
+{% endblock extrahead %}
+
+{% block content %}
+    <div class="g-left">
+        <div class="b-material-list-header">
+            <a href="{{ newsletter.get_absolute_url }}" target="_blank">Посмотреть результат</a>
+        </div>
+        <ul class="material-list empty j-main-material-list js-sortable js-sortable-connected"
+            data-save-url="{% url 'admin_newsletter_save' %}" data-newsletter-id="{{ newsletter.id }}">
+            {% for material in main_materials %}
+                {% include 'admin/news/material/item.html' with material=material only_standard_image=True %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="g-left g-margin-left-20">
+        <div class="b-material-list-header g-relative">
+            {% csrf_token %}
+            <input type="text" id="id_material_search" class="b-material-list-search j-material-list-search"/>
+            <label for="id_material_search" class="close j-material-list-search-clear"></label>
+        </div>
+        <ul class="material-list search js-sortable js-sortable-connected j-material-list-search-container"
+            id="material-list-search-container"
+            data-url="{% url 'admin_newsletter_other_materials' %}"
+            data-start="0" data-limit="20" data-page="2">
+        </ul>
+    </div>
+
+    <div class="submit-row material-list-submit-row">
+        <input class="js-save default" type="submit" value="Сохранить" />
+        <div class="submit-text js-save-text"></div>
+    </div>
+{% endblock content %}

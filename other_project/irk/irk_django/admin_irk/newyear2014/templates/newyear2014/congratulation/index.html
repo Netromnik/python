@@ -1,0 +1,69 @@
+{% extends 'newyear2014/layout.html' %}
+{% load adv_tags str_utils staticfiles paginator_utils %}
+
+{% block title %}Поздравления | {{ block.super }}{% endblock title %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.extend.js' %}"></script>
+    <script>
+        $(function() {
+            $('#id_grats').validate({
+                rules: {
+                    sign: {
+                        required: true,
+                        minlength: 2
+                    },
+                    content: {
+                        required: true,
+                        minlength: 10
+                    },
+                    captcha_1: {
+                        required: true
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    // пустое, чтобы не выводил сообщений
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block b-content %}
+    <section class="b-content-cr g-type2">
+        <header class="g-intend">
+            <h1>Поздравления</h1>
+        </header>
+        <ul class="b-ny2014-grats-list b-list-v">
+            {% for congratulation in objects.object_list %}
+                <li class="g-type_{% cycle '1' '2' '3' '4' %}">
+                    <p>{{ congratulation.content|typograf:'user'|safe }}</p>
+                    <p class="sign">
+                        {{ congratulation.sign|typograf:'title'|safe }}
+                    </p>
+                    <div class="label"></div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% paginator objects %}
+    </section>
+    <aside class="b-aside-r g-type2">
+        <section class="b-aside-block b-ny2014-grats-form">
+            <header>
+                <h2>Поздравьте горожан с праздником:</h2>
+            </header>
+            <form id="id_grats" action="." method="post" {% if form.errors %}class="{% if form.content.errors %} g-content-error{% endif %}{% if form.sign.errors %} g-sign-error{% endif %}{% if form.captcha.errors %} g-captcha-error{% endif %}"{% endif %}>{% csrf_token %}
+                {{ form.sign }}
+                {{ form.content }}
+                {{ form.captcha }}
+                <button type="submit">Поздравить</button>
+            </form>
+        </section>
+        {% ibanner ID=407 as banner %}
+        {% if banner %}
+            <div class="b-aside-block go-center b-aside-adv b-aside-float-block">{{ banner }}</div>
+        {% endif %}
+    </aside>
+{% endblock b-content %}

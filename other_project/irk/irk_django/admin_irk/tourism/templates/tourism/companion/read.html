@@ -1,0 +1,43 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils form_tags str_utils %}
+{% load str_utils thumbnail news_tags comments_tags share_utils %}
+{% block title %} Объявление | Туризм в Иркутске на IRK.ru {% endblock %}
+
+{% block content %}
+    <!-- Хлебные крошки -->
+    <div class="b-content-block b-breadcrumbs">
+        <nav>
+            <ul class="b-list-h">
+                <li><a href="{% url 'tourism:index' %}">Туризм</a></li>
+                <li><a href="{% url 'tourism:companion:search' %}">Поиск компаньона</a></li>
+                <li>{{ companion.name }}</li>
+            </ul>
+        </nav>
+    </div>
+    <!-- /Хлебные крошки -->
+
+    <div class="b-content-block b-tourism-companion-my-block b-tourism-companion-index-block">
+        <article class="b-companion-search-result-block">
+            {% if companion.name %}<span class="b-companion-author">{{ companion.name|typograf:'title'|safe }}</span>{% endif %}
+            <div class="b-info-grayblock b-companion-my-info">
+                <header>
+                    <span class="b-companion-author-gender-info"><strong>{{ companion.get_my_composition_display|capfirst }}</strong></span> ищет <span class="b-companion-team-info"><strong>{{ companion.get_find_composition_display }}</strong></span>, место отдыха
+                    {% if companion.place %}<span class="b-companion-place-info"><strong>{{ companion.place }}</strong></span>{% endif %}
+                </header>
+                {% if companion.description %}<p>{{ companion.description }}</p>{% endif %}
+                {% if companion.about %}
+                <h4>О себе</h4>
+                <p>{{ companion.about }}</p>
+                {% endif %}
+                <footer>
+                {% if user.is_authenticated %}
+                   <a href="mailto:{{ companion.email }}">{{ companion.email }}</a> <span class="phone">Телефон: {{ companion.phone }}</span>
+                    {% else %}
+                    <small class="g-color-gray">Контакты доступны только зарегестрированным пользователям</small>
+                {% endif %}
+                </footer>
+            </div>
+        </article>
+    </div>
+{% endblock %}

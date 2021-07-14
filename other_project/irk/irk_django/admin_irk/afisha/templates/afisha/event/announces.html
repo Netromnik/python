@@ -1,0 +1,78 @@
+{% extends 'afisha/layout.html' %}
+
+{% block title %}Анонсы | {{ block.super }}{% endblock %}
+
+{% load staticfiles media_utils str_utils pytils_dt thumbnail %}
+
+{% block container %}<div class="b-container-padding"><div class="g-overflow">{{ block.super }}</div></div>{% endblock %}
+
+{% block container-class-content %} b-container_nopt{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    <!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="{% static 'afisha/css/ie8.css' %}"><![endif]-->
+{% endblock %}
+
+{% block content %}
+    <header class="b-afisha-announces-title clearfix g-indent">
+        <aside class="b-aside-r">
+                {% include 'afisha/base/search.html' %}
+        </aside>
+        <div class="b-content-cr b-content-cr_fix">
+            <h1>Скоро</h1>
+            <ul class="b-list-h b-afisha-guide-filter_old">
+                {% if not event_type %}
+                    <li class="g-active g-first"><span>Все</span></li>
+                {% else %}
+                    <li class="g-first"><a href="{% url 'afisha:announces:events_list' %}">Все</a></li>
+                {% endif %}
+                {% for ev_type, active in event_types_list %}
+                    {% if ev_type != event_type and not active %}
+                    {% else %}
+                    <li class="menu-{{ forloop.counter }} {% if ev_type == event_type %}g-active{% endif %}{% if forloop.last %} g-last{% endif %}">
+                        {% if ev_type == event_type %}
+                            <span>{{ ev_type }}</span>
+                        {% else %}
+                            <a href="{% url 'afisha:announces:events_list'  event_type=ev_type.alias %}">{{ ev_type }}</a>
+                    {% endif %}
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                <li class="g-relative g-mobile g-not-desktop more g-last j-reveal-button-toggle touchstart {% if select_more %}g-active{% endif %}" data-target="announces-menu">
+                    <span class="g-jlink"><span class="g-jlink g-color-black">еще</span></span>
+                    <ul class="b-content-header-menu-more g-accelerate j-reveal-block-toggle j-reveal-block-toggle-announces-menu">
+                        {% for ev_type, active in event_types_list %}
+                            <li class="hide content-header-menu-{{ forloop.counter }} {% if ev_type == event_type %}g-active{% endif %}{% if forloop.last %} g-last{% endif %}">
+                                {% if ev_type == event_type %}
+                                    <span>{{ ev_type }}</span>
+                                {% else %}
+                                    <a href="{% url 'afisha:announces:events_list'  event_type=ev_type.alias %}">{{ ev_type }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="g-indent">
+        <ul class="b-list-v b-afisha-announces-list">
+            {% for event in events %}
+                <li style="background-color: #{{ colors.next }};">
+                    <div class="date"><time><div><span>{{ event.schedule.0.date|ru_strftime:"%d" }}</span><br>{{ event.schedule.0.date|ru_strftime:"%B" }}</div></time></div>
+                    <article class="event">
+                        <h3><a href="{{ event.get_absolute_url }}">
+                            {% thumbnail event.gallery.main_image.image 300x800 as thumb %}
+                            <img src="{{ thumb }}" alt="{{ event|typograf }}" title="{{ event.title|typograf }}" width="300">{{ event|typograf }}</a>{% if event.age_rating %}<span class="b-afisha-events-label g-black">{% if event.age_rating %}{{ event.age_rating }}{% else %}0{% endif %}+</span>{% endif %}</h3>
+                        {% if event.caption %}<p>{{ event.caption|typograf|truncatechars:280 }}</p>{% endif %}
+                    </article>
+                    <div class="price">
+                        <span>{{ event.genre|typograf }}</span>
+                        <div>{{ event.schedule.0.price|typograf }}</div>
+                    </div>
+                    <div class="g-clear"></div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock content %}

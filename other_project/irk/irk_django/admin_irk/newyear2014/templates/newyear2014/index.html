@@ -1,0 +1,412 @@
+{% extends 'newyear2014/layout.html' %}
+{% load staticfiles media_utils thumbnail str_utils pytils_numeral comments_tags adv_tags rating_tags pytils_dt cache_tags polls_tags metric_tags date_tags newyear2014_tags %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/lib/jquery.jcarousel.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/owl.carousel.js' %}"></script>
+{#    <script type="text/javascript" src="{% static 'js/lib/jquery.menu-aim.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'newyear2014/js/newyear2014.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lib/jquery.validate.extend.js' %}"></script>
+    <script>
+        $(function() {
+            $('#id_grats').validate({
+                rules: {
+                    sign: {
+                        required: true,
+                        minlength: 2
+                    },
+                    content: {
+                        required: true,
+                        minlength: 10
+                    },
+                    captcha_1: {
+                        required: true
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    // пустое, чтобы не выводил сообщений
+                }
+            });
+            {% comment %}
+            $('.b-ny2014-index-sms').find('form').validate({
+                rules: {
+                    number: {
+                        required: true,
+                        number: true
+                    },
+                    message: {
+                        required: true
+                    },
+                    captcha_1: {
+                        required: true
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    var attr = element.attr('name');
+                    var box = $("[name="+attr+"]").parent();
+                    if (box.find('.g-color-red').length>0) {
+                        box.find('.g-color-red').text(error.html());
+                    } else {
+                        box.append('<small class="g-color-red" style="display:block; margin-top: 4px;">'+error.html()+'</small>');
+                    }
+                },
+                success: function(label) {
+
+                }
+            });
+            {% endcomment %}
+        });
+    </script>
+{% endblock %}
+
+{% block b-content-parent %}
+    <section class="b-content g-ny2014-menu b-ny2014-index g-spring-separated g-parted">
+        {% main_menu request.path %}
+        {% comment %}
+        {% ibanner ID=396 as banner1 %}
+        {% if banner1 %}<div class="g-intend">{{ banner1 }}</div>{% endif %}
+        <div class="b-content-block">
+            <section class="b-ny2014-index-contests">
+                <header class="g-title">
+                    <h3><a href="{% url 'newyear2014.views.contests.index' %}">Конкурсы</a></h3>
+                </header>
+                <div class="b-list-h b-ny2014-carousel j-contests-carousel-init">
+                    {% for contest in contests %}
+                        <div class="item">
+                            {% if contest.image %}
+                                {% thumbnail contest.image 289x200 crop as thumb %}
+                                <a class="image" href="{{ contest.get_absolute_url }}">
+                                    <img src="{{ thumb }}" alt="{{ offer.title|typograf|safe }}" style="width: {{ thumb.width }}px; height: {{ thumb.height }}px">
+                                </a>
+                            {% endif %}
+                            <h5><a href="{{ contest.get_absolute_url }}" title="{{ contest|typograf|safe }}">{{ contest|typograf:'title'|safe }}</a></h5>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+        {% ibanner ID=408 as banner2 %}
+        {% if banner2 %}<div class="g-intend">{{ banner2 }}</div>{% endif %}
+
+        {% endcomment %}
+        <div class="b-ny2014-index-back-blue">
+            <nav class="b-ny2014-index-services">
+                <a class="service_01" href="{% url 'newyear2014.views.guru.index' %}">Как встретить?</a>
+                <a class="service_02" href="{% url 'newyear2014.views.wish.index' %}">Загадай желание</a>
+                <a class="service_03" href="{% url 'newyear2014.views.prediction.index' %}">Гадания</a>
+            </nav>
+        {% comment %}
+            <section class="b-ny2014-index-tourism">
+                <header>
+                    <h3><a href="{% url 'newyear2014.views.offers.index' %}" title="Новогодние предложения на IRK.ru">Новогодние предложения:</a></h3>
+                    <span class="j-carousel-control"></span>
+                </header>
+                <div class="b-ny2014-index-tourism-carousel"{% if offers|length > 3 %} data-dots="true"{% endif %}>
+                    {% for offer in offers %}
+                        <figure class="item">
+                            {% if offer.image %}
+                                {% thumbnail offer.image 198x138 as thumb %}
+                                <a class="image" href="{% if offer.url %}{{ offer.url }}{% else %}{{ offer.get_absolute_url }}{% endif %}" offer="{{ offer.title|typograf|safe }}">
+                                    <img src="{{ thumb }}" alt="{{ offer.title|typograf|safe }}" style="width: {{ thumb.width }}px; height: {{ thumb.height }}px">
+                                </a>
+                            {% endif %}
+                            <h5><a href="{% if offer.url %}{{ offer.url }}{% else %}{{ offer.get_absolute_url }}{% endif %}" title="{{ offer.title|typograf|safe }}">{{ offer.title|typograf:'title'|safe }}</a></h5>
+                            {% if offer.caption %}
+                                <figcaption>{{ offer.caption|typograf|safe }}</figcaption>
+                            {% endif %}
+                        </figure>
+                    {% endfor %}
+                </div>
+                {% ibanner ID=398 as banner3 %}
+                <div class="b-content-block g-tourism-adv">{% if banner3 %}{{ banner3 }}{% endif %}</div>
+            </section>
+        {% endcomment %}
+        </div>
+
+        {% if gifts %}
+            {% with gifts as offers %}
+                <section class="b-obed-corporatives-container pattern_gift">
+                    <div class="b-obed-corporatives carousel">
+                        <header class="b-obed-corporatives-promo-header">
+                            <h3 class="b-obed-corporatives-promo-hint"><a href="{% url 'newyear_gifts' %}">Подарки</a></h3>
+                        </header>
+                        <div class="b-obed-corporatives-list j-obed-corporatives j-owl-nav-disabling">
+                            {% include 'newyear2014/discounts_offers/list.html' %}
+                        </div>
+                    </div>
+            </section>
+            {% endwith %}
+        {% endif %}
+    </section>
+    {% if hostels %}
+        <div class="b-content b-ny2014-index g-spring-separated g-parted">
+            {% with hostels as offers %}
+            <section class="b-obed-corporatives-container pattern_hostel">
+                <div class="b-obed-corporatives carousel">
+                    <header class="b-obed-corporatives-promo-header">
+                        <h3 class="b-obed-corporatives-promo-hint"><a href="{% url 'newyear_hostels' %}">Турбазы</a></h3>
+                    </header>
+                    <div class="b-obed-corporatives-list j-obed-corporatives j-owl-nav-disabling">
+                        {% include 'newyear2014/discounts_offers/list.html' %}
+                    </div>
+                </div>
+            </section>
+            {% endwith %}
+        </div>
+    {% endif %}
+    {% if corporates %}
+        <div class="b-content b-ny2014-index g-spring-separated g-parted">
+            <section class="b-obed-corporatives-container">
+                <div class="b-obed-corporatives carousel">
+                    <header class="b-obed-corporatives-promo-header">
+                        <h3 class="b-obed-corporatives-promo-hint"><a href="{% url 'newyear_corporates' %}">Рестораны</a></h3>
+                    </header>
+                    <div class="b-obed-corporatives-list j-obed-corporatives j-owl-nav-disabling">
+                        {% include 'newyear2014/corporates/list.html' %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    {% endif %}
+    <div class="b-content b-ny2014-index g-added g-parted">
+    {% comment %}
+        {% ibanner ID=395 as banner4 %}
+        {% if banner4 %}<div class="b-content-block">{{ banner4 }}</div>{% endif %}
+        <div class="b-content-block">
+            {# Блок статей статьи #}
+            <div class="b-ny2014-index-articles">
+                <figure>
+                    <a class="link" href="#">
+                        <img class="image" src="" title="" alt="">
+                        <figcaption><div class="caption"></div><span class="back"></span></figcaption>
+                    </a>
+                </figure>
+                <ul class="paginator">
+                    {% for item in news.articles_and_photos %}
+                        <li class="{% if forloop.first %}g-active{% endif %}{% if forloop.last %} g-last{% endif %}">
+                            {% thumbnail item.gallery.main_image.image 410x100000 as thumb %}
+                            <a href="{{ item.get_absolute_url }}" data-href="{{ item.get_absolute_url }}"{% if item.gallery.main_image.image %} data-src="{{ thumb }}"{% else %} data-gag="g-{{ item.type.alias }}"{% endif %} data-caption="{{ item.caption|typograf|truncatechars:490 }}" {% if item.model == "photo" %} data-model="photo"{% endif %}>
+                                <span class="announce-name">{{ item|typograf:"title"|safe }}</span>
+                            </a>
+                            <span class="border-bottom"></span>
+                            <script type="text/javascript">
+                                $(function () {
+                                    Preload('{{ thumb }}');
+                                });
+                            </script>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="g-clear"></div>
+            </div>
+            {# Афиша #}
+            <section class="b-ny2014-index-afisha">
+                <div>
+                    <header>
+                        <h3><a href="{% url 'newyear2014.views.afisha.index' %}">Новогодняя афиша</a></h3>
+                        <div class="j-carousel-control"></div>
+                    </header>
+                    <article>
+                        <ul class="b-list-h">
+                            {% for announcement in afisha.announcements %}
+                                <li>
+                                    {% if announcement.event.gallery.main_image.image %}
+                                        {% thumbnail announcement.event.gallery.main_image.image 304x214 crop as thumb %}
+                                        <figure>
+                                            <a href="{{ announcement.event.get_absolute_url }}"><img src="{{ thumb }}" alt="{{ announcement.event.gallery.main_image.alt }}" style="width: {{ thumb.width }}px; height: {{ thumb.height }}px" /></a>
+                                            <figcaption><h4><a href="{{ announcement.event.get_absolute_url }}">{{ announcement.event.title|typograf:'title'|safe }} {#({{ announcement.event.age_rating }}+)#}{{ announcement.date|ru_strftime:"%d %B" }}</a></h4><span></span></figcaption>
+                                        </figure>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </article>
+                </div>
+            </section>
+        </div>
+        <div class="b-instagram">
+            <h3 class="g-left line-height">
+                Наши конкурсы в Instagram:
+            </h3>
+{#            <a class="g-right g-color-link g-font-size-16 line-height" href="#">правила конкурсов</a>#}
+            <ul class="b-list-l hint g-font-size-16 line-height">
+                {% for tag in instagram.tags %}
+
+                    <li><a href="{% url 'newyear2014.views.instagram.instagram_tag' tag_id=tag.pk %}">#{{ tag.title }}</a></li>
+                {% endfor %}
+            </ul>
+            {% if instagram.images %}
+                <ul class="b-instagram-hlist">
+                {% for image in instagram.images %}
+                    <li>
+                        <a href="{% url 'newyear2014.views.instagram.instagram_tag' tag_id=image.tags.all.0.pk %}#{{ forloop.counter }}">
+                            <img src="{{ image.data.images.thumbnail.url }}" alt="" width="155px" height="155px"/>
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        {% ibanner ID=397 as banner5 %}
+        {% if banner5 %}<div class="g-intend">{{ banner5 }}</div>{% endif %}
+        {% endcomment %}
+        <section class="b-content-block b-ny2014-index-grats{% if user.is_authenticated %} g-authed{% endif %}">
+            <header class="g-title g-intend_s">
+                <h3><a href="{% url 'newyear2014.views.congratulation.index' %}">Поздравления</a></h3>
+            </header>
+            <ul class="b-ny2014-index-grats-list b-list-h">
+                {% for congratulation in congratulations.objects %}
+                    <li class="g-type_{% cycle '1' '2' '3' '4' %}">
+                        {% with congratulation.content as content %}
+                        <p>{{ content|truncatechars:185|typograf:"title"|safe }} {% if congratulation.should_be_truncated %}<a href="{% url 'newyear2014.views.congratulation.index' %}">читать&nbsp;полностью</a>{% endif %}</p>
+                        {% endwith %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <form id="id_grats" action="{% url 'newyear2014.views.congratulation.index' %}" method="post" {% if form.errors %}class="{% if form.content.errors %} g-content-error{% endif %}{% if form.sign.errors %} g-sign-error{% endif %}{% if form.captcha.errors %} g-captcha-error{% endif %}"{% endif %}>{% csrf_token %}
+                {{ congratulations.form.content }}
+                <div class="g-indent-small g-centered-text clearfix">{{ congratulations.form.captcha }}</div>
+                {{ congratulations.form.sign }}
+                <button type="submit">Поздравить</button>
+            </form>
+        </section>
+
+        <section class="b-ny2014-index-zodiac b-ny2014-index-block g-indent">
+            {# Гороскопы #}
+            <ul class="b-list-l">
+                {% ibanner ID=399 as banner6 %}
+                {% ibanner ID=400 as banner7 %}
+                {% for horoscope in horoscope.horoscopes %}
+                    <li>
+                        <h3 class="g-intend_xs"><a href="{{ horoscope.get_absolute_url }}">{{ horoscope.name|typograf:"title"|safe }}</a></h3>
+                        <ul class="b-list-h g-intend_s{% if banner6 or banner7 %} have-banner{% endif %}">
+                        {% for zodiac in horoscope.zodiac_set.all|dictsortreversed:"position" %}
+                            <li>
+                                {% thumbnail zodiac.image 45x45 as thumb %}
+                                <a href="{{ zodiac.get_absolute_url }}"><img src="{{ thumb }}" title="{{ zodiac.name|typograf:"title"|safe }}" alt="{{ zodiac.name|typograf:"title"|safe }}" style="width: {{ thumb.width }}px; height: {{ thumb.height }}px"></a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                        {% if forloop.counter == 1 %}
+                            {% if banner6 %}<div class="g-intend go-center">{{ banner6 }}</div>{% endif %}
+                        {% endif %}
+                        {% if forloop.counter == 2 %}
+                            {% if banner7 %}<div class="g-intend go-center">{{ banner7 }}</div>{% endif %}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                <li>
+                    <a href="{% url 'newyear_corporates' %}"><img src="{% static 'newyear2014/img/banner_2_2015.jpg' %}" alt=""/></a>
+                </li>
+            </ul>
+        </section>
+        {% comment %}
+        <section class="b-content-block b-ny2014-index-block">
+            <header class="g-intend_s">
+                <h3><a href="{% url 'newyear2014.views.wallpapers.index' %}">Обои на рабочий стол</a></h3>
+            </header>
+            <ul class="b-ny2014-index-wallpapers">
+                {% for wallpaper in wallpapers %}
+                    {% if forloop.counter == 1 %}
+                        {% thumbnail wallpaper.wide_image 327x291 crop quality=100 as thumb %}
+                    {% elif forloop.counter == 2 %}
+                        {% thumbnail wallpaper.wide_image 327x291 crop quality=100 as thumb %}
+                    {% else %}
+                        {% if forloop.counter == 3 %}
+                            {% thumbnail wallpaper.wide_image 304x194 crop quality=100 as thumb %}
+                        {% else %}
+                            {% thumbnail wallpaper.wide_image 152x97 crop quality=100 as thumb %}
+                        {% endif %}
+                    {% endif %}
+                    <li class="wp-{{ forloop.counter }}"><a href="{% url 'newyear2014.views.wallpapers.index' %}"><img src="{{ thumb }}" alt="" style="width: {{ thumb.width }}px; height: {{ thumb.height }}px"></a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        <div class="b-ny2014-index-withside">
+            <section class="b-content-block b-ny2014-index-grapicis">
+                {% with infographic.preview as thumb_img %}
+                    {% thumbnail thumb_img 632x700 as thumb %}
+                    <header class="g-intend_s">
+                        <h3><a href="{{ infographic.get_absolute_url }}" title="{{ infographic.title|typograf:'title'|safe }}">{{ infographic.title|typograf:'title'|safe }}</a></h3>
+                    </header>
+                    <article>
+                        <figure>
+                            <a href="{{ infographic.get_absolute_url }}" title="{{ infographic.title|typograf:'title'|safe }}">
+                                <img src="{{ thumb }}" alt="{{ infographic.caption|typograf:'title'|safe }}" style="width:{{ thumb.width }}px;height:{{ thumb.height }}px;">
+                            </a>
+                        </figure>
+                    </article>
+                {% endwith %}
+            </section>
+            <section class="b-content-block ">
+                <header class="g-intend_s">
+                    <h3><a href="{% url 'newyear2014.views.wallpapers.index' %}">Обои на рабочий стол</a></h3>
+                </header>
+                <article>
+                    <ul class="b-ny2014-index-wallpapers">
+                        {% for wallpaper in wallpapers %}
+                            {% if forloop.counter == 1 %}
+                                {% thumbnail wallpaper.wide_image 327x291 crop quality=100 as thumb %}
+                            {% else %}
+                                {% if forloop.counter == 2 %}
+                                    {% thumbnail wallpaper.wide_image 304x194 crop quality=100 as thumb %}
+                                {% else %}
+                                    {% thumbnail wallpaper.wide_image 152x97 crop quality=100 as thumb %}
+                                {% endif %}
+                            {% endif %}
+                            <li class="wp-{{ forloop.counter }}"><a href="{% url 'newyear2014.views.wallpapers.index' %}"><img src="{{ thumb }}" alt="" style="width: {{ thumb.width }}px; height: {{ thumb.height }}px"></a></li>
+                        {% endfor %}
+                    </ul>
+                </article>
+            </section>
+        </div>
+        {% endcomment %}
+    </div>
+    {% comment %}
+    <div class="b-content b-ny2014-index g-added">
+        <div class="b-ny2014-index-column g-marg">
+            {# Отправить СМС #}
+            <section class="b-content-block b-ny2014-index-sms">
+                <header><h3>Отправить СМС</h3></header>
+
+                <form method="post" action="">{% csrf_token %}
+
+                    <div>
+                        <label for="{{ sms_form.number.id_for_label }}">{{ sms_form.number.label }}</label>
+                        {{ sms_form.number }}
+                    </div>
+                    <div>
+                        <label for="{{ sms_form.message.id_for_label }}">{{ sms_form.message.label }}</label>
+                        {{ sms_form.message }}
+                    </div>
+                    <div class="b-home-sms-captcha">
+                        <label for="id_captcha_1">{{ sms_form.captcha.label }}</label>
+                        {{ sms_form.captcha }}
+                    </div>
+                    <input type="submit" value="Отправить">
+                </form>
+            </section>
+        </div>
+        <div class="b-ny2014-index-column g-marg">
+            <section>
+                <header><h3>Голосование</h3></header>
+                {# Голосование #}
+                {% poll %}
+            </section>
+        </div>
+        <section class="b-ny2014-index-column">
+            <section class="b-ny2014-index-calendars">
+                <header><h3>Календарь на 2015 год</h3></header>
+                <article>
+                    <a href="{% static 'newyear2014/calendar_2015.pdf' %}"><img src="{% static 'newyear2014/img/calendar_preview.jpg' %}" alt="Календарь на 2015 год от IRK.ru"></a>
+                </article>
+                <a href="{% static 'newyear2014/calendar_2015.pdf' %}" class="button">Скачать календарь</a>
+            </section>
+        </section>
+        {% ibanner ID=409 as banner2 %}
+        {% if banner2 %}<div class="g-intend go-center g-clear">{{ banner2 }}</div>{% endif %}
+    </div>
+    {% endcomment %}
+{% endblock b-content-parent %}

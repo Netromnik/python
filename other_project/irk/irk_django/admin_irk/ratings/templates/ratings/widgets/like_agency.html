@@ -1,0 +1,22 @@
+{% load pytils_numeral %}
+<div class="b-realty-agency-form">
+    {% if not authenticated %}
+        <a class="complain j-relty-agency-complain auth-link" href="#"><span>это агентство</span></a>
+        <form action="{% url 'ratings:rate' %}" method="post">
+            <input type="hidden" name="ct" value="{{ content_type.pk }}">
+            <input type="hidden" name="obj" value="{{ obj.pk }}">
+            <input type="hidden" name="value" value="1">
+            <button type="submit" class="complain auth-link" rel='/'>это агентство</button>
+        </form>
+    {% else %}
+        {% if not is_rated %}
+            <a class="complain j-relty-agency-complain" href="#"><span>это агентство</span></a>
+            <form action="{% url 'ratings:rate' %}" method="post">
+                <input type="hidden" name="ct" value="{{ content_type.pk }}">
+                <input type="hidden" name="obj" value="{{ obj.pk }}">
+                <input type="hidden" name="value" value="1">
+                <button class="complain" type="submit">это агентство</button>
+            </form>
+        {% endif %}
+    {% endif %}
+</div>

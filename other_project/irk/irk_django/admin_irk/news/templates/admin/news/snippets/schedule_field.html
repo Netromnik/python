@@ -1,0 +1,133 @@
+{% comment %}
+    Этот JS-интерфейс работает на странице редактирования материала
+    в админке. Он показывает под полем Время публикации уведомления
+    о том, будет ли запланирована публикация на будущее.
+{% endcomment %}
+
+<style>
+    .field-_schedule_field {
+        display: none;
+    }
+    .b-schedule {
+        display: none;
+        padding-top: 6px;
+    }
+    .b-schedule .label {
+        padding-left: 0;
+    }
+    .b-schedule .checkbox {
+        display: none;
+        margin-top: 0;
+    }
+</style>
+
+
+<div id="schedule-help" style="display:none" class="b-schedule">
+    <label class="vCheckboxLabel label">
+        Материал будет опубликован автоматически <span class="when"></span>
+    </label>
+</div>
+
+
+<script>
+    jQuery(function($){
+
+        // Состояние мини-приложения по принципу redux
+        var state = {
+            is_hidden: false, // состояние чекбокса "скрытая"
+            stamp: '', // поля времени и даты
+            published_time: ''
+        };
+
+        var updateState = function(key, newValue) {
+            var oldValue = state[key];
+            if (oldValue !== newValue) {
+                console.log('setting', key, 'to', newValue);
+                state[key] = newValue;
+                renderState();
+            }
+        }
+
+        var formatDate = function(dt) {
+            var options = {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+
+            return 'в ' + dt.toLocaleString('ru-RU', options);
+        }
+
+        var renderState = function() {
+            // Логика здесь дублирует логику на сервере. Если публикация в будущем
+            // и она скрыта, то будет запланирована автоматическая публикация
+            // Покажем или скроем уведомление об этом
+
+            if (!state.is_hidden) {
+                // если материал будет опубликован, то нет смысла в планировании
+                $('#schedule-help').hide();
+                return;
+            }
+
+            var now = new Date();
+            var dt = new Date(state.stamp+'T'+state.published_time);
+            if (!dt.getTime()) {
+                // если ошибка или если время не указано вообще (оно не обязательное поле)
+                $('#schedule-help').hide();
+                return;
+            }
+
+            if (dt.getTime() > now.getTime()) {
+                // публикация планируется в будущем - покажем уведомление
+                $('#schedule-help').show();
+                $('#schedule-help .when').text(formatDate(dt));
+            } else {
+                $('#schedule-help').hide();
+            }
+        }
+
+        // Обработчики меняют state
+        $('#id_stamp').on('change', function(){
+            updateState('stamp', this.value);
+        });
+        $('#id_published_time').on('change', function(){
+            updateState('published_time', this.value);
+        });
+        $('#id_is_hidden').on('click', function(){
+            updateState('is_hidden', this.checked);
+        });
+
+        /*
+            Стандартное событие $(input).change не выстреливает при изменении даты
+            через календарь и при вводе вручную до потери полем фокуса.
+            Мы воспользуемся тем, что календарь делает input.focus()
+            после закрытия - и сами выстрелим событие change.
+
+            Также см: https://stackoverflow.com/a/2885716
+        */
+        $('#id_stamp, #id_published_time').each(function(i, input){
+            var oldValue = input.value;
+
+            $(input).on('propertychange change click keyup input paste focus', function(){
+                if (this.value !== oldValue) {
+                    oldValue = this.value;
+                    $(this).trigger('change');
+                }
+            });
+        });
+
+        // переместить интерфейс под поле ввода времени
+        $('#id_published_time').parent().append($('#schedule-help'));
+
+        // Первичное заполнение state
+        state.is_hidden = document.getElementById('id_is_hidden').checked;
+        state.stamp = document.getElementById('id_stamp').value;
+        state.published_time = document.getElementById('id_published_time').value;
+
+        // первый вывод
+        renderState();
+    });
+</script>

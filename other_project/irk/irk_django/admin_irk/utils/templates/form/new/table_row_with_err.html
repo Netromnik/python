@@ -1,0 +1,26 @@
+{% if not field.is_hidden %}
+<tr{% if field.errors %} class="errors"{% endif %}>
+    <th>
+        <label for="{{ field.id_for_label }}"{% if field.field.required %} class="required"{% endif %}>{{ field.label }} {% if field.field.required %}<span class="g-color-red">*</span>{% endif %}</label>
+    </th>
+    <td {% if class_name %} class="{{ class_name }}"{% endif %}>
+        {{ field }}
+
+        {% if field.help_text %}
+            <div class="help_text">{{ field.help_text }}</div>
+        {% endif %}
+        {% if field.errors %}
+            <div>{{ field.errors }}</div>
+        {% endif %}
+        </td>
+</tr>
+{% else %}
+<tr>
+    <th></th>
+    <td>
+        <div style="display:none;">
+            {{ field }}
+        </div>
+    </td>
+</tr>
+{% endif %}

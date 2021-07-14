@@ -1,0 +1,30 @@
+{% load date_tags %}
+<div class="g-indent-small g-clear-left">
+    <ul class="b-list-h b-afisha-theater-filter b-calendar-block j-calendar-url" data-url="{% url 'guide:sessions' firm_id=object.id %}">
+        {% if next_month %}
+            <li>
+                <b>Репертуар на:</b>
+            </li>
+            <li class="j-theatre-month">
+                <span data-date="{{ current_month|date:"Ymd" }}" data-month="1" class="g-active j-link">{{ current_month|ru_strftime_flat:'%B' }}</span>
+            </li>
+            <li class="j-theatre-month">
+                <span data-date="{{ next_month|date:"Ymd" }}" data-month="1" class="j-link">{{ next_month|ru_strftime_flat:'%B' }}</span>
+            </li>
+            {#        <li class="j-theatre-full"><span data-full="1" class="j-link">весь сезон</span></li>#}
+            <li>
+                <div class="b-calendar-ajax j-theater-calendar" data-href="{% url 'guide:calendar_paginator' firm_id=object.id %}"></div>
+                <div class="b-calendar">
+                    <a href="#" class="b-calendar-close"></a>
+                    <article></article>
+                </div>
+            </li>
+        {% else  %}
+            <li>
+                <b>Репертуар на</b>
+                <span data-date="{{ current_month|date:"Ymd" }}" data-month="1" class="g-active j-link">{{ current_month|ru_strftime_flat:'%B' }}</span>
+            </li>
+        {% endif %}
+    </ul>
+    <div class="b-calendar-date"></div>
+</div>

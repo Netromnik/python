@@ -1,0 +1,9 @@
+{% extends "letter.html" %}
+
+{% load site_utils str_utils %}
+
+{% block content %}
+    <p>Ваша заявка на размещение события "{{ event.title|typograf }}" в разделе "Афиша" на IRK.ru одобрена</p>
+    <p>Для оплаты перейдите по ссылке <a href="{{ url|safe }}">Оплатить</a></p>
+    <p>Событие появится на сайте сразу после прохождения оплаты</p>
+{% endblock %}

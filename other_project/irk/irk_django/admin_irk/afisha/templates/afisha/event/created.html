@@ -1,0 +1,29 @@
+{% extends "afisha/layout_cr.html" %}
+
+{% load staticfiles media_utils %}
+
+{% block title %}Мероприятие отправлено на проверку модераторам | Афиша Ирк.ру{% endblock %}
+
+{% block content %}
+    <div class="addevent__success">
+        <h1 class="addevent__title">
+            Успех!
+        </h1>
+        <div class="addevent__content">
+            <p>
+                Данные о вашем событии отправлены на проверку, обычно она проходит в течение рабочего дня.<br />
+                {% if is_commercial %}
+                    После проверки модератором вам будет выслан счет на оплату.
+                {% else %}
+                    После проверки модератором оно появится на сайте.
+                {% endif %}
+            </p>
+            <p class="small">
+                Телефон отдела продаж: (3952) 488-850
+            </p>
+            <p>
+                <a href="/">На главную &rarr;</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

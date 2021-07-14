@@ -1,0 +1,27 @@
+{% extends 'newyear2014/layout_cr.html' %}
+
+{% load adv_tags str_utils comments_tags thumbnail paginator_utils date_tags %}
+
+{% block title %}Новогодние предложения | {{ block.super }}{% endblock title %}
+
+{% block b-content-cr %}
+    <header class="g-intend">
+        <h1>Новогодние предложения</h1>
+    </header>
+    <article>
+        <ul class="b-ny2014-offers-list b-list-v">
+            {% for object in objects %}
+                <li>
+                    <a href="{{ object.get_absolute_url }}" title="{{ object.title|typograf:'title'|safe }}">
+                        {% thumbnail object.image 308x1000 as thumb %}
+                        <img src="{{ thumb }}" alt="{{ object.caption|typograf:'title'|safe }}" title="{{ object.caption|typograf:'title'|safe }}">
+                        <h3>{{ object.title|typograf:'title'|safe }}</h3>
+                    </a>
+                    <p>
+                        {{ object.caption|typograf|safe }}
+                    </p>
+                </li>
+            {% endfor %}
+        </ul>
+    </article>
+{% endblock b-content-cr %}

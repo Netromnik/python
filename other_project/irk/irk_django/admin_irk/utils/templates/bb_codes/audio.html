@@ -1,0 +1,29 @@
+{% spaceless %}
+
+<div class="article-element">
+    <div id="j-audio-id-{{ id }}" class="j-audio jp-jplayer" data-id="{{ id }}" data-src="{{ src }}"></div>
+    <figure id="jp_container_{{ id }}" class="player jp-audio" role="application" aria-label="media player">
+        <div class="player__controls">
+            <button class="player__button player__button_play jp-play" role="button" tabindex="0">play</button>
+        </div>
+        <div class="player__information">
+            <div class="player__time jp-time-holder">
+                <span class="player__time__current jp-current-time" role="timer" aria-label="time"></span>
+                <span class="player__time__duration jp-duration" role="timer" aria-label="duration"></span>
+            </div>
+            <div class="player__progress jp-progress">
+                <div class="player__progress__line jp-seek-bar">
+                    <div class="player__progress__active jp-play-bar"></div>
+                </div>
+            </div>
+            <figcaption class="player__title">{{ title }}</figcaption>
+        </div>
+        <div class="player__volume jp-volume-controls">
+            <div class="player__volume__bar jp-volume-bar">
+                <div class="player__volume__active jp-volume-bar-value"></div>
+            </div>
+        </div>
+    </figure>
+</div>
+
+{% endspaceless %}

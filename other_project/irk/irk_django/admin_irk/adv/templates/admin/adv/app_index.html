@@ -1,0 +1,29 @@
+{% extends "admin/app_index.html" %}
+
+{% block content-main %}
+    {{ block.super }}
+
+    <div class="app-none module">
+        <table>
+            <caption>Дополнительно</caption>
+            <tr class="model-none">
+                <th scope="row"><a href="{% url 'admin_adv_place_stat' %}">Статистика рекламных позиций</a></th>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    <div id="content-related">
+        <div class="module" id="recent-actions-module">
+            <h2>CRM-система</h2>
+            <h3><a href="{% url 'adv_crm:clients.clientsList' %}">Работа с клиентами</a></h3>
+            {% if perms.adv.can_use_bookings_system %}
+                <h3><a href="{% url 'adv_crm:crm.index' %}">Бронирование</a></h3>
+                <h3><a href="{% url 'adv_crm:communications.duties' %}">Мои дела</a></h3>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

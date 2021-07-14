@@ -1,0 +1,23 @@
+{# пагинатор в закладках #}
+
+{% if paginator.paginator.num_pages > 1 %}
+<section class="bookmarks__pagination">
+    <ul class="bookmarks__pages">
+        {% for page in paginator.page_range %}
+            {% if page == paginator.number %}
+                <li class="bookmarks__pages__item">
+                    <span class="bookmarks__pages__link active">
+                        {{ page }}
+                    </span>
+                </li>
+            {% else %}
+                <li class="bookmarks__pages__item">
+                    <a href="./?page={{ page }}&amp;{{ url_params|default:'' }}{{ url_hash|default:'' }}" class="bookmarks__pages__link">
+                        {{ page }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}

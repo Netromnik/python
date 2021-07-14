@@ -1,0 +1,106 @@
+{% load thumbnail profile_utils comments_tags staticfiles site_utils %}
+
+{% if is_moderator %}
+    <script type="text/javascript" src="{% static 'comments/js/comments-moder.js' %}"></script>
+{% endif %}
+
+{% if not hide_form %}
+    {% if object.comments_cnt != 0 %}
+        <div class="comments__filter">
+            <ul class="list-comments-filter j-comments-filter">
+                <li class="list-comments-filter__item">
+                    <a data-href="{% url 'comments:list' ct_id object.pk %}?sort=asc" data-sort="asc" class="list-comments-filter__link {% if sort == 'asc' %}active{% endif %} j-comments-sort j-comments-loader">
+                        по порядку
+                    </a>
+                </li>
+                <li class="list-comments-filter__item">
+                    <a data-href="{% url 'comments:list' ct_id object.pk %}?sort=desc" data-sort="desc" class="list-comments-filter__link {% if sort == 'desc' %}active{% endif %} j-comments-sort j-comments-loader">
+                        новые сверху
+                    </a>
+                </li>
+                <li class="list-comments-filter__item">
+                    <a data-href="{% url 'comments:list' ct_id object.pk %}?sort=top" data-sort="top" class="list-comments-filter__link {% if sort == 'top' %}active{% endif %} j-comments-sort j-comments-loader">
+                        по популярности
+                    </a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+    {% if not user.is_authenticated %}
+        <div class="comments__message">
+            Чтобы оставить свой отзыв, вам необходимо <a href="{% url 'authentication:register:index' %}?next={{ object.get_absolute_url }}">зарегистрироваться</a> или
+            <a href="{% url 'authentication:login' %}?next={{ object.get_absolute_url }}" class="auth_link">войти</a>
+        </div>
+    {% else %}
+        {% if user.profile.is_verified %}
+            {% if not object.disable_comments %}
+                {% if not request.user.profile.is_banned %}
+                    <div class="comments__add hide j-comment-add">
+                        <a href="#" class="comments__add-link j-comment-add-link">
+                            Добавить комментарий
+                        </a>
+                    </div>
+                    <div class="comments__form j-comments-form-container">
+                        <form class="form-comments j-comments-form" method="POST" action="{% url 'comments:create' %}">
+
+                            <!--system inputs-->
+                            {% csrf_token %}
+                            <input type="hidden" name="ct_id" id="content_id" value="{{ ct_id }}">
+                            <input type="hidden" name="target_id" id="target_id" value="{{ object.pk }}">
+                            <input autocomplete="off" type="hidden" name="parent" id="parent_id" value="">
+                            <!--system inputs-->
+
+                            <textarea class="form-comments__textarea j-comments-textarea" name="text" id="comment_text"></textarea>
+                            <div class="comments__buttons">
+                                <div class="comments__column">
+                                    <button type="submit" class="form-comments__submit j-comments-submit" title="Ctrl + Enter" disabled>
+                                        Отправить
+                                    </button>
+                                    <span class="comments__cancel j-comments-edit-cancel">отмена</span>
+                                    <span class="comments__desc">
+                                        Нажимая эту кнопку, Вы соглашаетесь
+                                        с&nbsp;<a href="/comments/rules/" target="_blank">правилами публикации отзывов.</a>
+                                    </span>
+                                </div>
+                                <div class="comments__column">
+                                    <!-- смайлов пока нет
+                                    <a href="#" class="comments__smiles"></a>
+                                    -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="comments__message">
+                        Вы не можете оставлять комментарии. Ваш аккаунт был заблокирован. Если вы считаете, что произошла ошибка, <a href="{% url 'about:feedback' %}">напишите нам об этом</a>.
+                    </div>
+                {% endif %}
+
+            {% endif %}
+        {% else %}
+            <div class="comments__message">
+                Чтобы иметь возможность оставлять комментарии, <a href="/verification/">верифицируйте аккаунт&nbsp;→</a>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endif %}
+<div class="comments__list">
+    <ul class="list-comments j-comments-list">
+        {% for comment in comments %}
+            {% include 'comments/comment/list_item.html' with request=request %}
+        {% endfor %}
+    </ul>
+</div>
+{% if not hide_form %}
+    {% if user.is_authenticated and user.profile.is_verified %}
+        {% if not object.disable_comments and not request.user.profile.is_banned %}
+            {% if object.comments_cnt > 3 %}
+                <div class="comments__add j-comment-add">
+                    <a href="#" class="comments__add-link j-comment-add-link">
+                        Добавить комментарий
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endif %}

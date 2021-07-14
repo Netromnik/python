@@ -1,0 +1,41 @@
+
+{% load pytils_dt weather_tags cache_tags %}
+
+{% cache 3600 'weather.index.forecast_detailed' vary='city.id' tags='forecast_detailed' %}
+    {% for day, forecasts in forecasts_by_days %}
+        <li class="days {% if forloop.first %}today{% endif %}">
+            <h3>{% if forloop.first %}Сегодня, {% endif %}{{ day|ru_strftime:"%d %B" }}</h3>
+            <ul class="b-list-v b-weather-detailed-days-times">
+                {% for forecast in forecasts %}
+                    <li>
+                        <ul class="b-weather-detailed-days-times-list">
+                            <li class="b-weather-detailed-days-times-temp">
+                                {{ forecast.temp.from|sign }}..{{ forecast.temp.to|sign }}
+                            </li>
+                            <li class="b-weather-detailed-days-times-time">
+                                {{ forecast.period }}
+                            </li>
+                            <li class="b-weather-detailed-days-times-icon">
+                                <span class="g-icon-weather-small {{ forecast.sky.icon_class }}"
+                                      title="{{ forecast.sky }}"></span>
+                            </li>
+                            <li class="b-weather-detailed-days-times-description">
+                                {{ forecast.sky }}
+                            </li>
+                            <li class="b-weather-detailed-days-times-wind">
+                                {{ forecast.wind.long }}
+                                <div>{{ forecast.wind.speed }}&nbsp;м/с</div>
+                            </li>
+                            <li class="b-weather-detailed-days-times-wetness">
+                                {{ forecast.humidity }} % {% if forloop.first %}влажность{% endif %}
+                            </li>
+                            <li class="b-weather-detailed-days-times-pressure">
+                                {{ forecast.pressure }} {% if forloop.first %}мм.&nbsp;рт.&nbsp;ст.{% endif %}
+                            </li>
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+{% endcache %}

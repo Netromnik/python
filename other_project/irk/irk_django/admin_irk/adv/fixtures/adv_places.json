@@ -1,0 +1,1457 @@
+[
+    {
+        "pk": 52,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434 200\u0445300 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435 (\u0432\u0435\u0440\u0445\u043d\u0438\u0439)",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 4,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 53,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434 200\u0445300 \u0412\u043e \u0432\u0442\u043e\u0440\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435 (\u043d\u0438\u0436\u043d\u0438\u0439)",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 6,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 64,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 45000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0430\u0434 \u0448\u0430\u043f\u043a\u043e\u0439",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 1,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 70,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 40000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f 960\u044550 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041f\u043e\u0434 \u0448\u0430\u043f\u043a\u043e\u0439",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 3,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 91,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 960\u044570 \u041f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u043d\u0430\u0434 \u0448\u0430\u043f\u043a\u043e\u0439 ",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 2,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 92,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0438\u0437 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 13,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 93,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 200\u0445300 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 5,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 94,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438. \u0418\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0438\u043a\u0430 200\u0445300",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": false
+        }
+    },
+    {
+        "pk": 96,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 960\u044550 \u041f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u043f\u043e\u0434 \u0448\u0430\u043f\u043a\u043e\u0439 \u0441\u0430\u0439\u0442\u0430 ",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 4,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 97,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 200\u0445100 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 6,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 98,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 580\u0445100 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 7,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 100,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 200\u0445300 \u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u0438\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 9,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 101,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0430\u0434 \u0448\u0430\u043f\u043a\u043e\u0439 \u0441\u0430\u0439\u0442\u0430",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 2,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 102,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430. \u0412 \u043a\u0438\u043d\u043e \u0432 \u043f\u0440\u0430\u0432\u043e\u0439 \u043a\u043e\u043b\u043e\u043d\u043a\u0435 \u043d\u0438\u0436\u043d\u0438\u0439",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": false
+        }
+    },
+    {
+        "pk": 106,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0438\u0437 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 9,
+            "show_text": false,
+            "booking_visible": false
+        }
+    },
+    {
+        "pk": 107,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430 200\u0445300 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 5,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 110,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430 960\u044550 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041f\u043e\u0434 \u0448\u0430\u043f\u043a\u043e\u0439 \u0441\u0430\u0439\u0442\u0430",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 4,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 112,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430. \u041f\u0440\u0430\u0432\u0430\u044f \u043a\u043e\u043b\u043e\u043d\u043a\u0430, \u0432 \u0431\u043b\u043e\u043a\u0435 \u0441\u0442\u0430\u0442\u0435\u0439 (200\u0445100)",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 116,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 200\u0445300 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 3,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 5,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 119,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0430\u0434 \u0448\u0430\u043f\u043a\u043e\u0439",
+            "site": 3,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 2,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 120,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0438\u0437 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+            "site": 3,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 9,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 125,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 960\u044550 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041f\u043e\u0434 \u0448\u0430\u043f\u043a\u043e\u0439 \u0441\u0430\u0439\u0442\u0430",
+            "site": 3,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 4,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 126,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 200\u0445100 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 3,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 6,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 128,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 280\u044560 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435 (\u0441\u043b\u0435\u0432\u0430)",
+            "site": 3,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 7,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 129,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 280\u044560 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435 (\u0441\u043f\u0440\u0430\u0432\u0430)",
+            "site": 3,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 8,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 132,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u042d\u043a\u0441\u043f\u0435\u0440\u0442 200\u0445300 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 10,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 4,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 133,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u042d\u043a\u0441\u043f\u0435\u0440\u0442 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0430\u0434 \u0448\u0430\u043f\u043a\u043e\u0439 \u0441\u0430\u0439\u0442\u0430",
+            "site": 10,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 2,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 134,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u042d\u043a\u0441\u043f\u0435\u0440\u0442 \u041f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u0432\u043d\u0438\u0437\u0443 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b (800\u044570)",
+            "site": 10,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": false
+        }
+    },
+    {
+        "pk": 137,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u042d\u043a\u0441\u043f\u0435\u0440\u0442 \u0431\u0440\u0435\u043d\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u0440\u0430\u0437\u0434\u0435\u043b\u0430",
+            "site": 10,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 1,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 177,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0422\u0443\u0440\u0438\u0437\u043c 460\u0445100 \u0412\u0442\u043e\u0440\u043e\u0439 \u044d\u043a\u0440\u0430\u043d",
+            "site": 23,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 7,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 181,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0422\u0443\u0440\u0438\u0437\u043c 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0430\u0434 \u0448\u0430\u043f\u043a\u043e\u0439",
+            "site": 23,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 2,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 184,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0422\u0443\u0440\u0438\u0437\u043c 200\u0445100 \u0412\u0442\u043e\u0440\u043e\u0439 \u044d\u043a\u0440\u0430\u043d",
+            "site": 23,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 6,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 189,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0422\u0443\u0440\u0438\u0437\u043c 90\u044560 \u043b\u043e\u0433\u043e\u0442\u0438\u043f \u041f\u043e\u0434 \u0448\u0430\u043f\u043a\u043e\u0439 \u0441\u0430\u0439\u0442\u0430",
+            "site": 23,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 4,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 223,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0412\u0430\u043b\u044e\u0442\u0430 200\u0445300 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 5,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 4,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 226,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0412\u0430\u043b\u044e\u0442\u0430 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u043d\u0430\u0434 \u0448\u0430\u043f\u043a\u043e\u0439 \u0441\u0430\u0439\u0442\u0430",
+            "site": 5,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 2,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 227,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0412\u0430\u043b\u044e\u0442\u0430 \u041f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u0432\u043d\u0438\u0437\u0443 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b (800\u044570)",
+            "site": 5,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": false
+        }
+    },
+    {
+        "pk": 232,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0412\u0430\u043b\u044e\u0442\u0430 200\u0445100 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 5,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 5,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 245,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0422\u0443\u0440\u0438\u0437\u043c 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0438\u0437 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+            "site": 23,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 8,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 257,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0422\u0443\u0440\u0438\u0437\u043c 200\u0445300 \u0412\u0442\u043e\u0440\u043e\u0439 \u044d\u043a\u0440\u0430\u043d",
+            "site": 23,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 5,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 262,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0412\u0430\u043b\u044e\u0442\u0430 \u0431\u0440\u0435\u043d\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u0440\u0430\u0437\u0434\u0435\u043b\u0430",
+            "site": 5,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 1,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 274,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043b\u0430\u0442\u0435\u0436\u0438 960\u044550 \u041f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u043f\u043e\u0434 \u0448\u0430\u043f\u043a\u043e\u0439",
+            "site": 30,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 291,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434 200x100 \u0412 \u043f\u0435\u0440\u0432\u043e\u043c \u044d\u043a\u0440\u0430\u043d\u0435",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 5,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 292,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434 \u0431\u0440\u0435\u043d\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u0440\u0430\u0437\u0434\u0435\u043b\u0430",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 1,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 293,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0430\u0434 \u0448\u0430\u043f\u043a\u043e\u0439 \u0441\u0430\u0439\u0442\u0430",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 2,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 294,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434 960\u044570 \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u041d\u0438\u0437 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 9,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 295,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0414\u043b\u044f \u0442\u0440\u0430\u043d\u0441\u043b\u044f\u0446\u0438\u0438",
+            "site": null,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 296,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434! \u041b\u043e\u0433\u043e\u0442\u0438\u043f",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 10,
+            "show_text": false,
+            "booking_visible": false
+        }
+    },
+    {
+        "pk": 297,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434 280\u044560 \u0412\u0442\u043e\u0440\u043e\u0439 \u044d\u043a\u0440\u0430\u043d (\u043b\u0435\u0432\u044b\u0439)",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 7,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 298,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434 280\u044560 \u0412\u0442\u043e\u0440\u043e\u0439 \u044d\u043a\u0440\u0430\u043d (\u043f\u0440\u0430\u0432\u044b\u0439)",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 8,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 302,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 \u0422\u0438\u0437\u0435\u0440 \u0412 \u0448\u0430\u043f\u043a\u0435 \u0441\u0430\u0439\u0442\u0430",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 3,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 303,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430 \u0442\u0438\u0437\u0435\u0440 \u0412 \u0448\u0430\u043f\u043a\u0435 \u0441\u0430\u0439\u0442\u0430",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 3,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 304,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 \u0442\u0438\u0437\u0435\u0440 \u0412 \u0448\u0430\u043f\u043a\u0435 \u0441\u0430\u0439\u0442\u0430",
+            "site": 3,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 3,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 305,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0412\u0430\u043b\u044e\u0442\u0430 \u0442\u0438\u0437\u0435\u0440 \u0412 \u0448\u0430\u043f\u043a\u0435 \u0441\u0430\u0439\u0442\u0430",
+            "site": 5,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 3,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 309,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u042d\u043a\u0441\u043f\u0435\u0440\u0442 \u0442\u0438\u0437\u0435\u0440 \u0412 \u0448\u0430\u043f\u043a\u0435 \u0441\u0430\u0439\u0442\u0430",
+            "site": 10,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 3,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 310,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e\u0431\u0435\u0434 \u0442\u0438\u0437\u0435\u0440 \u0412 \u0448\u0430\u043f\u043a\u0435 \u0441\u0430\u0439\u0442\u0430",
+            "site": 31,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 3,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 311,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 20000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u0442\u0438\u0437\u0435\u0440 \u0432 \u0448\u0430\u043f\u043a\u0435 \u0441\u0430\u0439\u0442\u0430",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 2,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 314,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0413\u0438\u0434, \u0442\u0438\u0437\u0435\u0440",
+            "site": 20,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 315,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0422\u0443\u0440\u0438\u0437\u043c \u0442\u0438\u0437\u0435\u0440 \u0412 \u0448\u0430\u043f\u043a\u0435 \u0441\u0430\u0439\u0442\u0430",
+            "site": 23,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 3,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 317,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041e \u043f\u0440\u043e\u0435\u043a\u0442\u0435, \u0442\u0438\u0437\u0435\u0440",
+            "site": 15,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 318,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0420\u0435\u043a\u043b\u0430\u043c\u043d\u044b\u0435 \u043d\u043e\u0432\u043e\u0441\u0442\u0438, \u0442\u0438\u0437\u0435\u0440",
+            "site": 22,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 319,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041a\u043e\u043d\u043a\u0443\u0440\u0441\u044b, \u0442\u0438\u0437\u0435\u0440",
+            "site": null,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 333,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 20000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u043e\u0434 \u0431\u043b\u043e\u043a\u043e\u043c \u0421\u0442\u0430\u0442\u044c\u0438 300\u0445200",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 7,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 334,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 40000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f 640\u044590 \u043f\u043e\u0434 \u0433\u043b\u0430\u0432\u043d\u043e\u0439 \u043d\u043e\u0432\u043e\u0441\u0442\u044c\u044e",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 5,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 335,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 20000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u043e\u0434 \u043f\u043e\u0433\u043e\u0434\u043e\u0439 300\u044590",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 4,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 337,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 35000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u043e\u0434 \u0430\u0444\u0438\u0448\u0435\u0439 260\u0445400",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 12,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 339,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 10000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u043e\u0434 \u043e\u0431\u0435\u0434\u043e\u043c \u043e\u043d\u043b\u0430\u0439\u043d 300\u0445200",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 14,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 340,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 30000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u043e\u0434 \u0431\u043b\u043e\u043a\u043e\u043c \u041d\u043e\u0432\u043e\u0441\u0442\u0438 \u043a\u043e\u043c\u043f\u0430\u043d\u0438\u0438 260\u0445400",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 13,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 342,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 8000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u043e\u0434 \u0444\u043e\u0440\u0443\u043c\u043e\u043c 300\u0445200",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 20,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 361,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 5000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u0420\u0435\u043a\u043b\u0430\u043c\u043d\u0430\u044f \u043d\u043e\u0432\u043e\u0441\u0442\u044c",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 11,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 362,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 15000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u041d\u043e\u0432\u043e\u0441\u0442\u0438 \u043a\u043e\u043c\u043f\u0430\u043d\u0438\u0439",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 9,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 363,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 12000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u0418\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0438\u043a\u0430",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 10,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 364,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 20000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u0421\u0442\u0430\u0442\u044c\u044f",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 6,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 365,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 \u0431\u0440\u0435\u043d\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u0440\u0430\u0437\u0434\u0435\u043b\u0430",
+            "site": 3,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 1,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 367,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 \u0420\u0435\u043a\u043b\u0430\u043c\u043d\u0430\u044f \u043d\u043e\u0432\u043e\u0441\u0442\u044c",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 10,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 368,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0422\u0443\u0440\u0438\u0437\u043c \u0431\u0440\u0435\u043d\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u0440\u0430\u0437\u0434\u0435\u043b\u0430",
+            "site": 23,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 1,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 370,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 \u0431\u0440\u0435\u043d\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u0440\u0430\u0437\u0434\u0435\u043b\u0430",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 1,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 371,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 50000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u0431\u0440\u0435\u043d\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u0440\u0430\u0437\u0434\u0435\u043b\u0430",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 372,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0412\u0438\u0434\u0435\u043e",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 13,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 373,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430 \u0431\u0440\u0435\u043d\u0434\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u0440\u0430\u0437\u0434\u0435\u043b\u0430",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 1,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 380,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0424\u043e\u0440\u0443\u043c \u041f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u0432\u043d\u0438\u0437\u0443 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+            "site": null,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 381,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041f\u043e\u043f\u0443\u0442\u0447\u0438\u043a \u041f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u0432\u043d\u0438\u0437\u0443 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+            "site": null,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 383,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430 \u0441\u0430\u043c\u043e\u0435 \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u043e\u0435 \u0432 \u0433\u043e\u0440\u043e\u0434\u0435",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 30,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 384,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u043e\u0432\u043e\u0441\u0442\u0438 \u0424\u043e\u0442\u043e\u0440\u0435\u043f\u043e\u0440\u0442\u0430\u0436",
+            "site": 1,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 24,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 385,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430. \u0421\u043a\u0432\u043e\u0437\u043d\u043e\u0439 960\u044570",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 386,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430. \u0412 \u043b\u0435\u0432\u043e\u0439 \u043a\u043e\u043b\u043e\u043d\u043a\u0435 170\u0445100",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 387,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 8000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u043e\u0434 \u0421\u041c\u0421 300\u0445200",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 15,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 388,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 8000.0,
+            "name": "\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u0435\u0440\u0435\u0442\u044f\u0436\u043a\u0430 \u043d\u0438\u0437 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 16,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 389,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 5000.0,
+            "name": "\u0420\u0435\u043a\u043b\u0430\u043c\u043d\u0430\u044f \u041d\u043e\u0432\u043e\u0441\u0442\u044c",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 31,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 390,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 5000.0,
+            "name": "\u0420\u0435\u043a\u043b\u0430\u043c\u043d\u0430\u044f \u041d\u043e\u0432\u043e\u0441\u0442\u044c",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 32,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 392,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 5000.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430. \u0421\u0430\u043c\u043e\u0435 \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u043e\u0435 \u0432 \u0433\u043e\u0440\u043e\u0434\u0435",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 10,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 393,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 5000.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430. \u0421\u0430\u043c\u043e\u0435 \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u043e\u0435 \u0432 \u0433\u043e\u0440\u043e\u0434\u0435",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 11,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 394,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 5000.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430. \u0421\u0430\u043c\u043e\u0435 \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u043e\u0435 \u0432 \u0433\u043e\u0440\u043e\u0434\u0435",
+            "site": 2,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 12,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 406,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 5000.0,
+            "name": "\u0410\u0444\u0438\u0448\u0430 \u0441\u0430\u043c\u043e\u0435 \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u043e\u0435 \u0432 \u0433\u043e\u0440\u043e\u0434\u0435",
+            "site": 14,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 32,
+            "show_text": false,
+            "booking_visible": true
+        }
+    },
+    {
+        "pk": 410,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u0430\u0448\u0438 \u0431\u0430\u043d\u043d\u0435\u0440\u044b 200\u0445200",
+            "site": 15,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": false
+        }
+    },
+    {
+        "pk": 411,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u0430\u0448\u0438 \u0431\u0430\u043d\u043d\u0435\u0440\u044b 728\u044590",
+            "site": 15,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": false
+        }
+    },
+    {
+        "pk": 412,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u041d\u0430\u0448\u0438 \u0431\u0430\u043d\u043d\u0435\u0440\u044b 160\u0445600",
+            "site": 15,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": false
+        }
+    },
+    {
+        "pk": 413,
+        "model": "adv.place",
+        "fields": {
+            "dayPrice": 0.0,
+            "name": "\u0422\u0438\u0437\u0435\u0440 \u0434\u043b\u044f \u043f\u0440\u043e\u0441\u0442\u044b\u0445 \u0441\u0442\u0440\u0430\u043d\u0438\u0446",
+            "site": null,
+            "about_price": null,
+            "targetix": null,
+            "visible": true,
+            "position": 0,
+            "show_text": false,
+            "booking_visible": false
+        }
+    }
+]

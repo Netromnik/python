@@ -1,0 +1,96 @@
+{% extends "admin/change_list.html" %}
+{% load staticfiles media_utils admin_list admin_utils %}
+
+{% block content %}
+    <h1>&laquo;{{ banner.client }}&raquo;</h1>
+    {% if on_file %}
+        {% if on_file.main.file_type == 'swf' %}
+            {% if on_file.dummy %}
+                <img src="{{ on_file.dummy.url }}" alt=""/>
+            {% else %}
+                <h4>При использовании flash баннеров загрузите заглушку для отображения в статистике</h4>
+            {% endif %}
+        {% else %}
+            {% if on_file.main %}
+                <img src="{{ on_file.main.url }}" alt="" width="{{ on_file.width }}" height="{{ on_file.height }}"/>
+            {% elif on_file.dummy %}
+                <img src="{{ on_file.dummy.url }}" alt=""/>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    <h3>Места размещения</h3>
+    <ul>
+        {% for place in banner.places.all %}
+            <li>{{ place }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if banner.file_set.count > 1 %}
+        <div style="margin:10px;">
+            {% if on_file %}
+                <a href="?banner__id__exact={{ banner.pk }}">Размещение</a>
+            {% else %}
+                <span>Размещение</span>
+            {% endif %}
+            :
+            {% for file in banner.file_set.all %}
+                {% if file == on_file %}
+                    <span>{{ file }} № {{ forloop.counter }}</span>
+                {% else %}
+                    <a href="?banner__id__exact={{ banner.pk }}&amp;file__id__exact={{ file.pk }}">{{ file }}
+                        № {{ forloop.counter }}</a>
+                {% endif %}
+                {% if not forloop.last %}
+                    |
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {{ block.super }}
+{% endblock %}
+
+{% block result_list %}
+    {% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
+    {% result_list cl %}
+    {% if action_form and actions_on_bottom and cl.full_result_count %}{% admin_actions %}{% endif %}
+    <script type="text/javascript">
+        (function ($) {
+            $(function () {
+                $('#result_list').append(
+                    '<tr><th>Итого</th><td>{{ itog.views }}</td><td>{{ itog.clicks }}</td><td class="field-scrolls">{{ itog.scrolls }}</td><td>{{ itog.ctr }}</td></tr>'
+                );
+                var $columnList = $('.column-scrolls, .field-scrolls');
+                $columnList.hide();
+                var $buttonToggleColumn = $('<a/>', {
+                    href: '#',
+                    text: '+',
+                    class: 'b-button-column-toggle'
+                });
+                $('#changelist').prepend($buttonToggleColumn);
+                $buttonToggleColumn.on('click', function (e) {
+                    e.preventDefault();
+                    $columnList.toggle();
+                });
+            });
+        })(django.jQuery);
+    </script>
+    <style>
+        a.b-button-column-toggle {
+            padding: 0 8px;
+            display: block;
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            line-height: 19px;
+            color: white;
+            background: #e1e1e1;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block pagination %}{% endblock %}
+
+{% block object-tools %}{% endblock %}

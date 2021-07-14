@@ -1,0 +1,92 @@
+{% load staticfiles media_utils str_utils thumbnail phones_tags %}
+
+<div class="submenu-wrapper g-margin-top-20">
+    {# блок поиска #}
+        {% url 'news:search' as articles_url %}
+        {% include 'snippets/submenu_search.html' with url=articles_url %}
+    {# блок поиска #}
+    <nav class="submenu articles">
+        <ul class="submenu-list">
+            {% if request.path == '/news/articles/' %}
+                <li class="submenu-list__item active submenu-counter-index">
+                    <span>
+                        Лента
+                    </span>
+                </li>
+            {% else %}
+                <li class="submenu-list__item submenu-counter-index">
+                    <a class="submenu-list__link" href="{% url 'articles_list_view' %}">
+                        Лента
+                    </a>
+                </li>
+            {% endif %}
+
+            {# пока захардкодим меню #}
+
+            <li class="submenu-list__item submenu-counter-0">
+                <a class="submenu-list__link" href="{% url 'afisha:review:index' %}">Рецензии</a>
+            </li>
+            <li class="submenu-list__item submenu-counter-1">
+                <a class="submenu-list__link" href="/obed/?tab=critic#article-list">Ресторанный критик</a>
+            </li>
+            <li class="submenu-list__item submenu-counter-2">
+                <a class="submenu-list__link" href="{% url 'special:index' 'vote' %}">Радиоэфиры</a>
+            </li>
+            <li class="submenu-list__item submenu-counter-3">
+                <a class="submenu-list__link" href="{% url 'special:index' 'club' %}">Клуб путешественников</a>
+            </li>
+            <li class="submenu-list__item submenu-counter-4">
+                <a class="submenu-list__link" href="{% url 'special:index' 'experience'%}">Личный опыт</a>
+            </li>
+
+            <li class="submenu-list__item more">
+                <span class="g-jlink g-mobile j-toggle-button" data-toggle-target="mobile-submenu bodyhide">
+                    <span class="g-jlink g-color-black">
+                        еще
+                    </span>
+                </span>
+                <span class="g-jlink g-not-mobile j-toggle-button" data-toggle-target="mobile-submenu bodyhide">
+                    <span class="g-jlink g-color-black">
+                        еще
+                    </span>
+                </span>
+            </li>
+        </ul>
+        <div class="submenu-wrapper__mobile j-toggle-target-mobile-submenu" data-toggle-class="show">
+            <span class="submenu-wrapper__mobile__close j-toggle-button-touch" data-toggle-target="mobile-submenu bodyhide"></span>
+
+            <ul class="submenu-list submenu-list_mobile">
+                {% if request.path == '/news/articles/' %}
+                    <li class="submenu-list__item active">
+                        <span>
+                            Лента
+                        </span>
+                    </li>
+                {% else %}
+                    <li class="submenu-list__item">
+                        <a class="submenu-list__link" href="{% url 'articles_list_view' %}">
+                            Лента
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li class="submenu-list__item">
+                    <a class="submenu-list__link" href="{% url 'afisha:review:index' %}">Рецензии</a>
+                </li>
+                <li class="submenu-list__item">
+                    <a class="submenu-list__link" href="/obed/?tab=critic#article-list">Ресторанный критик</a>
+                </li>
+                <li class="submenu-list__item">
+                    <a class="submenu-list__link" href="{% url 'special:index' 'vote' %}">Радиоэфиры</a>
+                </li>
+                <li class="submenu-list__item">
+                    <a class="submenu-list__link" href="{% url 'special:index' 'club' %}">Клуб путешественников</a>
+                </li>
+                <li class="submenu-list__item">
+                    <a class="submenu-list__link" href="{% url 'special:index' 'experience'%}">Личный опыт</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+</div>

@@ -1,0 +1,40 @@
+{% load str_utils comments_tags thumbnail utils_tags cache_tags staticfiles pytils_dt pytils_numeral %}
+
+<!--item-->
+{% spaceless %}
+<div class="bigcard">
+    <div class="bigcard__inner">
+        <div class="bigcard__header">
+            <span class="bigcard__label">
+                {{ material|verbose_name }}
+            </span>
+            <span class="bigcard__info">
+                45 комментариев, около 8 минут на чтение
+                {% comment %}
+                    {% if material.comments_cnt %}
+                        {{ material.comments_cnt|get_plural:'комментарий,комментария,комментариев' }},
+                        около {{ material.content|time_to_read|get_plural:"минуты,минут,минут" }} на чтение
+                    {% endif %}
+                {% endcomment %}
+            </span>
+        </div>
+        <div class="bigcard__article">
+            <h3 class="bigcard__title">
+                {{ material.title|typograf }}
+            </h3>
+            <p class="bigcard__desc">
+                {{ material.caption|typograf }}
+            </p>
+        </div>
+        <div class="bigcard__bottom">
+            <a href="{{ material.get_absolute_url }}" class="bigcard__button">
+                Читать на сайте
+            </a>
+        </div>
+    </div>
+    <div class="bigcard__bg">
+        <img src="{% static 'img/360/bg_right.jpg' %}" />
+    </div>
+</div>
+{% endspaceless %}
+<!--item close-->

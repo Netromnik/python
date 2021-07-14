@@ -1,0 +1,238 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils str_utils thumbnail site_utils adv_tags comments_tags pytils_dt gallery_tags map_tags gallery_tags %}
+
+{% block title %}{{ object.name|typograf:"title"|safe }} | {{ block.super }}{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="//maps.api.2gis.ru/2.0/loader.js?pkg=full&skin=dark&lazy=true"></script>
+{% endblock %}
+
+{% block content %}
+    <!-- Хлебные крошки -->
+    <div class="b-content-block b-breadcrumbs">
+        <nav>
+            <ul class="b-list-h">
+                <li><a href="{% url 'tourism:index' %}">Туризм</a></li>
+                <li><a href="../">{{ section|typograf:'title'|safe }}</a></li>
+            </ul>
+        </nav>
+    </div>
+    <!-- /Хлебные крошки -->
+
+    <div class="b-content-block">
+        <div class="b-tourism-company-block">
+            <header>
+                {% if object.logo %}
+                <div class="b-company-logo-block">
+                    {% thumbnail object.logo 175x10000 as thumb %}
+                    <img class="b-company-logo" alt="{{ object.name|typograf:"title"|safe }}" src="{{ thumb }}" style="width:{{ thumb.width }}px; height:{{ thumb.height }}px">
+                </div>
+                {% endif %}
+
+                <div class="b-company-title-block">
+                    <h1 class="g-title">{{ object.name|typograf|safe }}</h1>
+                    {% if can_edit %}
+                    <div class="b-tourism-company-edit-block">
+                        <a href="{% url 'tourism:firm:edit' section_slug=section.slug firm_id=object.id %}" class="g-color-green"><img src="{% static 'tourism/img/action-edit.png' %}">редактировать информацию</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </header>
+
+            <!-- Информация об организации -->
+            <article class="b-company-info-block">
+                <!-- Основные контактные данные -->
+                <ul class="b-list-v b-company-info-list">
+                    {% if object.main_address %}
+                    <li><address class="b-company-address-block g-map-address-link">{% map_address object.main_address %}</address></li>
+                    {% endif %}
+                    {% if object.main_address.phones %}
+                    <li>
+                        <div class="b-company-phones">
+                            <ul class="b-list-v">
+                                <li>{{ object.main_address.phones|typograf:"title"|safe }}</li>
+                                {% if object.skype %}
+                                <li>Skype: {{ object.skype }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </li>
+                    {% endif %}
+
+                    {% if object.main_address.worktime %}
+                        <li>
+                            <div class="b-company-worktime-block">
+                                <span class="g-color-gray">Часы работы:</span>
+                                <time>{{ object.main_address.worktime|typograf|safe }}</time>
+                            </div>
+                        </li>
+                    {% endif %}
+
+                    {% if object.season %}
+                        <li><div class="b-company-worktime-block">{{ object.season|typograf|safe }}</div></li>
+                    {% endif %}
+
+                    {% if object.url or object.mail %}
+                        <li>
+                            <div class="b-company-web-feedback">
+                                {% if object.url %}
+                                <span class="b-company-web-site g-color-green">{{ object.url|urlize|lower }}</span>
+                                {% endif %}
+                                {% if object.mail %}
+                                <span class="b-company-email g-color-green"><script type="text/javascript">{{ object.get_email|safe }}</script></span>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>
+                <!-- /Основные контактные данные -->
+
+                {% if object.other_addresses %}
+                <!-- Дополнительные контакты организации -->
+                <ul class="b-list-v b-company-info-list">
+                    {% for address in object.other_addresses %}
+                        {% if address %}<li><address class="b-company-address-block">{% map_address address %}</address></li>{% endif %}
+                        {% if address.phones %}<li><div class="b-company-phones">{{ address.phones|typograf:"title"|safe }}</div></li>{% endif %}
+                        {% if address.worktime %}
+                            <li><div class="b-company-worktime-block">
+                                <span class="g-color-gray">Часы работы:</span> <time>{{ address.worktime|typograf|safe }}</time>
+                            </div></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                <!-- /Дополнительные контакты организации -->
+                {% endif %}
+
+
+                {% if object.description %}
+                <!-- Описание организации -->
+                <div class="b-content-block b-company-description-block">
+                    {{ object.description|typograf:"user"|safe }}
+                </div>
+                <!-- /Описание организации -->
+                {% endif %}
+
+                <!-- Блок со списком туров -->
+                <div class="b-content-block">
+                    {% if can_edit %}
+                        <div class="b-tourism-company-tours-add">
+                            <div class="b-tourism-company-edit-block">
+                                <a href="{% url 'tourism:firm:add_tour' section.slug object.pk %}" class="g-color-green"><img src="{% static 'tourism/img/action-add.png' %}">добавить</a>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if tours_list %}
+                    <section class="b-tourism-company-tours-block g-open">
+
+                        <header>
+                            <h2>Туры</h2>
+                        </header>
+
+                        <table class="b-tourism-tours-table">
+                            <colgroup>
+                                <col width="358">
+                                <col width="92">
+                                <col width='81'>
+                            </colgroup>
+                            <thead>
+                            <th>Название</th>
+                            <th>Дата</th>
+                            <th></th>
+                            </thead>
+                            <tbody>
+
+                            {% for tour in tours.hot %}
+                            <tr id="tr{{ tour.pk }}" class="b-tourism-tours-hot">
+                                <td class="b-tour-title-block">
+                                    <div class="g-relative">
+                                        <a href="{{ tour.get_absolute_url }}">
+                                            {% thumbnail tour.image 89x1000 as thumb %}
+                                            {% if thumb %}<img class="b-tour-title-pic" src="{{ thumb }}" style='width:{{ thumb.width }}; height:{{ thumb.height }}'>{% endif %}
+                                            {{ tour.title|typograf:'title'|safe }}</a>
+                                        {% if can_edit %}
+                                        <section id="j-tour-title-{{ tour.pk }}">
+                                            <a href="{% url 'tourism:tour:edit' tour.pk %}?section={{ section.slug }}" class="g-color-green">редактировать</a>
+                                            <a href="{% url 'tourism:tour:delete' tour.pk %}?section={{ section.slug }}" class="g-color-red">удалить</a>
+                                            {% if can_edit and tour.is_hidden %}<span class="g-label-inline-orange">на модерации</span>{% endif %} {# Оформить и перенести куда надо #}
+                                        </section>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="b-tour-date-block">
+                                    {% for date in tour.get_dates|slice:"1" %}
+                                    {{ date.0|ru_strftime:"%d %B" }}{% if date.1 %} - {{ date.1|ru_strftime:"%d %B" }}{% endif %}{% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% if can_edit %}
+                                    <div class="g-relative">
+                                        <a href="{% url 'tourism:tour:update_status' tour.pk %}?hot=0&amp;section={{ section.slug }}" class="j-tour-title b-tour-end-fire"><img align="absmiddle" alt="потушить" src="{% static 'tourism/img/action-extinct.png' %}"></a>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                            {% for tour in tours.extinct %}
+                            <tr id="tr{{ tour.pk }}">
+                                <td class="b-tour-title-block">
+                                    <a href="{{ tour.get_absolute_url }}" class="b-tour-title">
+                                        {% thumbnail tour.image 89x1000 as thumb %}
+                                        {% if thumb %}<img class="b-tour-title-pic" src="{{ thumb }}" style='width:{{ thumb.width }}; height:{{ thumb.height }}'>{% endif %}
+                                        {{ tour.title|typograf|safe }}
+                                        {% if can_edit %}
+                                        <section>
+                                            <div id="j-tour-title-{{ tour.pk }}">
+                                                <a href="{% url 'tourism:tour:edit' tour.pk %}?section={{ section.slug }}" class="g-color-green">редактировать</a>
+                                                <a href="{% url 'tourism:tour:delete' tour.pk %}?section={{ section.slug }}" class="g-color-red b-tour-delete">удалить</a>
+                                                {% if can_edit and tour.is_hidden %}<span class="g-label-inline-orange">на модерации</span>{% endif %} {# Оформить и перенести куда надо #}
+                                            </div>
+                                        </section>
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td class="b-tour-date-block">
+                                    {% for date in tour.get_dates|slice:"1" %}
+                                    {{ date.0|ru_strftime:"%d %B" }}{% if date.1 %} - {{ date.1|ru_strftime:"%d %B" }}{% endif %}{% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% if can_edit %}
+                                    <div class="g-relative">
+                                        <div id="j-tour-title-{{ tour.pk }}" class="j-tour-title">
+                                            {% if tours_paid and hot_tours < 5 %}
+                                            <a href="{% url 'tourism:tour:update_status' tour.pk %}?hot=1&amp;section={{ section.slug }}" class="b-tour-fire"><img alt="поджечь" src="{% static 'tourism/img/action-fire.png' %}"></a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </section>
+                    {% endif %}
+                </div>
+                <!-- /Блок со списком туров -->
+
+                {% if object.gallery.main_gallery %}
+                <!-- Блок фото галлереи -->
+                <div class="b-content-block">
+                    <section class="b-tourism-company-gallery">
+                        {% gallery object.gallery.main_gallery "10000x75" %}
+                    </section>
+                </div>
+                <!-- /Блок фото галлереи -->
+                {% endif %}
+
+                {% comments comments_object %}
+            </article>
+            <!-- /Информация об организации -->
+        </div>
+    </div>
+{% endblock content %}

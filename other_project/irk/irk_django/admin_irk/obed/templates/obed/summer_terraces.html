@@ -1,0 +1,44 @@
+{% extends 'obed/layout.html' %}
+
+{% load staticfiles obedtags pytils_numeral %}
+
+{% block title %}Летние веранды | {{ block.super }}{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/lib/nouislider.js' %}"></script>
+    {{ block.super }}
+{% endblock %}
+
+{% block adblock-message %}{% endblock %}
+{% block obed-search-filter %}{% endblock %}
+{% block b-container-first %}
+    <div class="terraces-header j-container">
+        <div class="terraces-header__inner">
+            <div class="terraces-header__logo">
+                <img src="{% static 'img/terraces/table.svg' %}" alt="изображение веранды" />
+            </div>
+            <div class="terraces-header__text">
+                Лето в Иркутске драгоценно. Чтобы вы могли больше времени наслаждаться свежим воздухом, многие рестораны открывают уютные веранды.
+                Выбор огромен, определиться поможет специальная вкладка Обед.IRK.ru: мы соберем фотографии интересных террас и немного расскажем о них
+            </div>
+        </div>
+    </div>
+{% endblock b-container-first %}
+
+{% block b-container-second %}
+    {% if establishments %}
+        <section class="b-obed-corporatives-container type-summer-terraces g-indent{% if not see_also_establishments %} no-also-establishments{% endif %}">
+            <div class="b-obed-corporatives">
+                <ul class="b-obed-corporatives-inlist">
+                    {% for establishment in establishments %}
+                        <li class="b-obed-corporatives-inlist-item">
+                            {% include 'obed/establishment/list_item.html' with tab='summer_terrace' %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}
+
+{% block b-container-third %}{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'newyear2014/layout_cr.html' %}
+
+{% load adv_tags str_utils comments_tags thumbnail paginator_utils date_tags rating_tags %}
+
+{% block title %}Наглядно | {{ block.super }}{% endblock title %}
+
+{% block b-content-cr %}
+    <header class="g-intend">
+        <h1>Наглядно</h1>
+    </header>
+    <article>
+        <ul class="b-ny2014-graphics-list b-list-v">
+            {% for object in object_list %}
+                <li {% if forloop.last %}class="g-last"{% endif %}>
+                    {% with object.preview as thumb_img %}
+                        {% thumbnail thumb_img 740x700 as thumb %}
+                        <header>
+                                <h3><a href="{{ object.get_absolute_url }}" title="{{ object.title|typograf:'title'|safe }}">{{ object.title|typograf:'title'|safe }}</a></h3>
+                                <small class="g-color-gray"><time>{{ object.stamp|dates:'%d.%m|%d.%m.%Y' }}</time></small>
+                                <small class="g-color-gray">{% comments_cnt object new_layout=True %}</small>
+                                {% rating_result object 'ratings/widgets/results/like_blogs.html' %}
+                        </header>
+                        <article>
+                            <figure>
+                                <a href="{{ object.get_absolute_url }}" title="{{ object.title|typograf:'title'|safe }}">
+                                    <img src="{{ thumb }}" alt="{{ object.caption|typograf:'title'|safe }}" style="width:{{ thumb.width }}px;height:{{ thumb.height }}px;">
+                                </a>
+                            </figure>
+                        </article>
+                    {% endwith %}
+                </li>
+            {% endfor %}
+        </ul>
+        {% paginator objects template='paginator/layout.html' %}
+    </article>
+{% endblock b-content-cr %}
+

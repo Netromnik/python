@@ -1,0 +1,3 @@
+{% for material in object_list %}
+    {% include 'admin/news/material/item.html' with material=material is_search_list=True only_standard_image=True %}
+{% endfor %}

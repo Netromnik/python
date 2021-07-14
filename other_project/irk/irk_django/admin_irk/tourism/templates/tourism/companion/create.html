@@ -1,0 +1,101 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils form_tags %}
+
+{% block title %} {% block title_create %}Добавление объявления{% endblock %} | Туризм в Иркутске на IRK.ru {% endblock %}
+
+
+{% block content %}
+    <!-- Хлебные крошки -->
+    <div class="b-content-block b-breadcrumbs">
+        <nav>
+            <ul class="b-list-h">
+                <li><a href="{% url 'tourism:index' %}">Туризм</a></li>
+                <li><a href="{% url 'tourism:search' %}">Поиск попутчика</a></li>
+                <li>{% block breadcrumbs %}Добавление объявления{% endblock %}</li>
+            </ul>
+        </nav>
+    </div>
+    <!-- /Хлебные крошки -->
+
+    <div class="b-content-block b-tourism-companion-create-block">
+        <form action='' name='' method="POST">{% csrf_token %}
+            <div class="b-info-grayblock">
+                <table class="b-table">
+                    <colgroup>
+                        <col width="50%">
+                        <col width="50%">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <ul class="b-list-h">
+                                    <li>
+                                        <label for="id_my_composition" class="required">Мой состав <span class="g-color-red">*</span></label>
+                                        {{ form.my_composition }}
+                                    </li>
+
+                                    <li>
+                                        <label for="id_find_composition" class="required">Ищу состав <span class="g-color-red">*</span></label>
+                                        {{ form.find_composition }}
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+
+                        <tr {% if form.place.errors %} class="errors"{% endif %}>
+                            <td>
+                                <label for="id_place" class="required">Место отдыха <span class="g-color-red">*</span> </label>
+                                {{ form.place }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label for="id_description">Дополнительно </label>
+                                {{ form.description }}
+                            </td>
+                        </tr>
+
+                        <tr {% if form.name.errors %} class="errors"{% endif %}>
+                            <td>
+                                <label for="id_name" class="required">Имя <span class="g-color-red">*</span> </label>
+                                {{ form.name }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label for="id_about">О себе </label>
+                                {{ form.about }}
+                            </td>
+                        </tr>
+
+                        <tr {% if form.phone.errors %} class="errors"{% endif %}>
+                            <td>
+                                <label for="id_phone" class="required">Телефон <span class="g-color-red">*</span> </label>
+                                {{ form.phone }}
+                            </td>
+                        </tr>
+
+                        <tr {% if form.email.errors %} class="errors"{% endif %}>
+                            <td>
+                                <label for="id_email" class="required">Почта <span class="g-color-red">*</span> </label>
+                                {{ form.email }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label for="id_visible">Отображение на сайте </label>
+                                {{ form.visible }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" class="b-button">{% block submit_button %}Добавить объявление{% endblock %}</button>
+        </form>
+    </div>
+
+{% endblock content %}

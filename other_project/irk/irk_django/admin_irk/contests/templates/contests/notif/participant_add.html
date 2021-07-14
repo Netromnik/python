@@ -1,0 +1,14 @@
+{% extends "to_moder.html" %}
+
+{% load site_utils pytils_numeral %}
+
+{% block body_letter %}
+    <h3>Новый участник конкурса «{{ participant.contest.title }}»</h3>
+    <p>Участник: {{ participant.full_name }}</p>
+    <p>Телефон: {{ participant.phone }}</p>
+    <p>Название: {{ participant.title }}</p>
+    <p>Описание: {{ participant.description }}</p>
+    <div>
+        <a href="https://{% get_site_url www %}{% url 'admin:contests_participant_change' participant.id %}">Открыть</a>
+        </div>
+{% endblock %}

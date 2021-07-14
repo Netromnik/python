@@ -1,0 +1,23 @@
+{% load site_utils str_utils pytils_dt cache_tags news_tags date_tags %}
+
+<section class="subscription">
+    <header class="subscription__header j-subscribe-success-hide">
+        <h3 class="subscription__title">
+            Подписаться на итоги дня:
+        </h3>
+    </header>
+    <form class="subscription__form j-subscribe j-subscribe-json j-subscribe-success-hide" id="news-subscription-form" method="POST" action="{% url 'news:subscription:ajax' %}">
+        {% csrf_token %}
+        <div class="subscription__form__container">
+            <input type="email" id="id_subscription_email" name="email" placeholder="ваш e-mail">
+            <button type="submit" class="button"></button>
+        </div>
+        <div class="subscription__error j-subscribe-error-block hint g-hide"></div>
+    </form>
+    <div class="subscription__success j-subscribe-success-show g-hide">
+        <h3 class="subscription__title g-margin-bottom-20">
+            До встречи в 8 вечера!
+        </h3>
+        <p class="subscription__text">Не забудьте подтвердить адрес (письмо у вас на почте)</p>
+    </div>
+</section>

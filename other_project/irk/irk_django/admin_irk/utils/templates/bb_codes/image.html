@@ -1,0 +1,17 @@
+{% load str_utils %}
+{% spaceless %}
+{% clearclasses %}
+<figure class="article-image{% if full %} article-image_full j-full-image{% if not title %} article-image_after{% endif %}{% endif %}{% if align %} g-float-{{align}}{% endif %}{% if link_3d %} b-3dtour-image-container{% endif %}{% if upscale %} article-image_upscale{% endif %}">
+    {% if link_3d %}
+        <a class="b-3dtour-link-container j-irk-tour3d-show" href="{{ link_3d }}">
+            <span class="b-3dtour-link-icon"></span>
+            <span class="b-3dtour-link-button">Посмотреть 3D-тур</span>
+        </a>
+    {% endif %}
+    <img src="{{src}}" alt="{{title|typograf}}" title="{{title|typograf}}" width="{{width}}" height="{{height}}"{% if big_src and big_width and big_height %} class="g-cursor-pointer j-single-layer-opener" data-single-layer-img="{{big_src}}" data-single-layer-width="{{big_width}}" data-single-layer-height="{{big_height}}"{% endif %}>
+    {% if title %}
+        <figcaption>{{title|typograf}}</figcaption>
+    {% endif %}
+</figure>
+{% endclearclasses %}
+{% endspaceless %}

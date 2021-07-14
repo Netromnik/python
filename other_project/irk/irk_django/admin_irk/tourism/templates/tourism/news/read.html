@@ -1,0 +1,28 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils str_utils thumbnail comments_tags tourism_tags gallery_tags news_tags pytils_dt cache_tags %}
+
+{% block title %}{{ object.title|typograf:"title"|safe }} | Новости туризма | {{ block.super }}{% endblock %}
+
+{% block meta %}
+    {#  Мета-данные для социальных сетей и поисковиков #}
+    {% cache 86400 'news.instance.meta' vary='object.id' tags='news' %}{% spaceless %}
+        {% include 'share_meta.html' with url=object.get_absolute_url title=object.title description=object.caption image=object.gallery.main_image.image %}
+    {% endspaceless %}{% endcache %}
+{% endblock %}
+
+{% block content %}
+    <!-- Хлебные крошки -->
+    <div class="b-content-block b-breadcrumbs">
+        <nav>
+            <ul class="b-list-h">
+                <li><a href="{% url 'tourism:index' %}">Туризм</a></li>
+                <li><a href="{% url 'tourism:news:index' %}">Новости</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- /Хлебные крошки -->
+
+    {% render_news_cool object is_tourism=True %}
+{% endblock %}

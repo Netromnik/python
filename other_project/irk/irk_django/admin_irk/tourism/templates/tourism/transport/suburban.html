@@ -1,0 +1,93 @@
+{% extends "tourism/layout_lc.html" %}
+
+{% load staticfiles media_utils str_utils thumbnail comments_tags pytils_dt %}
+
+{% block title %}Пригородные автобусы | {{ block.super }}{% endblock %}
+
+{% block content %}
+    <section class="b-content-block b-tourism-schedule-block">
+
+        <header class="g-title">
+            <h1>Пригородные автобусы</h1>
+        </header>
+
+        <article>
+            {% if last_update %}<p class="g-color-gray">Дата последнего обновления: {{ last_update|ru_strftime:"%d %B %Y г." }}</p>{% endif %}
+
+            <table class="b-table">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Маршрут (длина)</th>
+                        <th>Отправление</th>
+                        <th>Отправление с конечного пункта</th>
+                        <th>По дням</th>
+                        <th>Цена, руб.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for autobus in autobuses %}
+                    <tr class="{% cycle 'g-odd' 'g-even' %}">
+                        <td>{{ autobus.number }}</td>
+                        <td>{{ autobus.name|typograf|safe }}{% if autobus.length %} ({{ autobus.length }}){% endif %}</td>
+                        <td>{{ autobus.dispatch|typograf|safe }}</td>
+                        <td>{{ autobus.arrival }}</td>
+                        <td>{{ autobus.days }}</td>
+                        <td>{{ autobus.price|default:"" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </article>
+    </section>
+{% endblock %}
+
+{% block col2 %}
+
+    <div class="fast-nav">
+    {% block fastnav %}
+        <a href="{% url 'tourism:index' %}">Туризм</a> /
+    {% endblock %}
+    </div>
+	<div class="transport" style="background:none !important">
+	
+		<h1>Пригородные автобусы</h1>
+
+	{% if last_update %}<p class="info">Дата последнего обновления: {{ last_update|ru_strftime:"%d %B %Y г." }}</p>{% endif %}
+
+		<div class="blue-block there">
+			<div class="t">
+				<div class="l"></div>
+				<div class="r"></div>
+			</div>
+			<div class="body">	
+			<table>
+				<thead>
+					<th>№</th>
+					<th>Маршрут (длина)</th>
+					<th>Отправление</th>
+					<th>Отправление с конечного пункта</th>
+					<th>По дням</th>
+					<th>Цена, руб.</th>
+				</thead>
+				<tbody>
+				{% for autobus in autobuses %}
+				<tr class="{% cycle 'odd' 'even' %}">
+					<td>{{ autobus.number }}</td>
+					<td>{{ autobus.name|typograf|safe }}{% if autobus.length %} ({{ autobus.length }}){% endif %}</td>
+					<td>{{ autobus.dispatch|typograf|safe }}</td>
+					<td>{{ autobus.arrival }}</td>
+					<td>{{ autobus.days }}</td>
+					<td>{{ autobus.price|default:"" }}</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			</div>
+			<div class="b">
+				<div class="l"></div>
+				<div class="r"></div>
+			</div>			
+		</div>		
+	</div>
+{% endblock %}

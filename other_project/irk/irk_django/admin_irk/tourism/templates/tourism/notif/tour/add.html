@@ -1,0 +1,9 @@
+{% extends "to_moder.html" %}
+
+{% load site_utils pytils_numeral %}
+
+{% block body_letter %}
+
+	<h3>Новаый тур разделе Туризм: «{{ object.title }}»</h3>
+    <p><a href="http://{% get_site_url www %}{% url 'admin:tourism_tour_change' object.pk %}">Перейти на страницу редактирования</a></p>
+{% endblock %}

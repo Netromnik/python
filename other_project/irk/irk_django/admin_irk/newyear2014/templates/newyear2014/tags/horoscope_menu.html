@@ -1,0 +1,13 @@
+<nav class="b-ny2014-horoscope-types{% for horoscope in objects %}{% if current == horoscope %} g-inner{% endif %}{% endfor %}">
+    {% for horoscope in objects %}
+        {% if current == horoscope %}
+            {% if show_link %}
+                <a class="g-black" href="{{ horoscope.get_absolute_url }}">{{ horoscope.short_name }}</a>
+            {% else %}
+                <h1>{{ horoscope.short_name }}</h1>
+            {% endif %}
+        {% else %}
+            <a href="{{ horoscope.get_absolute_url }}">{{ horoscope.short_name }}</a>
+        {% endif %}
+    {% endfor %}
+</nav>

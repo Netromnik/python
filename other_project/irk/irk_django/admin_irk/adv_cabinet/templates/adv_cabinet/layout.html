@@ -1,0 +1,41 @@
+{% load static media_utils %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Рекламный кабинет IRK.ru{% endblock %}</title>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-touch-icon-57x57.png' %}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-touch-icon-72x72.png' %}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/icons/apple-touch-icon-114x114.png' %}" />
+
+    {% block style %}
+        {% less '/less/compile/apps/adv_cabinet.less' %}
+    {% endblock style %}
+
+    {% if settings.DEBUG %}
+        <script>var less = {env: "development"};</script>
+        <script src="{% static 'js/lib/less/less-1.7.5.js' %}"></script>
+    {% endif %}
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar__inner">
+            <nav class="topmenu onhover">
+                <a class="topmenu__item topmenu__link{% if '/companies/' in request.path %} active{% endif %}" href="{% url 'adv_cabinet:companies'%}">Карточка компании</a>
+                <a class="topmenu__item topmenu__link{% if '/banners/' in request.path  %} active{% endif %}" href="{% url 'adv_cabinet:banners'%}">Статистика размещений</a>
+            </nav>
+            <div>
+                Отдел продаж — <a href="mailto:adv@irk.ru">adv@irk.ru</a> | +7 (3952) 488-850
+            </div>
+        </div>
+    </div>
+
+    {% block content %}{% endblock content %}
+
+    {% block bottom_scripts %}{% endblock bottom_scripts %}
+</body>
+</html>

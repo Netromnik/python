@@ -1,0 +1,26 @@
+{% load staticfiles str_utils comments_tags thumbnail paginator_utils news_tags date_tags rating_tags %}
+{% for object in objects %}
+    <li {% if forloop.last %}class="g-last"{% endif %}>
+        {% with object.preview as thumb_img %}
+            {% thumbnail thumb_img 740x700 as thumb %}
+            <header>
+                {% spaceless %}
+                    <h3><a href="{% url 'news:infographic:read' object.pk %}" title="{{ object.title|typograf:'title'|safe }}">{{ object.title|typograf:'title'|safe }}</a></h3>
+                    <small class="g-color-gray"><time>{{ object.stamp|dates:'%d.%m|%d.%m.%Y' }}</time></small>
+                    <small class="g-color-gray">{% comments_cnt object new_layout=True %}</small>
+                    {% rating_result object 'ratings/widgets/results/like_blogs.html' %}
+                {% endspaceless %}
+            </header>
+            <article>
+                <figure>
+                    <a href="{% url 'news:infographic:read' object.pk %}" title="{{ object.title|typograf:'title'|safe }}">
+                        <img src="{{ thumb }}" alt="{{ object.caption|typograf:'title'|safe }}">
+                        {% comment %}
+                                    {% if object.caption %}<figcaption>{{ object.caption|typograf:'title'|safe }}</figcaption>{% endif %}
+                                    {% endcomment %}
+                    </a>
+                </figure>
+            </article>
+        {% endwith %}
+    </li>
+{% endfor %}
