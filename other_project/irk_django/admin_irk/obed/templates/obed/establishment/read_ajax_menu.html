@@ -1,7 +1,0 @@
-{% load thumbnail str_utils %}
-{% for item in menu.gallery.main_gallery %}
-    <li>
-        {% thumbnail item.image 620x660 quality=92 x=item.watermark as thumb %}
-        <img src="{{ thumb }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt="{% if item.alt %}{{ item.alt|typograf:"title"|safe }}{% endif %}" />
-    </li>
-{% endfor %}

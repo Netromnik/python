@@ -1,7 +1,0 @@
-{% load staticfiles contests_tags thumbnail comments_tags pytils_dt str_utils %}
-
-{% for announcement in announcements %}
-    <li>
-        {% include 'afisha/event/list_item.html' with event=announcement.event %}
-    </li>
-{% endfor %}

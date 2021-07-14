@@ -1,9 +1,0 @@
-{% load adv_tags %}
-
-{% if request.user_agent.is_mobile %}
-    {% ibanner ID=555 as mobile_banner_under_comments %}
-
-    {% if not object.is_advertising and mobile_banner_under_comments %}
-        <div class="g-centered-div g-not-desktop g-margin-bottom-20">{{ mobile_banner_under_comments }}</div>
-    {% endif %}
-{% endif %}

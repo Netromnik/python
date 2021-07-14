@@ -1,9 +1,0 @@
-{% load str_utils comments_tags thumbnail utils_tags cache_tags staticfiles pytils_dt pytils_numeral %}
-
-{# выбор карточки в зависимости от события #}
-
-{% if card|classname == 'Event' %}
-    {% include 'irkutsk360/card_afisha.html' with event=card %}
-{% else %}
-    {% include 'irkutsk360/card.html' with material=card %}
-{% endif%}

@@ -1,9 +1,0 @@
-{% load adv_tags %}
-
-{% if request.user_agent.is_gadget %}
-    {% ibanner ID=554 as mobile_banner_above_title %}
-
-    {% if not object.is_advertising and mobile_banner_above_title %}
-        <div class="g-centered-div g-not-desktop g-margin-bottom-20">{{ mobile_banner_above_title }}</div>
-    {% endif %}
-{% endif %}

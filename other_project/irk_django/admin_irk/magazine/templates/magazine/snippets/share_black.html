@@ -1,8 +1,0 @@
-{% load site_utils %}
-
-<div class="b-share-button-group black j-share-buttons {{ additional_class }}" data-url="{{ request.scheme|default:'https' }}://{% get_site_url 'www' %}{% url 'magazine:index' %}" data-description="{{ title }}">
-    <span class="g-inline-block j-share-button-container"><span class="b-share-button b-share-button-fb j-share j-share-fb j-metrika-goal" data-metrika-goal="magazine_social_share_fb" title="Поделиться в Facebook"></span></span>
-    <span class="g-inline-block j-share-button-container"><span class="b-share-button b-share-button-ok j-share j-share-ok j-metrika-goal" data-metrika-goal="magazine_social_share_ok" title="Поделиться в Одноклассниках"></span></span>
-    <span class="g-inline-block j-share-button-container"><span class="b-share-button b-share-button-vk j-share j-share-vk j-metrika-goal" data-metrika-goal="magazine_social_share_vk" title="Поделиться во Вконтакте"></span></span>
-    <span class="g-inline-block j-share-button-container"><span class="b-share-button b-share-button-tw j-share j-share-tw j-metrika-goal" data-metrika-goal="magazine_social_share_tw" title="Поделиться в Твиттере"></span></span>
-</div>

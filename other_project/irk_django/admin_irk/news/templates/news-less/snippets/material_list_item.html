@@ -1,7 +1,0 @@
-{% load cache_tags %}
-
-{% cache 86400 'news.material_list_item' vary='material.pk,main,showType,expert_index' tags='material' %}
-    <li class="b-news-article-list-super b-news-article-list-super_big negative-margin-10 {% if forloop.first %}first{% endif %}">
-        {% include 'news-less/snippets/material.html' with material=material %}
-    </li>
-{% endcache %}
