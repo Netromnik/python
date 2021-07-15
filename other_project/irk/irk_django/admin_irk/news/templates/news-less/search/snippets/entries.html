@@ -1,4 +1,0 @@
-{% load staticfiles media_utils str_utils comments_tags thumbnail paginator_utils news_tags date_tags %}
-{% for material in objects %}
-    {% include 'news-less/snippets/news_list_item.html' with showType=True %}
-{% endfor %}

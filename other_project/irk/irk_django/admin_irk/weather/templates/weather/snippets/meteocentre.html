@@ -1,8 +1,0 @@
-{% load str_utils %}
-
-{% if meteocentre %}
-    <div class="b-weather-meteocentre">
-        <h5><span class="g-jsLink">Прогноз от Иркутского Гидрометцентра</span></h5>
-        <div class="b-weather-meteocentre-text">{{ meteocentre.content|typograf:'user'|safe }}</div>
-    </div>
-{% endif %}

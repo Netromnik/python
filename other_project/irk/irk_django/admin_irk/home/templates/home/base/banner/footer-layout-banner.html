@@ -1,6 +1,0 @@
-{% load adv_tags %}
-{% ibanner ID=388 template='adv/banners/banner_layout.html' as banner %}
-{% ibanner id=464 as branding_footer %}
-{% if banner and not branding_footer %}
-    <div class="b-footer-layout-banner g-desktop">{{ banner }}</div>
-{% endif %}

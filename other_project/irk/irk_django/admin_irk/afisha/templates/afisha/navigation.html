@@ -1,9 +1,0 @@
-{% load widgets site_utils %}
-<a href="
-{%if sessions.ct.model == 'event' %}
-	//{% get_site_url 'afisha' %}/{{ date_from.date|date:"Ymd" }}/{{ sessions.object.pk }}/
-{% else %}
-	?date={{ date_from.date|date:"Ymd" }}{% if query %}&{{ query }}{% endif %}
-{% endif %}
-" {% if direction == "right" %}style="float: right;"{% endif %}>
-{% date_date date_from.date date_to.date direction %}</a>

@@ -1,9 +1,0 @@
-{% load pytils_dt %}
-
-{% for period in object.period_set.all %}
-	{% if forloop.first %}
-	{{ period }}
-	{% else %}
-	, {{ period }}
-	{% endif %}
-{% endfor %}

@@ -1,7 +1,0 @@
-{% load str_utils %}
-
-{% if object.subject and object.subject.is_visible %}
-    <a href="{{ object.subject.get_absolute_url }}" class="b-subject-link">
-        {{ object.subject|typograf }}
-    </a>
-{% endif %}
