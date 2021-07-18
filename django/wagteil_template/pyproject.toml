@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "irk_wagtail"
+version = "0.1.0"
+description = "Пример проекта на wagtail"
+authors = ["hewimetall@github.com"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+wagtail = "^2.13.4"
+wagtailmedia = "^0.7.1"
+wagtail-review = "^0.3"
+wagtail-flags = "^5.1.0"
+wagtail-autocomplete = "^0.6.3"
+wagtailstreamforms = "^3.15"
+wagtail-sharing = "^2.5.1"
+wagtail-draftail-snippet = "^0.3.2"
+django-debug-toolbar = "^3.2.1"
+wagtailmenus = "^3.0.2"
+wagtail-blocks = "^0.7.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
